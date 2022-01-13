@@ -74,6 +74,7 @@
             focus:text-gray-700
             focus:outline-none
           "
+          v-on:change="Recherche"
           v-model="recherche"
         />
       </b-col>
@@ -81,9 +82,9 @@
      <b-card-group deck v-for="sugestion in Valide" :key="sugestion.id">
       <b-card>
         <b-card-text>
-          {{ sugestion.Title }}
-          {{ sugestion.Description }}
-          <h3>nb votes:<h3> {{sugestion.nbvote}}
+         <h2>Titre {{ sugestion.Title }}</h2>
+          <h2>{{ sugestion.Description }}</h2>
+          <h3>nb votes:{{sugestion.nbvote}}</h3>
         </b-card-text>
         <b-button variant="danger" @click="modifetat(suprimer,sugesstion.id)"
           >Pas bon</b-button
@@ -197,6 +198,10 @@
 </template>
 
 <script>
+import VueSession from 'vue-session'
+Vue.use(VueSession)
+import BootsrapVue from 'bootstrap-vue'
+Vue.use(BootsrapVue)
 export default {
   name: "App",
   data() {
@@ -209,16 +214,17 @@ export default {
       variation: "",
       vote: 0,
       date_today: new date(),
-      unesugestion: { titre: "", description: "", nbvote: "" },
+      unesugestion: { titre: "", description: "", nbvote: "",ListUser:[] },
       titre: "",
       description: "",
-      today_date: "",
-      Envalidation: [],
-      Valider: [],
+      today_date: new Date(),
+
+     LesSugestion:{},
       connected: "louka.ruiz@apitech.fr",
     };
   },
   created() {
+    
     this.fetchdataModerateur("premier");
     this.fetchdatauser(premier);
   },
@@ -235,40 +241,30 @@ export default {
       axios.get("http://127.0.0.1:8000/SugestionList").then((response) => {
         this.Sugestions = response.data;
       });
-      if (sugestion.etat == "pas valider") {
-        if (lieu == "premier") {
-          this.Sugestions.forEach((sugestion) => {
+      this.Sugestions.forEach((sugestion) => {
             axios
               .get("http://127.0.0.1:8000/nbVote" + sugestion.id)
               .then((response) => {
                 this.Vote = response.data;
-              });
-            this.variation = this.Vote.length;
+              })
+      ;
+      
+       this.variation = this.Vote.length;
             this.unesugestion.titre = sugestion.title;
             this.unesugestion.description = sugestion.description;
             this.unesugestion.nbvote = this.variation;
+            this.LesSugestion.push(this.unesugestion)
+            
+      })
+      if(type==='premier'){
+        this.LesSugestions.sort((a,b)=>a.nbvote - b.nbvote)
 
-            if (this.variation > this.vote) {
-              this.Valider.push(this.unesugestion);
-              this.vote = this.variation;
-            } else {
-              this.lasugestion = this.unesugestion;
-            }
-          });
-          this.Valider.push(this.lasugestion);
-        } else {
-          this.Sugestions.forEach((sugestion) => {
-            if (sugestion.date < this.date_today) {
-              this.Valider.push(sugestion);
-              this.date_today = sugestion.date;
-              this.lasugestion = sugestion;
-            } else {
-              this.lasugestion = sugestion;
-            }
-          });
-          Valider.push(this.lasugestion);
-        }
+      }else{
+        LesaSugestions.sort((a,b)=>a.date_creat - b.date_creat)
+
       }
+      
+      
     },
      fetchdatauser(lieu,connected) {
       axios.get("http://127.0.0.1:8000/SugestionList").then((response) => {
@@ -333,6 +329,9 @@ export default {
     DeleteVote() {
       axios.delete("http://127.0.0.1:8000/enlevervoter" + id);
     },
+    Recherche(){
+
+    }
   },
 };
 </script>
