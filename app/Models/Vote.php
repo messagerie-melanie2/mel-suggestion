@@ -11,7 +11,7 @@ class Vote extends Model
     protected $fillable = [
         'id',
         'email',
-        'date-vote',
+        'voting_day',
         'id_sugestion',
     ];
 }

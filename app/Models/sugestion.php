@@ -13,7 +13,7 @@ class sugestion extends Model
         'Title',
         'Description',
         'User',
-        'date_creat',
+        'creation date',
         'etat',
         'Url',
 

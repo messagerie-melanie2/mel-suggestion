@@ -74,28 +74,31 @@
             focus:text-gray-700
             focus:outline-none
           "
+          @keyup="ser"
           v-on:change="Recherche"
           v-model="recherche"
         />
       </b-col>
     </b-row>
-     <b-card-group deck v-for="sugestion in Valide" :key="sugestion.id">
+    <b-card-group deck v-for="sugestion in LesaSugestions" :key="sugestion.id">
       <b-card>
+        <b-card-text> Titre {{ sugestion.Title }} </b-card-text>
         <b-card-text>
-         <h2>Titre {{ sugestion.Title }}</h2>
-          <h2>{{ sugestion.Description }}</h2>
-          <h3>nb votes:{{sugestion.nbvote}}</h3>
+          {{ sugestion.Description }}
         </b-card-text>
-        <b-button variant="danger" @click="modifetat(suprimer,sugesstion.id)"
+        <b-card-text> nb votes:{{ sugestion.nbvote }} </b-card-text>
+        <b-button variant="danger" @click="modifetat(suprimer, sugesstion.id)"
           >Pas bon</b-button
         >
         <b-button
           variant="success"
           v-b-modal.modal-1
-          @click="modifetat(amodifier,sugesstion.id)"
+          @click="modifetat(amodifier, sugesstion.id)"
           >à Modifier</b-button
         >
-        <b-button variant="outline-primary" @click="modifetat(valide,sugesstion.id)"
+        <b-button
+          variant="outline-primary"
+          @click="modifetat(valide, sugesstion.id)"
           >Valide</b-button
         >
       </b-card>
@@ -104,7 +107,7 @@
   <div v-else>
     <b-row>
       <b-col cols="6" md="4"> </b-col>
-      <b-col cols="12" md="8"><h1> Faire une Sugestion</h1> </b-col>
+      <b-col cols="12" md="8"><h1>Faire une Sugestion</h1> </b-col>
     </b-row>
     <div>
       <b-modal
@@ -180,28 +183,29 @@
         />
       </b-col>
     </b-row>
-     <b-card-group deck v-for="sugestion in Envalidation" :key="sugestion.id">
-        <b-card>
-          <b-card-text>
-            {{ sugestion.Title }}
-            {{ sugestion.Description }} </b-card-text
-          ><b-btn @click=" Voter(sugestion.id) ">Voter</b-btn>
-          <b-btn
-            v-if="(sugesstion.email = connected)"
-            v-b-modal.modal-prevent-closing
-            class="pull-right"
-            >Modifier</b-btn
-          >
-        </b-card>
-      </b-card-group>
+    <b-card-group deck v-for="sugestion in LesaSugestions" :key="sugestion.id">
+      <b-card v-if="(sugestion.etat = 2)">
+        <b-card-text>
+          {{ sugestion.Title }}
+          {{ sugestion.Description }} </b-card-text
+        ><b-btn @click="Voter(sugestion.id)">Voter</b-btn>
+        <b-btn
+          v-if="(sugesstion.email = connected)"
+          v-b-modal.modal-prevent-closing
+          class="pull-right"
+          >Modifier</b-btn
+        >
+      </b-card>
+      <b-card v-else> </b-card>
+    </b-card-group>
   </div>
 </template>
 
 <script>
-import VueSession from 'vue-session'
-Vue.use(VueSession)
-import BootsrapVue from 'bootstrap-vue'
-Vue.use(BootsrapVue)
+import VueSession from "vue-session";
+Vue.use(VueSession);
+import BootsrapVue from "bootstrap-vue";
+Vue.use(BootsrapVue);
 export default {
   name: "App",
   data() {
@@ -209,23 +213,22 @@ export default {
       recherche: "",
       type: "moderateur",
       recherche: "",
-      lasugestion: {},
+      LesSugestion: {},
+      LesSugestionValider: {},
       Vote: {},
       variation: "",
       vote: 0,
       date_today: new date(),
-      unesugestion: { titre: "", description: "", nbvote: "",ListUser:[] },
+      unesugestion: { titre: "", description: "", nbvote: "", ListUser: [] },
       titre: "",
       description: "",
       today_date: new Date(),
-
-     LesSugestion:{},
+      LesSugestion: {},
       connected: "louka.ruiz@apitech.fr",
     };
   },
   created() {
-    
-    this.fetchdataModerateur("premier");
+    this.fetchdataModerateur(premier);
     this.fetchdatauser(premier);
   },
   methods: {
@@ -237,89 +240,77 @@ export default {
         type,
       ]);
     },
-    fetchdataModerateur(lieu,connected) {
+    fetchdataModerateur(connected) {
+      axios
+        .get("http://127.0.0.1:8000/SugestionList")
+        .response((this.Sugestions = response.data));
+      this.Sugestions = response;
+      this.Sugestions.forEach((sugestion) => {
+        axios
+          .get("http://127.0.0.1:8000/nbVote" + sugestion.id)
+          .then((response) => {
+            this.Vote = response.data;
+          });
+
+        this.variation = this.Vote.length;
+        this.unesugestion.titre = sugestion.title;
+        this.unesugestion.description = sugestion.description;
+        this.unesugestion.nbvote = this.variation;
+        this.LesSugestion.push(this.unesugestion);
+      });
+      if (connected === "premier") {
+        this.LesSugestions.sort((a, b) => a.nbvote - b.nbvote);
+      } else {
+        LesaSugestions.sort((a, b) => a.date_creat - b.date_creat);
+      }
+    },
+    fetchdatauser(lieu, connected) {
       axios.get("http://127.0.0.1:8000/SugestionList").then((response) => {
         this.Sugestions = response.data;
       });
       this.Sugestions.forEach((sugestion) => {
-            axios
-              .get("http://127.0.0.1:8000/nbVote" + sugestion.id)
-              .then((response) => {
-                this.Vote = response.data;
-              })
-      ;
-      
-       this.variation = this.Vote.length;
-            this.unesugestion.titre = sugestion.title;
-            this.unesugestion.description = sugestion.description;
-            this.unesugestion.nbvote = this.variation;
-            this.LesSugestion.push(this.unesugestion)
-            
-      })
-      if(type==='premier'){
-        this.LesSugestions.sort((a,b)=>a.nbvote - b.nbvote)
-
-      }else{
-        LesaSugestions.sort((a,b)=>a.date_creat - b.date_creat)
-
-      }
-      
-      
-    },
-     fetchdatauser(lieu,connected) {
-      axios.get("http://127.0.0.1:8000/SugestionList").then((response) => {
-        this.Sugestions = response.data;
-      });
-      if (sugestion.etat == "Valide") {
-        if (lieu == "premier") {
-          this.Sugestions.forEach((sugestion) => {
-            axios
-              .get("http://127.0.0.1:8000/nbVote" + sugestion.id)
-              .then((response) => {
-                this.Vote = response.data;
-              });
-            this.variation = this.Vote.length;
-            this.unesugestion.titre = sugestion.title;
-            this.unesugestion.description = sugestion.description;
-            this.unesugestion.nbvote = this.variation;
-
-            if (this.variation > this.vote) {
-              this.Valider.push(this.unesugestion);
-              this.vote = this.variation;
-            } else {
-              this.lasugestion = this.unesugestion;
-            }
+        axios
+          .get("http://127.0.0.1:8000/nbVote" + sugestion.id)
+          .then((response) => {
+            this.Vote = response.data;
           });
-          this.Valider.push(this.lasugestion);
-        } else {
-          this.Sugestions.forEach((sugestion) => {
-            if (sugestion.date < this.date_today) {
-              this.Valider.push(sugestion);
-              this.date_today = sugestion.date;
-              this.lasugestion = sugestion;
-            } else {
-              this.lasugestion = sugestion;
-            }
-          });
-          Valider.push(this.lasugestion);
+        if ((sugestion.etat = 2)) {
+          this.variation = this.Vote.length;
+          this.unesugestion.titre = sugestion.title;
+          this.unesugestion.description = sugestion.description;
+          this.unesugestion.nbvote = this.variation;
+          this.LesSugestionValider.push(this.unesugestion);
         }
+      });
+      if (type === "premier") {
+        this.LesSugestionsValider.sort((a, b) => a.nbvote - b.nbvote);
+      } else {
+        LesaSugestionsValider.sort((a, b) => a.date_creat - b.date_creat);
       }
     },
-     modifetat(type, id) {
+    modifetat(type, id) {
       if (type == "valide") {
-        axios.put("http://127.0.0.1:8000/updateeta", [etat = type,id_sugestion=id]);
+        axios.put("http://127.0.0.1:8000/updateeta", [
+          (etat = 2),
+          (id_sugestion = id),
+        ]);
 
         this.fetchdata();
       } else if ((type = "suprimer")) {
-        axios.put("http://127.0.0.1:8000/updateeta", [etat = type, id_sugestion=id]);
-        axios.delete("http://127.0.0.1:8000/deletesugestion" + id );
+        axios.delete("http://127.0.0.1:8000/deletesugestion" + id);
         this.fetchdata();
       } else {
-        axios.put("http://127.0.0.1:8000/updateeta", [etat = type,id_sugestion=id]);
+        axios.put("http://127.0.0.1:8000/updateeta", [
+          (etat = 3),
+          (id_sugestion = id),
+        ]);
       }
     },
-     Voter(id) {
-      axios.post("http://127.0.0.1:8000/Voter" , [today_date,id,this.connected,
+    Voter(id) {
+      axios.post("http://127.0.0.1:8000/Voter", [
+        today_date,
+        id,
+        this.connected,
         this.titre,
         this.description,
         this.today_date,
@@ -329,8 +320,20 @@ export default {
     DeleteVote() {
       axios.delete("http://127.0.0.1:8000/enlevervoter" + id);
     },
-    Recherche(){
-
+    Recherche() {
+      document.getElementById('recherche').addEventListener('keyup', function(e) {
+  var recherche = this.value.toLowerCase();
+  var documents = document.querySelectorAll('.document');
+ 
+  Array.prototype.forEach.call(documents, function(document) {
+    // On a bien trouvé les termes de recherche.
+    if (document.innerHTML.toLowerCase().indexOf(recherche) > -1) {
+      document.style.display = 'block';
+    } else {
+      document.style.display = 'none';
+    }
+  });
+});
     }
   },
 };

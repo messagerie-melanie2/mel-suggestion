@@ -36,10 +36,11 @@ class SugestionsController extends Controller
      */
     public function store(Request $request)
     {
+        $user=$_SESSION['email'];
         if ($request->type === 'Moderateur') {
-            $etat = 'valider';
+            $etat = '2';
         } else {
-            $etat = 'A valdier';
+            $etat = '1';
         }
 
         $sugestion = new Sugestion;
