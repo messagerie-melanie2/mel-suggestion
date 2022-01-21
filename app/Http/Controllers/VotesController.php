@@ -31,7 +31,7 @@ class VotesController extends Controller
         $vote->save();   
        
     }
-    public function nombrevote( $id)
+    public function AllvoteSugestion( $id)
     {
         $Sugestions = Vote::where('id_sugestion',$id)->get();
         return response()->json($Sugestions);

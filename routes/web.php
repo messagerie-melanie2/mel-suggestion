@@ -25,7 +25,7 @@ Route::get('/', function () {
 
 
 
-Route::get('/SugestionList', [SugestionsController::class, 'index']);
+Route::get('/AllSugestion', [SugestionsController::class, 'index']);
 Route::post('/AddSugestion', [SugestionController::class,'store']);
 Route::post('/UpdateSugestion', [SugestionsController::class,'update']);
 Route::post('/updateeta', [SugestionsController::class,'updateetat']);
@@ -34,6 +34,6 @@ Route::delete('/deletesugestion', [SugestionsController::class,'destroy']);
 Route::post('/Updatetat', [SugestionsController::class,'getnonvalider']);
 Route::get('/Voter', [VotesController::class,'getnonvalider']);
 Route::post('/Voter', [VotesController::class,'create']);
-Route::post('/enlevervoter', [VotesController::class,'destroy']);
-Route::get('/nbVote', [VotesController::class,'nbvote']);
+Route::post('/suprimervote', [VotesController::class,'destroy']);
+Route::get('/Votebyid', [VotesController::class,'AllvoteSugestion']);
 
