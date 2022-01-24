@@ -83,15 +83,16 @@
     </div>
     <h2>Liste des Sugestion à valider</h2>
     <b-card-group deck v-for="sugestion in ListSugestion" :key="sugestion.id">
-    
-      <b-card v-if="sugestion.etat='1'">
+      <b-card v-if="(sugestion.etat = '1')">
         <b-card-text> Titre {{ sugestion.Title }} </b-card-text>
         <b-card-text>
           {{ sugestion.Description }}
         </b-card-text>
         <b-card-text> nb votes:{{ sugestion.nbvote }} </b-card-text>
         <div v-if="(sugestion.etat = '1')">
-          <b-button variant="danger" @click="Updateetat(suprimer, sugesstion.id)"
+          <b-button
+            variant="danger"
+            @click="Updateetat(suprimer, sugesstion.id)"
             >Pas bon</b-button
           >
           <b-button
@@ -105,17 +106,13 @@
             @click="Updateetat(valide, sugesstion.id)"
             >Valide</b-button
           >
-        
-    
-        
         </div>
         <div v-else>
-          
-        <b-card-text> Titre {{ sugestion.Title }} </b-card-text>
-        <b-card-text>
-          {{ sugestion.Description }}
-        </b-card-text>
-        <b-card-text> nb votes:{{ sugestion.nbvote }} </b-card-text>
+          <b-card-text> Titre {{ sugestion.Title }} </b-card-text>
+          <b-card-text>
+            {{ sugestion.Description }}
+          </b-card-text>
+          <b-card-text> nb votes:{{ sugestion.nbvote }} </b-card-text>
           <b-btn @click="Voter(sugestion.id)">Voter</b-btn>
           <b-btn @click="DeleteVote(sugestion.id)">Enlever vote</b-btn>
         </div>
@@ -124,7 +121,7 @@
   </div>
 
   <div v-else>
-     <div>
+    <div>
       <b-row>
         <b-col cols="6" md="4"> </b-col>
         <b-col cols="12" md="8"><h1>Sugestion</h1> </b-col>
@@ -165,8 +162,8 @@
           v-model="recherche"
         />
       </b-col>
-      
-      <b-col cols="2" md="4" v-if="this.recherche!=''"
+
+      <b-col cols="2" md="4" v-if="this.recherche != ''"
         ><b-button v-b-modal.modal-prevent-closing class="pull-right"
           >Creer Sugestion</b-button
         >
@@ -208,20 +205,17 @@
     </div>
     <h2>Liste des Sugestion déjà faite</h2>
     <b-card-group deck v-for="sugestion in ListSugestion" :key="sugestion.id">
-
-          <b-card v-if="sugestion.etat=='3'">
+      <b-card v-if="sugestion.etat == '3'">
         <b-card-text> Titre {{ sugestion.Title }} </b-card-text>
         <b-card-text>
           {{ sugestion.Description }}
         </b-card-text>
         <b-card-text> nb votes:{{ sugestion.nbvote }} </b-card-text>
-          <b-btn @click="Voter(sugestion.id)">Voter</b-btn>
-          <b-btn @click="DeleteVote(sugestion.id)">Enlever vote</b-btn>
-        
+        <b-btn @click="Voter(sugestion.id)">Voter</b-btn>
+        <b-btn @click="DeleteVote(sugestion.id)">Enlever vote</b-btn>
       </b-card>
     </b-card-group>
   </div>
-
 </template>
 
 <script>
@@ -246,7 +240,7 @@ export default {
   methods: {
     fetchAllsugestion(connected) {
       axios
-        .get("http://127.0.0.1:8000/AllSugestion0")
+        .get("http://127.0.0.1:8000/AllSugestion")
         .response((this.ListSugestion = response.data));
       this.ListSugestion.forEach((sugestion) => {
         axios
@@ -276,15 +270,7 @@ export default {
       ]);
     },
     Voter(id) {
-      axios.post("http://127.0.0.1:8000/Voter", [
-        today_date,
-        id,
-        this.connected,
-        this.titre,
-        this.description,
-        this.today_date,
-        type,
-      ]);
+      axios.post("http://127.0.0.1:8000/Voter", [today_date, id]);
       this.fetchAllsugestion(premier);
     },
     DeleteVote(id) {
@@ -297,6 +283,7 @@ export default {
           (etat = 2),
           (id_sugestion = id),
         ]);
+        axios.post("http://127.0.0.1:8000/Voter", [today_date, id]);
 
         this.fetchAllsugestion(premier);
       } else if ((type = "suprimer")) {
@@ -317,22 +304,23 @@ export default {
         type,
       ]);
     },
-     Recherche() {
-      document.getElementById('recherche').addEventListener('keyup', function(e) {
-  var recherche = this.value.toLowerCase();
-  var documents = document.querySelectorAll('.document');
- 
-  Array.prototype.forEach.call(documents, function(document) {
-    // On a bien trouvé les termes de recherche.
-    if (document.innerHTML.toLowerCase().indexOf(recherche) > -1) {
-      document.style.display = 'block';
-    } else {
-      document.style.display = 'none';
-    }
-  });
-});
-    }
-  
+    Recherche() {
+      document
+        .getElementById("recherche")
+        .addEventListener("keyup", function (e) {
+          var recherche = this.value.toLowerCase();
+          var documents = document.querySelectorAll(".document");
+
+          Array.prototype.forEach.call(documents, function (document) {
+            // On a bien trouvé les termes de recherche.
+            if (document.innerHTML.toLowerCase().indexOf(recherche) > -1) {
+              document.style.display = "block";
+            } else {
+              document.style.display = "none";
+            }
+          });
+        });
+    },
   },
 };
 </script>

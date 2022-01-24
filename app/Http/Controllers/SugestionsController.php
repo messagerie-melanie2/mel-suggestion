@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Sugestion;
 use Ramsey\Uuid\Type\Integer;
+use App\Models\Vote;
+use PHPUnit\Framework\Constraint\Count;
 
 class SugestionsController extends Controller
 {
@@ -36,7 +38,7 @@ class SugestionsController extends Controller
      */
     public function store(Request $request)
     {
-        $user=$_SESSION['email'];
+        $user = $_SESSION['email'];
         if ($request->type === 'Moderateur') {
             $etat = '2';
         } else {
@@ -116,4 +118,74 @@ class SugestionsController extends Controller
         $Sugestions = Sugestion::where('etat', `A valider`)->get();
         return response()->json($Sugestions);
     }
+    public function recupsugestion($type)
+    {
+        if ($type == 'user') {
+            $donne = new lsugestion();
+            $user = $_SESSION['email'];
+            $nombre = 0;
+            $LesSugestions = array();
+
+            $Sugestions = Sugestion::all();
+            foreach ($Sugestions as $Sugestion) {
+                $vote = Vote::where('id', `$Sugestion->id`)->get();
+                foreach ($vote as $votes) {
+                    if ($votes->user === $user) {
+                        $nombre = $nombre + 1;
+                    } else {
+                        $nombre = $nombre;
+                    }
+                    $donne->nbvote = Count($vote);
+                }
+                if ($nombre == 0) {
+                    $donne->etvote = 'non';
+                } else {
+                    $donne->etvote = 'oui';
+                }
+            }
+            $donne->title = $Sugestion->title;
+            $donne->description = $Sugestion->description;
+            $donne->date_create = $Sugestion->date_create;
+            $donne->etat = $Sugestion->etat;
+            $LesSugestions($donne);
+        } else {
+            $donne = new lsugestion();
+            $user = $_SESSION['email'];
+            $nombre = 0;
+            $LesSugestions = array();
+
+            $Sugestions = Sugestion::all();
+            foreach ($Sugestions as $Sugestion) {
+                $vote = Vote::where('id', `$Sugestion->id`)->get();
+                foreach ($vote as $votes) {
+                    if ($votes->user === $user) {
+                        $nombre = $nombre + 1;
+                    } else {
+                        $nombre = $nombre;
+                    }
+                    $donne->nbvote = Count($vote);
+                }
+                if ($nombre == 0) {
+                    $donne->etvote = 'non';
+                } else {
+                    $donne->etvote = 'oui';
+                }
+            }
+            $donne->title = $Sugestion->title;
+            $donne->description = $Sugestion->description;
+            $donne->date_create = $Sugestion->date_create;
+            $donne->etat = $Sugestion->etat;
+            $LesSugestions($donne);
+        }
+        
+    }
+}
+class lsugestion
+{
+    public $title;
+    public $description;
+    public $date_creation;
+    public $etat;
+    public $etvote;
+    public $nbvote;
 }

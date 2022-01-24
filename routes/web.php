@@ -30,6 +30,7 @@ Route::post('/AddSugestion', [SugestionController::class,'store']);
 Route::post('/UpdateSugestion', [SugestionsController::class,'update']);
 Route::post('/updateeta', [SugestionsController::class,'updateetat']);
 Route::delete('/deletesugestion', [SugestionsController::class,'destroy']);
+Route::get('/RecupSugestion', [SugestionsController::class, 'recupsugestion']);
 
 Route::post('/Updatetat', [SugestionsController::class,'getnonvalider']);
 Route::get('/Voter', [VotesController::class,'getnonvalider']);

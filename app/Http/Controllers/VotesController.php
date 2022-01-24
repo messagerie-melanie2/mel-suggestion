@@ -26,7 +26,7 @@ class VotesController extends Controller
     {
         $vote = new Vote;
         $vote->email = $request->connected;
-        $vote->date_vote = $request->today_date;
+        $vote->voting_day = $request->today_date;
         $vote->id_sugestion=$request->id;
         $vote->save();   
        
