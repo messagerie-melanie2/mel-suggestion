@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\VoteController;
+
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\SugestionsController;
-use App\Http\Controllers\VotesController;
+use App\Http\Controllers\SugestionController;
+use App\Http\Controllers\VoteController;
 
 
 /*
@@ -25,15 +25,10 @@ Route::get('/', function () {
 
 
 
-Route::get('/RecoverySugestion', [SugestionsController::class, 'Recupsugestion']);
-Route::post('/AddSugestion', [SugestionController::class,'store']);
-Route::post('/UpdateSugestion', [SugestionsController::class,'update']);
-Route::post('/updateeta', [SugestionsController::class,'updateetat']);
-Route::delete('/deletesugestion', [SugestionsController::class,'destroy']);
-
-
-Route::post('/Updatetat', [SugestionsController::class,'getnonvalider']);
-Route::post('/Voter', [VotesController::class,'create']);
-Route::post('/suprimervote', [VotesController::class,'destroy']);
-Route::get('/Votebyid', [VotesController::class,'AllvoteSugestion']);
-
+Route::get('/RecoverySugestion', [SugestionController::class, 'Recupsugestion']);
+Route::post('/AddSugestion', [SugestionController::class, 'store']);
+Route::post('/UpdateSugestion', [SugestionController::class, 'update']);
+Route::post('/Updateeta', [SugestionController::class, 'updateetat']);
+Route::delete('/Deletesugestion', [SugestionController::class, 'destroy']);
+Route::post('/Voter', [VoteController::class, 'create']);
+Route::delete('/Suprimervote', [VoteController::class, 'destroy']);

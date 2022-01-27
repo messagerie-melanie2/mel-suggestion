@@ -55,6 +55,7 @@ class SugestionsController extends Controller
         $sugestion->start_date = $request->date;
         $sugestion->state = $state;
         $sugestion->instance = '';
+        $sugestion->date_update = $request->date;
         $sugestion->save();
     }
 
@@ -195,4 +196,5 @@ class lsugestion
     public $voted;
     public $number_votes;
     public $user = '';
+    public $date_update;
 }

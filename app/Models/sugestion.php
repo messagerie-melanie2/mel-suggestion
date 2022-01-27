@@ -16,6 +16,7 @@ class sugestion extends Model
         'Start-date',
         'state',
         'Url',
+        'date_update',
 
     ];
 }

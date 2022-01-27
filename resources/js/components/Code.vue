@@ -60,7 +60,7 @@
           >
             <b-form-input
               id="name-input"
-              v-model="unesugestion.Title"
+              v-model="title"
               required
             ></b-form-input>
           </b-form-group>
@@ -71,7 +71,7 @@
           >
             <b-form-textarea
               id="textarea"
-              v-model="unesugestion.description"
+              v-model="description"
               placeholder="Une description"
               rows="3"
               max-rows="6"
@@ -88,22 +88,22 @@
         <b-card-text>
           {{ sugestion.Description }}
         </b-card-text>
-        <b-card-text> nb votes:{{ sugestion.nbvote }} </b-card-text>
+        <b-card-text> nb votes:{{ sugestion.number_votes }} </b-card-text>
         <div v-if="(sugestion.etat = '1')">
           <b-button
             variant="danger"
-            @click="Updateetat(suprimer, sugesstion.id)"
+            @click="Updateetatsugestion(suprimer, sugesstion.id)"
             >Pas bon</b-button
           >
           <b-button
             variant="success"
             v-b-modal.modal-1
-            @click="Updateetat(amodifier, sugesstion.id)"
+            @click="Updateetatsugestion(amodifier, sugesstion.id)"
             >à Modifier</b-button
           >
           <b-button
             variant="outline-primary"
-            @click="Updateetat(valide, sugesstion.id)"
+            @click="Updateetatsugestion(valide, sugesstion.id)"
             >Valide</b-button
           >
         </div>
@@ -112,7 +112,7 @@
           <b-card-text>
             {{ sugestion.Description }}
           </b-card-text>
-          <b-card-text> nb votes:{{ sugestion.nbvote }} </b-card-text>
+          <b-card-text> nb votes:{{ sugestion.number_votes }} </b-card-text>
           <b-btn @click="Vote(sugestion.id)">Vote</b-btn>
           <b-btn @click="DeleteVote(sugestion.id)">Enlever vote</b-btn>
         </div>
@@ -182,7 +182,7 @@
           >
             <b-form-input
               id="name-input"
-              v-model="unesugestion.Title"
+              v-model="title"
               required
             ></b-form-input>
           </b-form-group>
@@ -193,7 +193,7 @@
           >
             <b-form-textarea
               id="textarea"
-              v-model="unesugestion.description"
+              v-model="description"
               placeholder="Une description"
               rows="3"
               max-rows="6"
@@ -210,7 +210,7 @@
         <b-card-text>
           {{ sugestion.Description }}
         </b-card-text>
-        <b-card-text> nb votes:{{ sugestion.nbvote }} </b-card-text>
+        <b-card-text> nb votes:{{ sugestion.number_votes }} </b-card-text>
         <b-btn @click="Vote(sugestion.id)">Vote</b-btn>
         <b-btn @click="DeleteVote(sugestion.id)">Enlever vote</b-btn>
       </b-card>
@@ -226,68 +226,67 @@ export default {
   data() {
     return {
       ListSugestion: {},
-      unesugestion: { title: "", description: "" },
-      Vote: {},
-      today_date: new Date(),
+      title: "", description: "" ,
+      date: new Date(),
       type: "Moderateur",
       search: "",
     };
   },
   created() {
-    this.fetchAllsugestion(premier);
+    this.fetchAllsugestion(init);
   },
   methods: {
-    fetchAllsugestion(connected) {
+    fetchAllsugestion(Place) {
       axios
-        .get("http://127.0.0.1:8000/RecupSugestion")
+        .get("http://127.0.0.1:8000/RecoverySugestion")
         .response((this.ListSugestion = response.data));
 
-      if (connected === "premier") {
-        this.ListSugestion.sort((a, b) => a.nbvote - b.nbvote);
+      if (Place === "init") {
+        this.ListSugestion.sort((a, b) => a.number_votes - b.number_votes);
       } else {
-        this.ListSugestion.sort((a, b) => a.date_creat - b.date_creat);
+        this.ListSugestion.sort((a, b) => a.start_date - b.start_date);
       }
     },
     CreateSugestion() {
       axios.post("http://127.0.0.1:8000/AddSugestion", [
-         this.unesugestion.title,
-        this.unesugestion.description,
-        this.today_date,
+         this.title,
+        this.description,
+        this.date,
         type,
       ]);
     },
     Vote(id) {
-      axios.post("http://127.0.0.1:8000/Vote", [today_date, id]);
-      this.fetchAllsugestion(premier);
+      axios.post("http://127.0.0.1:8000/Voter", [date, id]);
+      this.fetchAllsugestion(init);
     },
     DeleteVote(id) {
-      axios.delete("http://127.0.0.1:8000/suprimervote" + id);
-      this.fetchAllsugestion(premier);
+      axios.delete("http://127.0.0.1:8000/Suprimervote" + id);
+      this.fetchAllsugestion(init);
     },
-    Updateetat(type, id) {
+    Updateetatsugestion(type, id) {
       if (type == "valide") {
-        axios.put("http://127.0.0.1:8000/updateeta", [
+        axios.put("http://127.0.0.1:8000/Updateeta", [
           (etat = 2),
           (id_sugestion = id),
         ]);
-        axios.post("http://127.0.0.1:8000/Vote", [today_date, id]);
+        axios.post("http://127.0.0.1:8000/Vote", [date, id]);
 
-        this.fetchAllsugestion(premier);
+        this.fetchAllsugestion(init);
       } else if ((type = "suprimer")) {
-        axios.delete("http://127.0.0.1:8000/deletesugestion" + id);
-        this.fetchAllsugestion(premier);
+        axios.delete("http://127.0.0.1:8000/Deletesugestion" + id);
+        this.fetchAllsugestion(init);
       } else {
-        axios.put("http://127.0.0.1:8000/updateeta", [
+        axios.put("http://127.0.0.1:8000/Updateeta", [
           (etat = 3),
           (id_sugestion = id),
         ]);
-        this.fetchAllsugestion(premier);
+        this.fetchAllsugestion(init);
       }
     },
     UpdateSugestion() {
       axios.put("http://127.0.0.1:8000/UpdateSugestion", [
-        this.unesugestion.title,
-        this.unesugestion.description,
+        this.title,
+        this.description,
         type,
       ]);
     },
