@@ -12,6 +12,6 @@ class Vote extends Model
         'id',
         'email',
         'voting_day',
-        'id_sugestion',
+        'sugestion_id',
     ];
 }

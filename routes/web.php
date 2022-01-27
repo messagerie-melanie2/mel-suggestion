@@ -25,15 +25,14 @@ Route::get('/', function () {
 
 
 
-Route::get('/AllSugestion', [SugestionsController::class, 'index']);
+Route::get('/RecoverySugestion', [SugestionsController::class, 'Recupsugestion']);
 Route::post('/AddSugestion', [SugestionController::class,'store']);
 Route::post('/UpdateSugestion', [SugestionsController::class,'update']);
 Route::post('/updateeta', [SugestionsController::class,'updateetat']);
 Route::delete('/deletesugestion', [SugestionsController::class,'destroy']);
-Route::get('/RecupSugestion', [SugestionsController::class, 'recupsugestion']);
+
 
 Route::post('/Updatetat', [SugestionsController::class,'getnonvalider']);
-Route::get('/Voter', [VotesController::class,'getnonvalider']);
 Route::post('/Voter', [VotesController::class,'create']);
 Route::post('/suprimervote', [VotesController::class,'destroy']);
 Route::get('/Votebyid', [VotesController::class,'AllvoteSugestion']);

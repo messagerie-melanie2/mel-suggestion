@@ -15,9 +15,9 @@
       >
       <b-col cols="2" md="4">
         <input
-          type="search"
-          id="search"
-          placeholder="Recherche une sugestion"
+          type="Search"
+          id="Search"
+          placeholder="Search une sugestion"
           class="
             appearance-none
             border border-gray-400 border-b
@@ -37,8 +37,8 @@
             focus:outline-none
           "
           @keyup="ser"
-          v-on:change="Recherche"
-          v-model="recherche"
+          v-on:change="Search"
+          v-model="search"
         />
       </b-col>
       <b-col cols="2" md="4"
@@ -113,7 +113,7 @@
             {{ sugestion.Description }}
           </b-card-text>
           <b-card-text> nb votes:{{ sugestion.nbvote }} </b-card-text>
-          <b-btn @click="Voter(sugestion.id)">Voter</b-btn>
+          <b-btn @click="Vote(sugestion.id)">Vote</b-btn>
           <b-btn @click="DeleteVote(sugestion.id)">Enlever vote</b-btn>
         </div>
       </b-card>
@@ -136,9 +136,9 @@
       >
       <b-col cols="2" md="4">
         <input
-          type="search"
-          id="search"
-          placeholder="Recherche une sugestion"
+          type="Search"
+          id="Search"
+          placeholder="Search une sugestion"
           class="
             appearance-none
             border border-gray-400 border-b
@@ -158,12 +158,12 @@
             focus:outline-none
           "
           @keyup="ser"
-          v-on:change="Recherche"
-          v-model="recherche"
+          v-on:change="Search"
+          v-model="search"
         />
       </b-col>
 
-      <b-col cols="2" md="4" v-if="this.recherche != ''"
+      <b-col cols="2" md="4" v-if="this.search != ''"
         ><b-button v-b-modal.modal-prevent-closing class="pull-right"
           >Creer Sugestion</b-button
         >
@@ -211,7 +211,7 @@
           {{ sugestion.Description }}
         </b-card-text>
         <b-card-text> nb votes:{{ sugestion.nbvote }} </b-card-text>
-        <b-btn @click="Voter(sugestion.id)">Voter</b-btn>
+        <b-btn @click="Vote(sugestion.id)">Vote</b-btn>
         <b-btn @click="DeleteVote(sugestion.id)">Enlever vote</b-btn>
       </b-card>
     </b-card-group>
@@ -226,12 +226,11 @@ export default {
   data() {
     return {
       ListSugestion: {},
-      FinalSuggestion: {},
-      unesugestion: { title: "", description: "", nbvote: "" },
+      unesugestion: { title: "", description: "" },
       Vote: {},
       today_date: new Date(),
       type: "Moderateur",
-      recherche: "",
+      search: "",
     };
   },
   created() {
@@ -251,14 +250,14 @@ export default {
     },
     CreateSugestion() {
       axios.post("http://127.0.0.1:8000/AddSugestion", [
-         this.unesugestion.titre,
+         this.unesugestion.title,
         this.unesugestion.description,
         this.today_date,
         type,
       ]);
     },
-    Voter(id) {
-      axios.post("http://127.0.0.1:8000/Voter", [today_date, id]);
+    Vote(id) {
+      axios.post("http://127.0.0.1:8000/Vote", [today_date, id]);
       this.fetchAllsugestion(premier);
     },
     DeleteVote(id) {
@@ -271,7 +270,7 @@ export default {
           (etat = 2),
           (id_sugestion = id),
         ]);
-        axios.post("http://127.0.0.1:8000/Voter", [today_date, id]);
+        axios.post("http://127.0.0.1:8000/Vote", [today_date, id]);
 
         this.fetchAllsugestion(premier);
       } else if ((type = "suprimer")) {
@@ -287,21 +286,21 @@ export default {
     },
     UpdateSugestion() {
       axios.put("http://127.0.0.1:8000/UpdateSugestion", [
-        this.unesugestion.titre,
+        this.unesugestion.title,
         this.unesugestion.description,
         type,
       ]);
     },
-    Recherche() {
+    Search() {
       document
-        .getElementById("recherche")
+        .getElementById("search")
         .addEventListener("keyup", function (e) {
-          var recherche = this.value.toLowerCase();
+          var search = this.value.toLowerCase();
           var documents = document.querySelectorAll(".document");
 
           Array.prototype.forEach.call(documents, function (document) {
-            // On a bien trouvé les termes de recherche.
-            if (document.innerHTML.toLowerCase().indexOf(recherche) > -1) {
+      
+            if (document.innerHTML.toLowerCase().indexOf(search) > -1) {
               document.style.display = "block";
             } else {
               document.style.display = "none";

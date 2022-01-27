@@ -27,62 +27,18 @@ class VotesController extends Controller
         $vote = new Vote;
         $vote->email = $request->connected;
         $vote->voting_day = $request->today_date;
-        $vote->id_sugestion=$request->id;
+        $vote->sugestion_id=$request->id;
         $vote->save();   
        
     }
-    public function AllvoteSugestion( $id)
-    {
-        $Sugestions = Vote::where('id_sugestion',$id)->get();
-        return response()->json($Sugestions);
-        
-
-    }
+    
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
+   
     /**
      * Remove the specified resource from storage.
      *

@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Sugestion;
 use Ramsey\Uuid\Type\Integer;
 use App\Models\Vote;
+use Illuminate\Database\Eloquent\Collection;
 use PHPUnit\Framework\Constraint\Count;
+
 
 class SugestionsController extends Controller
 {
@@ -15,11 +17,11 @@ class SugestionsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    /* public function index()
     {
         $Sugestions = Sugestion::all();
         return response()->json($Sugestions);
-    }
+    }*/
 
     /**
      * Show the form for creating a new resource.
@@ -40,18 +42,19 @@ class SugestionsController extends Controller
     {
         $user = $_SESSION['email'];
         if ($request->type === 'Moderateur') {
-            $etat = '2';
+            $state = '2';
         } else {
-            $etat = '1';
+            $state = '1';
         }
 
         $sugestion = new Sugestion;
-        $sugestion->title = $request->titre;
+        $sugestion->id=$request->id;
+        $sugestion->Title = $request->title;
         $sugestion->Description = $request->description;
         $sugestion->User = "louka.ruiz@orange.fr";
-        $sugestion->date_creat = $request->date;
-        $sugestion->etat = $etat;
-        $sugestion->Url = 'https://lab-im.joona.fr/channel/evenements';
+        $sugestion->start_date = $request->date;
+        $sugestion->state = $state;
+        $sugestion->instance = '';
         $sugestion->save();
     }
 
@@ -90,7 +93,7 @@ class SugestionsController extends Controller
         $sugestion->update([
             "title" => $request->title,
             "Description" => $request->Description,
-            "etat" => $request->etat,
+            "state" => $request->state,
         ]);
     }
     public function updateetat(Request $request, $id)
@@ -98,7 +101,7 @@ class SugestionsController extends Controller
         $sugestion = Sugestion::where('auteur', `$id`)->get();
         $sugestion->update([
 
-            "etat" => $request->etat,
+            "state" => $request->state,
         ]);
     }
 
@@ -115,16 +118,18 @@ class SugestionsController extends Controller
     }
     public function getnonvalider()
     {
-        $Sugestions = Sugestion::where('etat', `A valider`)->get();
+        $Sugestions = Sugestion::where('state', `A valider`)->get();
         return response()->json($Sugestions);
     }
-    public function recupsugestion($type)
+    public function Recupsugestion($type)
     {
+        $AdaptSugestion = new lsugestion();
+        $LesSugestions = new Collection();
         if ($type == 'user') {
-            $donne = new lsugestion();
+
             $user = $_SESSION['email'];
             $nombre = 0;
-            $LesSugestions = array();
+
 
             $Sugestions = Sugestion::all();
             foreach ($Sugestions as $Sugestion) {
@@ -135,24 +140,24 @@ class SugestionsController extends Controller
                     } else {
                         $nombre = $nombre;
                     }
-                    $donne->nbvote = Count($vote);
+                    $AdaptSugestion->nbvote = Count($vote);
                 }
                 if ($nombre == 0) {
-                    $donne->etvote = 'non';
+                    $AdaptSugestion->etvote = 'non';
                 } else {
-                    $donne->etvote = 'oui';
+                    $AdaptSugestion->etvote = 'oui';
                 }
             }
-            $donne->title = $Sugestion->title;
-            $donne->description = $Sugestion->description;
-            $donne->date_create = $Sugestion->date_create;
-            $donne->etat = $Sugestion->etat;
-            $LesSugestions($donne);
+            $AdaptSugestion->title = $Sugestion->title;
+            $AdaptSugestion->description = $Sugestion->description;
+            $AdaptSugestion->start_date = $Sugestion->start_date;
+            $AdaptSugestion->state = $Sugestion->state;
+            $LesSugestions->push($AdaptSugestion);
         } else {
-            $donne = new lsugestion();
+            $AdaptSugestion = new lsugestion();
             $user = $_SESSION['email'];
             $nombre = 0;
-            $LesSugestions = array();
+
 
             $Sugestions = Sugestion::all();
             foreach ($Sugestions as $Sugestion) {
@@ -163,29 +168,31 @@ class SugestionsController extends Controller
                     } else {
                         $nombre = $nombre;
                     }
-                    $donne->nbvote = Count($vote);
+                    $AdaptSugestion->number_votes = Count($vote);
                 }
                 if ($nombre == 0) {
-                    $donne->etvote = 'non';
+                    $AdaptSugestion->voted = 'non';
                 } else {
-                    $donne->etvote = 'oui';
+                    $AdaptSugestion->voted = 'oui';
                 }
             }
-            $donne->title = $Sugestion->title;
-            $donne->description = $Sugestion->description;
-            $donne->date_create = $Sugestion->date_create;
-            $donne->etat = $Sugestion->etat;
-            $LesSugestions($donne);
+            $AdaptSugestion->title = $Sugestion->title;
+            $AdaptSugestion->description = $Sugestion->description;
+            $AdaptSugestion->start_date = $Sugestion->start_date;
+            $AdaptSugestion->state = $Sugestion->state;
+            $AdaptSugestion->$user = $Sugestion->$user;
+            $LesSugestions->push($AdaptSugestion);
         }
-        
+        return response()->json($LesSugestions);
     }
 }
 class lsugestion
 {
     public $title;
     public $description;
-    public $date_creation;
-    public $etat;
-    public $etvote;
-    public $nbvote;
+    public $start_date;
+    public $state;
+    public $voted;
+    public $number_votes;
+    public $user = '';
 }
