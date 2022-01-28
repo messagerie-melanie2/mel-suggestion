@@ -48,7 +48,7 @@ class SugestionsController extends Controller
         }
 
         $sugestion = new Sugestion;
-        $sugestion->id=$request->id;
+        $sugestion->id = $request->id;
         $sugestion->Title = $request->title;
         $sugestion->Description = $request->description;
         $sugestion->User = "louka.ruiz@orange.fr";
@@ -59,27 +59,7 @@ class SugestionsController extends Controller
         $sugestion->save();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -90,16 +70,17 @@ class SugestionsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $sugestion = Sugestion::where('auteur', `$id`)->get();
+        $sugestion = Sugestion::where('id', `$id`)->get();
         $sugestion->update([
             "title" => $request->title,
             "Description" => $request->Description,
             "state" => $request->state,
+            "date_update" => $request->date
         ]);
     }
     public function updateetat(Request $request, $id)
     {
-        $sugestion = Sugestion::where('auteur', `$id`)->get();
+        $sugestion = Sugestion::where('Id', `$id`)->get();
         $sugestion->update([
 
             "state" => $request->state,
