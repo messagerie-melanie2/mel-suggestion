@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Vote;
-
-class VotesController extends Controller
+use Illuminate\Routing\Controller as BaseController;
+class VotesController extends BaseController
 {
     /**
      * Display a listing of the resource.

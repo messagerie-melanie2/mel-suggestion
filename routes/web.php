@@ -27,8 +27,8 @@ Route::get('/', function () {
 
 Route::get('/RecoverySugestion', [SugestionController::class, 'Recupsugestion']);
 Route::post('/AddSugestion', [SugestionController::class, 'store']);
-Route::post('/UpdateSugestion', [SugestionController::class, 'update']);
-Route::post('/Updateeta', [SugestionController::class, 'updateetat']);
+Route::put('/UpdateSugestion', [SugestionController::class, 'UpdateSugestion']);
+Route::put('/Updateeta', [SugestionController::class, 'UpdateState']);
 Route::delete('/Deletesugestion', [SugestionController::class, 'destroy']);
 Route::post('/Voter', [VoteController::class, 'create']);
 Route::delete('/Suprimervote', [VoteController::class, 'destroy']);

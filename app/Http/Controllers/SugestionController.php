@@ -8,10 +8,16 @@ use Ramsey\Uuid\Type\Integer;
 use App\Models\Vote;
 use Illuminate\Database\Eloquent\Collection;
 use PHPUnit\Framework\Constraint\Count;
+use Illuminate\Routing\Controller as BaseController;
+use App\Models\User;
 
 
-class SugestionsController extends Controller
+
+class SugestionsController extends  BaseController
 {
+
+ 
+
     /**
      * Display a listing of the resource.
      *
@@ -40,6 +46,7 @@ class SugestionsController extends Controller
      */
     public function store(Request $request)
     {
+        
         $user = $_SESSION['email'];
         if ($request->type === 'Moderateur') {
             $state = '2';
@@ -68,7 +75,7 @@ class SugestionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function UpdateSugestion(Request $request, $id)
     {
         $sugestion = Sugestion::where('id', `$id`)->get();
         $sugestion->update([
@@ -78,7 +85,7 @@ class SugestionsController extends Controller
             "date_update" => $request->date
         ]);
     }
-    public function updateetat(Request $request, $id)
+    public function UpdateState(Request $request, $id)
     {
         $sugestion = Sugestion::where('Id', `$id`)->get();
         $sugestion->update([
@@ -105,6 +112,7 @@ class SugestionsController extends Controller
     }
     public function Recupsugestion($type)
     {
+
         $AdaptSugestion = new lsugestion();
         $LesSugestions = new Collection();
         if ($type == 'user') {
@@ -164,9 +172,26 @@ class SugestionsController extends Controller
             $AdaptSugestion->state = $Sugestion->state;
             $AdaptSugestion->$user = $Sugestion->$user;
             $LesSugestions->push($AdaptSugestion);
+          
         }
         return response()->json($LesSugestions);
     }
+    public function Defineuser()
+    {
+        $instance = config('Moderateur.instance');
+        $user = $_SESSION['email'];
+        $listemoderateur = [];
+        $listemoderateur = config('Moderateur.Moderateur');
+        if (in_array($user, $listemoderateur)) {
+            $type = "moderateur";
+        } else {
+            $type = " User";
+        }
+
+        $valeur = [$instance, $user, $type];
+    return response()->json($valeur);
+    }
+    
 }
 class lsugestion
 {

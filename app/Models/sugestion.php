@@ -15,8 +15,8 @@ class sugestion extends Model
         'User',
         'Start-date',
         'state',
-        'Url',
-        'date_update',
+        'Instance',
+        'update-date',
 
     ];
 }

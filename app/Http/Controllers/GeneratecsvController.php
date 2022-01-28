@@ -6,9 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\Sugestion;
 use Spatie\SimpleExcel\SimpleExcelWriter;
 use Spatie\SimpleExcel\SimpleExcelReader;
-use App\Models\Vote;
-class GeneratecsvController extends Controller
+use App\Models\User;
+
+
+use Illuminate\Routing\Controller as BaseController;
+class GeneratecsvController extends  BaseController
 {
+	
  // Importer les données ...
  // Exporter les données
  public function export (Request $request) {
