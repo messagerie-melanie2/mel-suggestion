@@ -28,6 +28,6 @@ class User extends Authenticatable
         } else {
             $type = 2;
         }
-        $this.$fonction = strtolower($type);
+        $this->attributes['fonction']= strtolower($type);
     }
 }

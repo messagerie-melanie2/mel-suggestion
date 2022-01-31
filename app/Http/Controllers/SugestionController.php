@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use App\Models\Sugestion;
 use Ramsey\Uuid\Type\Integer;
@@ -11,14 +10,16 @@ use PHPUnit\Framework\Constraint\Count;
 use Illuminate\Routing\Controller as BaseController;
 use App\Models\User;
 
-$constante=new User();
-$constante= User::setfonction();
+
 
 class SugestionsController extends  BaseController
 {
-
- 
-
+public function __construct()
+{
+    $this->user = new User();
+    $this->user-> __setfonction();
+  
+}
 
     /**
      * Display a listing of the resource.
@@ -48,15 +49,11 @@ class SugestionsController extends  BaseController
      */
     public function store(Request $request)
     {
-        
-        $type = $request->input('type');
         $title = $request->input('title');
         $description = $request->input('description');
         $dateto = $request->input('date');
 
-
-        $user = $_SESSION['email'];
-        if ($type == 'Moderateur') {
+        if ($this->user->fonction == 'Moderateur') {
             $state = '2';
         } else {
             $state = '1';
@@ -65,10 +62,10 @@ class SugestionsController extends  BaseController
         $sugestion = new Sugestion;
         $sugestion->Title = $title;
         $sugestion->Description = $description;
-        $sugestion->User = "louka.ruiz@orange.fr";
+        $sugestion->User = $this->user->user;
         $sugestion->start_date = $dateto;
         $sugestion->state = $state;
-        $sugestion->instance = '';
+        $sugestion->instance = $this->user->instance;
         $sugestion->date_update = $request->dateto;
         $sugestion->save();
     }
@@ -105,7 +102,7 @@ class SugestionsController extends  BaseController
         ]);
         if ($request->state == '2') {
             $vote = new Vote;
-            $vote->email = $request->connected;
+            $vote->email = $this->user->user;
             $vote->voting_day = $request->date;
             $vote->sugestion_id = $sugestion->id;
             $vote->save();
@@ -135,7 +132,7 @@ class SugestionsController extends  BaseController
         $LesSugestions = new Collection();
         if ($type == 'user') {
 
-            $user = $_SESSION['email'];
+            
             $nombre = 0;
 
 
@@ -143,7 +140,7 @@ class SugestionsController extends  BaseController
             foreach ($Sugestions as $Sugestion) {
                 $vote = Vote::where('id', `$Sugestion->id`)->get();
                 foreach ($vote as $votes) {
-                    if ($votes->user === $user) {
+                    if ($votes->user === $this->user->user) {
                         $nombre = $nombre + 1;
                     } else {
                         $nombre = $nombre;
@@ -188,25 +185,10 @@ class SugestionsController extends  BaseController
             $AdaptSugestion->description = $Sugestion->description;
             $AdaptSugestion->start_date = $Sugestion->start_date;
             $AdaptSugestion->state = $Sugestion->state;
-            $AdaptSugestion->$user = $Sugestion->$user;
+            $AdaptSugestion->$user = $this->user->user;
             $LesSugestions->push($AdaptSugestion);
         }
         return response()->json($LesSugestions);
-    }
-    public function Defineuser()
-    {
-        $instance = config('Moderateur.instance');
-        $user = $_SESSION['email'];
-        $listemoderateur = [];
-        $listemoderateur = config('Moderateur.Moderateur');
-        if (in_array($user, $listemoderateur)) {
-            $type = "moderateur";
-        } else {
-            $type = " User";
-        }
-
-        $valeur = [$instance, $user, $type];
-        return response()->json($valeur);
     }
 }
 class lsugestion
