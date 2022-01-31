@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\SugestionController;
 use App\Http\Controllers\VoteController;
-
+use App\Http\Controllers\GeneratecsvController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,3 +32,4 @@ Route::put('/Updateeta', [SugestionController::class, 'UpdateState']);
 Route::delete('/Deletesugestion', [SugestionController::class, 'destroy']);
 Route::post('/Voter', [VoteController::class, 'create']);
 Route::delete('/Suprimervote', [VoteController::class, 'destroy']);
+Route::delete('/GenerationCSV', [GeneratecsvController::class, 'export']);

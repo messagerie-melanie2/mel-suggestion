@@ -11,12 +11,14 @@ use PHPUnit\Framework\Constraint\Count;
 use Illuminate\Routing\Controller as BaseController;
 use App\Models\User;
 
-
+$constante=new User();
+$constante= User::setfonction();
 
 class SugestionsController extends  BaseController
 {
 
  
+
 
     /**
      * Display a listing of the resource.
@@ -47,22 +49,27 @@ class SugestionsController extends  BaseController
     public function store(Request $request)
     {
         
+        $type = $request->input('type');
+        $title = $request->input('title');
+        $description = $request->input('description');
+        $dateto = $request->input('date');
+
+
         $user = $_SESSION['email'];
-        if ($request->type === 'Moderateur') {
+        if ($type == 'Moderateur') {
             $state = '2';
         } else {
             $state = '1';
         }
 
         $sugestion = new Sugestion;
-        $sugestion->id = $request->id;
-        $sugestion->Title = $request->title;
-        $sugestion->Description = $request->description;
+        $sugestion->Title = $title;
+        $sugestion->Description = $description;
         $sugestion->User = "louka.ruiz@orange.fr";
-        $sugestion->start_date = $request->date;
+        $sugestion->start_date = $dateto;
         $sugestion->state = $state;
         $sugestion->instance = '';
-        $sugestion->date_update = $request->date;
+        $sugestion->date_update = $request->dateto;
         $sugestion->save();
     }
 
@@ -77,12 +84,16 @@ class SugestionsController extends  BaseController
      */
     public function UpdateSugestion(Request $request, $id)
     {
+        $title = $request->input('title');
+        $Description = $request->input('Description');
+        $dateto = $request->input('date');
+        $state = $request->input('state');
         $sugestion = Sugestion::where('id', `$id`)->get();
         $sugestion->update([
-            "title" => $request->title,
-            "Description" => $request->Description,
-            "state" => $request->state,
-            "date_update" => $request->date
+            "title" => $title,
+            "Description" => $Description,
+            "state" => $state,
+            "date_update" => $dateto
         ]);
     }
     public function UpdateState(Request $request, $id)
@@ -92,6 +103,13 @@ class SugestionsController extends  BaseController
 
             "state" => $request->state,
         ]);
+        if ($request->state == '2') {
+            $vote = new Vote;
+            $vote->email = $request->connected;
+            $vote->voting_day = $request->date;
+            $vote->sugestion_id = $sugestion->id;
+            $vote->save();
+        }
     }
 
     /**
@@ -172,7 +190,6 @@ class SugestionsController extends  BaseController
             $AdaptSugestion->state = $Sugestion->state;
             $AdaptSugestion->$user = $Sugestion->$user;
             $LesSugestions->push($AdaptSugestion);
-          
         }
         return response()->json($LesSugestions);
     }
@@ -189,9 +206,8 @@ class SugestionsController extends  BaseController
         }
 
         $valeur = [$instance, $user, $type];
-    return response()->json($valeur);
+        return response()->json($valeur);
     }
-    
 }
 class lsugestion
 {

@@ -18,7 +18,7 @@ class User extends Authenticatable
         $this->user = $_SESSION['email'];
         $this->fonction;
     }
-    public function setfonction()
+    public function __setfonction()
     {
         $user = $_SESSION['email'];
         $listemoderateur = [];
@@ -28,6 +28,6 @@ class User extends Authenticatable
         } else {
             $type = 2;
         }
-        $this->attributes['fonction'] = strtolower($type);
+        $this.$fonction = strtolower($type);
     }
 }

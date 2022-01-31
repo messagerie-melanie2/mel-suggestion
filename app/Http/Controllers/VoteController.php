@@ -24,9 +24,11 @@ class VotesController extends BaseController
      */
     public function create(Request $request)
     {
+        $personne = $request->input('connected');
+        $date = $request->input('today_date');
         $vote = new Vote;
-        $vote->email = $request->connected;
-        $vote->voting_day = $request->today_date;
+        $vote->email = $personne;
+        $vote->voting_day = $date;
         $vote->sugestion_id=$request->id;
         $vote->save();   
        
