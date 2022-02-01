@@ -33,3 +33,6 @@ Route::delete('/Deletesugestion', [SugestionController::class, 'destroy']);
 Route::post('/Voter', [VoteController::class, 'create']);
 Route::delete('/Suprimervote', [VoteController::class, 'destroy']);
 Route::delete('/GenerationCSV', [GeneratecsvController::class, 'export']);
+Route::get('/role',[SugestionController::class,'Yesno'
+
+]);

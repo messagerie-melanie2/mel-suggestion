@@ -138,6 +138,7 @@ public function __construct()
 
             $Sugestions = Sugestion::all();
             foreach ($Sugestions as $Sugestion) {
+                
                 $vote = Vote::where('id', `$Sugestion->id`)->get();
                 foreach ($vote as $votes) {
                     if ($votes->user === $this->user->user) {
@@ -156,7 +157,14 @@ public function __construct()
             $AdaptSugestion->title = $Sugestion->title;
             $AdaptSugestion->description = $Sugestion->description;
             $AdaptSugestion->start_date = $Sugestion->start_date;
+            
             $AdaptSugestion->state = $Sugestion->state;
+            if($Sugestion->User==$this->user->user){
+                $AdaptSugestion->appartient='oui';
+            }else{
+                $AdaptSugestion->appartient='non';
+            }
+
             $LesSugestions->push($AdaptSugestion);
         } else {
             $AdaptSugestion = new lsugestion();
@@ -190,6 +198,19 @@ public function __construct()
         }
         return response()->json($LesSugestions);
     }
+    public function Yesorno(){
+        
+        $user = $_SESSION['email'];
+        $listemoderateur = [];
+        $listemoderateur = config('Moderateur.Moderateur');
+        if (in_array($user, $listemoderateur)) {
+            $type = 1;
+        } else {
+            $type = 2;
+        }
+        return response()->json($type);
+
+    }
 }
 class lsugestion
 {
@@ -199,6 +220,6 @@ class lsugestion
     public $state;
     public $voted;
     public $number_votes;
-    public $user = '';
     public $date_update;
+    public $appartient;
 }
