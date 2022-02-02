@@ -106,6 +106,7 @@
             @click="Updateetatsugestion(valide, sugesstion.id)"
             >Valide</b-button
           >
+          <b-button @click="Updateetatsugestion(vérouiller, sugesstion.id)">Vérouiller</b-button> 
         </div>
         <div v-else>
           <b-card-text> Titre {{ sugestion.Title }} </b-card-text>
@@ -303,7 +304,14 @@ export default defineComponent({
     } else if ((type = "suprimer")) {
       axios.delete("http://127.0.0.1:8000/Deletesugestion" + id);
       this.fetchAllsugestion(init);
-    } else {
+    } else if ((type = "suprimer")) {
+      axios.put("http://127.0.0.1:8000/Updateeta", [
+        (etat = 3),
+        (id_sugestion = id),
+      ]);
+      this.fetchAllsugestion(init);
+    
+    } else  {
       axios.put("http://127.0.0.1:8000/Updateeta", [
         (etat = 3),
         (id_sugestion = id),
