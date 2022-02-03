@@ -5,8 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Vote;
 use Illuminate\Routing\Controller as BaseController;
+use App\Models\User;
+
 class VotesController extends BaseController
 {
+    public function __construct()
+    {
+        $this->user = new User();
+        $this->user->__setfonction();
+    }
     /**
      * Display a listing of the resource.
      *
@@ -21,35 +28,36 @@ class VotesController extends BaseController
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
+    
      */
     public function create(Request $request)
     {
-        $personne = $request->input('connected');
-        $date = $request->input('today_date');
+
+        $date = $request->input('today_date');        
+        $id_sugestion = $request->input('id');
         $vote = new Vote;
-        $vote->email = $personne;
+        $vote->user_email = $this->user->user;
         $vote->voting_day = $date;
-        $vote->sugestion_id=$request->id;
-        $vote->save();   
-       
+        $vote->sugestion_id = $request->id_sugestion;
+        $vote->save();
     }
-    
+
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-   
+
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroybysugestion($id)
     {
-        $vote=Vote::where('id', `$id`)->get();
+        $vote = Vote::where('sugestion_id', `$id`)->get();
         $vote->delete();
     }
 }

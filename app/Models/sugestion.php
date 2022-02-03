@@ -10,12 +10,12 @@ class sugestion extends Model
     use HasFactory;
     protected $fillable = [
         'id',
-        'Title',
-        'Description',
-        'User',
-        'Start-date',
+        'title',
+        'description',
+        'user_email',
+        'created_date',
         'state',
-        'Instance',
+        'instance',
         'update-date',
 
     ];

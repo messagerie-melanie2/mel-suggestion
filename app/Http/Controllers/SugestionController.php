@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\Sugestion;
 use Ramsey\Uuid\Type\Integer;
@@ -14,12 +15,11 @@ use App\Models\User;
 
 class SugestionsController extends  BaseController
 {
-public function __construct()
-{
-    $this->user = new User();
-    $this->user-> __setfonction();
-  
-}
+    public function __construct()
+    {
+        $this->user = new User();
+        $this->user->__setfonction();
+    }
 
     /**
      * Display a listing of the resource.
@@ -59,14 +59,15 @@ public function __construct()
             $state = '1';
         }
 
+
         $sugestion = new Sugestion;
-        $sugestion->Title = $title;
-        $sugestion->Description = $description;
-        $sugestion->User = $this->user->user;
-        $sugestion->start_date = $dateto;
+        $sugestion->title = $title;
+        $sugestion->description = $description;
+        $sugestion->user_email = $this->user->user;
+        $sugestion->created_date = $dateto;
         $sugestion->state = $state;
         $sugestion->instance = $this->user->instance;
-        $sugestion->date_update = $request->dateto;
+        $sugestion->update_date = $request->dateto;
         $sugestion->save();
     }
 
@@ -117,13 +118,8 @@ public function __construct()
      */
     public function destroy($id)
     {
-        $sugestion = Sugestion::where('auteur', `$id`)->get();
+        $sugestion = Sugestion::where('id', `$id`)->get();
         $sugestion->delete();
-    }
-    public function getnonvalider()
-    {
-        $Sugestions = Sugestion::where('state', `A valider`)->get();
-        return response()->json($Sugestions);
     }
     public function Recupsugestion($type)
     {
@@ -132,13 +128,13 @@ public function __construct()
         $LesSugestions = new Collection();
         if ($type == 'user') {
 
-            
+
             $nombre = 0;
 
 
             $Sugestions = Sugestion::all();
             foreach ($Sugestions as $Sugestion) {
-                
+
                 $vote = Vote::where('id', `$Sugestion->id`)->get();
                 foreach ($vote as $votes) {
                     if ($votes->user === $this->user->user) {
@@ -157,12 +153,12 @@ public function __construct()
             $AdaptSugestion->title = $Sugestion->title;
             $AdaptSugestion->description = $Sugestion->description;
             $AdaptSugestion->start_date = $Sugestion->start_date;
-            
+
             $AdaptSugestion->state = $Sugestion->state;
-            if($Sugestion->User==$this->user->user){
-                $AdaptSugestion->appartient='oui';
-            }else{
-                $AdaptSugestion->appartient='non';
+            if ($Sugestion->User == $this->user->user) {
+                $AdaptSugestion->appartient = 'oui';
+            } else {
+                $AdaptSugestion->appartient = 'non';
             }
 
             $LesSugestions->push($AdaptSugestion);
@@ -176,7 +172,7 @@ public function __construct()
             foreach ($Sugestions as $Sugestion) {
                 $vote = Vote::where('id', `$Sugestion->id`)->get();
                 foreach ($vote as $votes) {
-                    if ($votes->user === $user) {
+                    if ($votes->user_email === $user) {
                         $nombre = $nombre + 1;
                     } else {
                         $nombre = $nombre;
@@ -191,15 +187,17 @@ public function __construct()
             }
             $AdaptSugestion->title = $Sugestion->title;
             $AdaptSugestion->description = $Sugestion->description;
-            $AdaptSugestion->start_date = $Sugestion->start_date;
+            $AdaptSugestion->start_date = $Sugestion->created_date;
             $AdaptSugestion->state = $Sugestion->state;
             $AdaptSugestion->$user = $this->user->user;
+            $AdaptSugestion->$user = $Sugestion->instance;
             $LesSugestions->push($AdaptSugestion);
         }
         return response()->json($LesSugestions);
     }
-    public function Yesorno(){
-        
+    public function Yesorno()
+    {
+
         $user = $_SESSION['email'];
         $listemoderateur = [];
         $listemoderateur = config('Moderateur.Moderateur');
@@ -209,7 +207,6 @@ public function __construct()
             $type = 2;
         }
         return response()->json($type);
-
     }
 }
 class lsugestion
@@ -222,4 +219,5 @@ class lsugestion
     public $number_votes;
     public $date_update;
     public $appartient;
+    public $instance;
 }
