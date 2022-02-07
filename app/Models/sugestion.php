@@ -16,7 +16,7 @@ class sugestion extends Model
         'created_date',
         'state',
         'instance',
-        'update-date',
+        'update_date',
 
     ];
 }

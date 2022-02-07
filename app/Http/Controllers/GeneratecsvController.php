@@ -12,10 +12,16 @@ use App\Models\User;
 use Illuminate\Routing\Controller as BaseController;
 class GeneratecsvController extends  BaseController
 {
+	public function __construct()
+    {
+        $this->user = new User();
+        $this->user->__setfonction();
+    }
 	
  // Importer les données ...
  // Exporter les données
  public function export (Request $request) {
+
  	// 1. Validation des informations du formulaire
  	$this->validate($request, [ 
  		'name' => 'bail|required|string',
@@ -24,7 +30,7 @@ class GeneratecsvController extends  BaseController
  	// 2. Le nom du fichier avec l'extension : .xlsx ou .csv
  	$file_name = $request->name.".".$request->extension;
  	// 3. On récupère données de la table "clients"
-     $Sugestions = Sugestion::all();
+     $Sugestions = Sugestion::where('instance', $this->user->instance)->get();
      
      
  	// 4. $writer : Objet Spatie\SimpleExcel\SimpleExcelWriter

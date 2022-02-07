@@ -80,18 +80,21 @@ class SugestionsController extends  BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function UpdateSugestion(Request $request, $id)
+    public function UpdateSugestion(Request $request)
     {
+        $idsuggestion = $request->input('id');
         $title = $request->input('title');
         $Description = $request->input('Description');
         $dateto = $request->input('date');
         $state = $request->input('state');
-        $sugestion = Sugestion::where('id', `$id`)->get();
+        $sugestion = Sugestion::where('id', `$idsuggestion`)->get();
         $sugestion->update([
             "title" => $title,
-            "Description" => $Description,
+            "description" => $Description,
             "state" => $state,
-            "date_update" => $dateto
+            "date_update" => $dateto,
+            'created_date'=>$dateto,
+
         ]);
     }
     public function UpdateState(Request $request, $id)
@@ -126,13 +129,14 @@ class SugestionsController extends  BaseController
 
         $AdaptSugestion = new lsugestion();
         $LesSugestions = new Collection();
-        if ($type == 'user') {
+        if ($this->user->fonction == '1') {
 
 
             $nombre = 0;
 
 
-            $Sugestions = Sugestion::all();
+            $Sugestions = Sugestion::where('id', $this->user->instance)->get();
+            ;
             foreach ($Sugestions as $Sugestion) {
 
                 $vote = Vote::where('id', `$Sugestion->id`)->get();
@@ -168,7 +172,7 @@ class SugestionsController extends  BaseController
             $nombre = 0;
 
 
-            $Sugestions = Sugestion::all();
+            $Sugestions = Sugestion::where('id', $this->user->instance)->get();
             foreach ($Sugestions as $Sugestion) {
                 $vote = Vote::where('id', `$Sugestion->id`)->get();
                 foreach ($vote as $votes) {
@@ -190,7 +194,7 @@ class SugestionsController extends  BaseController
             $AdaptSugestion->start_date = $Sugestion->created_date;
             $AdaptSugestion->state = $Sugestion->state;
             $AdaptSugestion->$user = $this->user->user;
-            $AdaptSugestion->$user = $Sugestion->instance;
+            $AdaptSugestion->$user = $this->user->instance;
             $LesSugestions->push($AdaptSugestion);
         }
         return response()->json($LesSugestions);
@@ -207,6 +211,10 @@ class SugestionsController extends  BaseController
             $type = 2;
         }
         return response()->json($type);
+    }
+    public function Detailsugestion($id){
+        $sugestion = Sugestion::where('id', `$id`)->get();
+        return response()->json($sugestion);
     }
 }
 class lsugestion
