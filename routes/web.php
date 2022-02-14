@@ -31,7 +31,7 @@ Route::post('/AddSuggestion', [SugestionController::class, 'store']);
 Route::put('/UpdateSuggestion', [SugestionController::class, 'UpdateSugestion']);
 Route::put('/UpdateState', [SugestionController::class, 'UpdateState']);
 Route::delete('/Deletesugestion', [SugestionController::class, 'destroy']);
-Route::post('/AddVoter', [VoteController::class, 'create']);
+Route::post('/AddVote', [VoteController::class, 'create']);
 Route::delete('/DeleteVote', [VoteController::class, 'destroy']);
 Route::post('/GenerationCSV', [GeneratecsvController::class, 'export']);
 Route::get('/Role',[SugestionController::class,'Moderateurorparticipent']);

@@ -316,7 +316,7 @@ export default defineComponent({
     },
   },
   CreateSugestion() {
-    axios.post("/AddSugestion", {
+    axios.post("/AddSuggestion", {
       title: this.newSugestion.title,
       description: this.newSugestion.description,
       date: this.newSugestion.date,
@@ -324,7 +324,7 @@ export default defineComponent({
   },
   fetchAllsugestion(Place) {
     axios
-      .get("/RecoverySugestion")
+      .get("/RecoverySuggestion")
       .response(response=>(this.ListSugestion = response.data));
 
     if (Place === "init") {
@@ -335,16 +335,16 @@ export default defineComponent({
   },
   Updateetatsugestion(type, id) {
     if (type == "valide") {
-      axios.put("/Updateeta", {
+      axios.put("/UpdateState", {
         etat : 2,
         id_sugestion : id,
       });
-      axios.post("/Vote", {date, id});
+      axios.post("/AddVote", {date, id});
 
       this.fetchAllsugestion(init);
     } else if ((type = "suprimer")) {
       axios.delete("/Deletesugestion" + id);
-      axios.delete("/Suprimervote"+{id})
+      axios.delete("/DeleteVote"+{id})
       this.fetchAllsugestion(init);
     } else if ((type = "modifier")) {
       axios.put("/Updateeta", {
@@ -353,7 +353,7 @@ export default defineComponent({
     });
       this.fetchAllsugestion(init);
     } else {
-      axios.put("/Updateeta", {
+      axios.put("/UpdateState", {
         etat : 4,
         id_sugestion : id,
       });
@@ -361,7 +361,7 @@ export default defineComponent({
     }
   },
   UpdateSugestion() {
-    axios.put("/UpdateSugestion", [
+    axios.put("/UpdateSuggestion", [
       title=this.SugestionDetail.title,
       description=this.SugestionDetail.description,
       date=this.date,
