@@ -7,9 +7,13 @@ Le but de ce projet est de réaliser une application de gestion de Sugestion
 - Clonez le repository git
    ```sh
    git clone https://github.com/messagerie-melanie2/mel-suggestion.git
+   composer install
+   npm install
+
    ```
 
-
+Creer un fichier .env avec vos données de connexion à la base de données
+éxécuter le script sql dans une base de données postgresql
 ## Projet
 
 Le projet est répartir en trois parties:
