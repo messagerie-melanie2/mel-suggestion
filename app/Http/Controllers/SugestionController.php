@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 use PHPUnit\Framework\Constraint\Count;
 use Illuminate\Routing\Controller as BaseController;
 use App\Models\User;
+use App\Models\lsugestion;
 
 
 
@@ -18,7 +19,7 @@ class SugestionsController extends  BaseController
     public function __construct()
     {
         $this->user = new User();
-        $this->user->__setfonction();
+        $this->user->isModerator();
     }
 
     /**
@@ -199,7 +200,7 @@ class SugestionsController extends  BaseController
         }
         return response()->json($LesSugestions);
     }
-    public function Yesorno()
+    public function Moderateurorparticipent()
     {
 
         $user = $_SESSION['email'];
@@ -216,16 +217,4 @@ class SugestionsController extends  BaseController
         $sugestion = Sugestion::where('id', `$id`)->get();
         return response()->json($sugestion);
     }
-}
-class lsugestion
-{
-    public $title;
-    public $description;
-    public $start_date;
-    public $state;
-    public $voted;
-    public $number_votes;
-    public $date_update;
-    public $appartient;
-    public $instance;
 }

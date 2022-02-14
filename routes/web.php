@@ -25,13 +25,13 @@ Route::get('/', function () {
 
 
 
-Route::get('/RecoverySugestion', [SugestionController::class, 'Recupsugestion']);
+Route::get('/RecoverySuggestion', [SugestionController::class, 'Recupsugestion']);
 Route::get('/Detail',[SugestionController::class,'Detailsugestion']);
-Route::post('/AddSugestion', [SugestionController::class, 'store']);
-Route::put('/UpdateSugestion', [SugestionController::class, 'UpdateSugestion']);
-Route::put('/Updateeta', [SugestionController::class, 'UpdateState']);
+Route::post('/AddSuggestion', [SugestionController::class, 'store']);
+Route::put('/UpdateSuggestion', [SugestionController::class, 'UpdateSugestion']);
+Route::put('/UpdateState', [SugestionController::class, 'UpdateState']);
 Route::delete('/Deletesugestion', [SugestionController::class, 'destroy']);
-Route::post('/Voter', [VoteController::class, 'create']);
-Route::delete('/Suprimervote', [VoteController::class, 'destroy']);
-Route::delete('/GenerationCSV', [GeneratecsvController::class, 'export']);
-Route::get('/role',[SugestionController::class,'Yesno']);
+Route::post('/AddVoter', [VoteController::class, 'create']);
+Route::delete('/DeleteVote', [VoteController::class, 'destroy']);
+Route::post('/GenerationCSV', [GeneratecsvController::class, 'export']);
+Route::get('/Role',[SugestionController::class,'Moderateurorparticipent']);

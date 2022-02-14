@@ -1,5 +1,5 @@
 <template>
-<div v-if="role === 'moderateur'">
+<div v-if="Role === 'moderateur'">
   <div>
       <b-row>
         <b-col cols="6" md="4"> </b-col>
@@ -294,7 +294,7 @@ Vue.use(BootsrapVue);
 export default defineComponent({
   data() {
     return {
-      role: "",
+      Role: "",
       newSugestion: {
         date: new Date(),
         title: "",
@@ -311,12 +311,12 @@ export default defineComponent({
   methods: {
     Fetchrole() {
       axios
-        .get("http://127.0.0.1:8000/role")
-        .response((response) => (this.role = response.data));
+        .get("/Role")
+        .response((response) => (this.Role = response.data));
     },
   },
   CreateSugestion() {
-    axios.post("http://127.0.0.1:8000/AddSugestion", {
+    axios.post("/AddSugestion", {
       title: this.newSugestion.title,
       description: this.newSugestion.description,
       date: this.newSugestion.date,
@@ -324,7 +324,7 @@ export default defineComponent({
   },
   fetchAllsugestion(Place) {
     axios
-      .get("http://127.0.0.1:8000/RecoverySugestion")
+      .get("/RecoverySugestion")
       .response(response=>(this.ListSugestion = response.data));
 
     if (Place === "init") {
@@ -335,25 +335,25 @@ export default defineComponent({
   },
   Updateetatsugestion(type, id) {
     if (type == "valide") {
-      axios.put("http://127.0.0.1:8000/Updateeta", {
+      axios.put("/Updateeta", {
         etat : 2,
         id_sugestion : id,
       });
-      axios.post("http://127.0.0.1:8000/Vote", {date, id});
+      axios.post("/Vote", {date, id});
 
       this.fetchAllsugestion(init);
     } else if ((type = "suprimer")) {
-      axios.delete("http://127.0.0.1:8000/Deletesugestion" + id);
-      axios.delete("http://127.0.0.1:8000/Suprimervote"+{id})
+      axios.delete("/Deletesugestion" + id);
+      axios.delete("/Suprimervote"+{id})
       this.fetchAllsugestion(init);
     } else if ((type = "modifier")) {
-      axios.put("http://127.0.0.1:8000/Updateeta", {
+      axios.put("/Updateeta", {
         etat :3,
         id_sugestion : id,
     });
       this.fetchAllsugestion(init);
     } else {
-      axios.put("http://127.0.0.1:8000/Updateeta", {
+      axios.put("/Updateeta", {
         etat : 4,
         id_sugestion : id,
       });
@@ -361,7 +361,7 @@ export default defineComponent({
     }
   },
   UpdateSugestion() {
-    axios.put("http://127.0.0.1:8000/UpdateSugestion", [
+    axios.put("/UpdateSugestion", [
       title=this.SugestionDetail.title,
       description=this.SugestionDetail.description,
       date=this.date,

@@ -18,7 +18,7 @@ class User extends Authenticatable
         $this->user = $_SESSION['email'];
         $this->fonction;
     }
-    public function __setfonction()
+    public function isModerator()
     {
         $user = $_SESSION['email'];
         $listemoderateur = [];
