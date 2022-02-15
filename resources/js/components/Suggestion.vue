@@ -3,13 +3,13 @@
   <div>
       <b-row>
         <b-col cols="6" md="4"> </b-col>
-        <b-col cols="12" md="8"><h1>Sugestion</h1> </b-col>
+        <b-col cols="12" md="8"><h1>Suggestion</h1> </b-col>
       </b-row>
       <b-col cols="6" md="4">
-        <b-button variant="primary" @click="fetchAllsugestion(today)"
+        <b-button variant="primary" @click="fetchAllsuggestion(today)"
           >New</b-button
         >
-        <b-button variant="primary" @click="fetchAllsugestion(top)"
+        <b-button variant="primary" @click="fetchAllsuggestion(top)"
           >Top</b-button
         ></b-col
       >
@@ -18,7 +18,7 @@
         <input
           type="Search"
           id="Search"
-          placeholder="Search une sugestion"
+          placeholder="Search une suggestion"
           class="
             appearance-none
             border border-gray-400 border-b
@@ -44,7 +44,7 @@
       </b-col>
       <b-col cols="2" md="4"
         ><b-button v-b-modal.modal-prevent-closing class="pull-right"
-          >Creer Sugestion</b-button
+          >Creer Suggestion</b-button
         >
       </b-col>
      
@@ -52,7 +52,7 @@
       <b-modal
         id="modal-prevent-closing"
         ref="modal"
-        title="Faire une Sugestion"
+        title="Faire une Suggestion"
       >
         <form ref="form" @submit.stop.prevent="handleSubmit">
           <b-form-group
@@ -79,60 +79,60 @@
               max-rows="6"
             ></b-form-textarea>
           </b-form-group>
-          <b-btn @click="AddSugestion">Ajouté</b-btn>
+          <b-btn @click="AddSuggestion">Ajouté</b-btn>
         </form>
       </b-modal>
     </div>
-    <h2>Liste des Sugestion à valider</h2>
-    <b-card-group deck v-for="sugestion in ListSugestion" :key="sugestion.id">
-      <b-card v-if="(sugestion.etat = '1')">
-        <b-card-text> Titre {{ sugestion.Title }} </b-card-text>
+    <h2>Liste des Suggestion à valider</h2>
+    <b-card-group deck v-for="suggestion in ListSuggestion" :key="suggestion.id">
+      <b-card v-if="(suggestion.etat = '1')">
+        <b-card-text> Titre {{ suggestion.Title }} </b-card-text>
         <b-card-text>
-          {{ sugestion.Description }}
+          {{ suggestion.Description }}
         </b-card-text>
-        <b-card-text> nb votes:{{ sugestion.number_votes }} </b-card-text>
-        <div v-if="(sugestion.etat = '1')">
+        <b-card-text> nb votes:{{ suggestion.number_votes }} </b-card-text>
+        <div v-if="(suggestion.etat = '1')">
           <b-button
             variant="danger"
-            @click="Updateetatsugestion(suprimer, sugesstion.id)"
+            @click="Updateetatsuggestion(suprimer, sugesstion.id)"
             >Pas bon</b-button
           >
           <b-button
             variant="success"
             v-b-modal.modal-1
-            @click="Updateetatsugestion(amodifier, sugesstion.id)"
+            @click="Updateetatsuggestion(amodifier, sugesstion.id)"
             >à Modifier</b-button
           >
           <b-button
             variant="outline-primary"
-            @click="Updateetatsugestion(valide, sugesstion.id)"
+            @click="Updateetatsuggestion(valide, sugesstion.id)"
             >Valide</b-button
           >
-          <b-button @click="Updateetatsugestion(vérouiller, sugesstion.id)">Vérouiller</b-button> 
+          <b-button @click="Updateetatsuggestion(vérouiller, sugesstion.id)">Vérouiller</b-button> 
         </div>
         <div v-else>
-          <b-card-text> {{ sugestion.Title }} </b-card-text>
+          <b-card-text> {{ suggestion.Title }} </b-card-text>
           <b-card-text>
-            {{ sugestion.Description }}
+            {{ suggestion.Description }}
           </b-card-text>
-          <b-card-text> {{ sugestion.number_votes }} </b-card-text>
+          <b-card-text> {{ suggestion.number_votes }} </b-card-text>
          
         </div>
       </b-card>
     </b-card-group>
-     <b-btn @click="Vote(sugestion.id)">Vote</b-btn>
-          <b-btn @click="DeleteVote(sugestion.id)">Enlever vote</b-btn>
+     <b-btn @click="Vote(suggestion.id)">Vote</b-btn>
+          <b-btn @click="DeleteVote(suggestion.id)">Enlever vote</b-btn>
   </div>
 <div v-else>
      <b-row>
         <b-col cols="6" md="4"> </b-col>
-        <b-col cols="12" md="8"><h1>Sugestion</h1> </b-col>
+        <b-col cols="12" md="8"><h1>Suggestion</h1> </b-col>
       </b-row>
       <b-col cols="6" md="4">
-        <b-button variant="primary" @click="fetchAllsugestion(init)"
+        <b-button variant="primary" @click="fetchAllsuggestion(init)"
           >New</b-button
         >
-        <b-button variant="primary" @click="fetchAllsugestion(top)"
+        <b-button variant="primary" @click="fetchAllsuggestion(top)"
           >Top</b-button
         ></b-col
       >
@@ -140,7 +140,7 @@
         <input
           type="Search"
           id="Search"
-          placeholder="Search une sugestion"
+          placeholder="Search une suggestion"
           class="
             appearance-none
             border border-gray-400 border-b
@@ -165,14 +165,14 @@
         />
          <b-col cols="2" md="4"
         ><b-button v-b-modal.modal-prevent-closing class="pull-right"
-          >Creer Sugestion</b-button
+          >Creer Suggestion</b-button
         >
       </b-col>
 
       <b-modal
         id="modal-prevent-closing"
         ref="modal"
-        title="Faire une Sugestion"
+        title="Faire une Suggestion"
       >
         <form ref="form" @submit.stop.prevent="handleSubmit">
           <b-form-group
@@ -182,7 +182,7 @@
           >
             <b-form-input
               id="name-input"
-              v-model="newSugestion.title"
+              v-model="newSuggestion.title"
               required
             ></b-form-input>
           </b-form-group>
@@ -199,13 +199,13 @@
               max-rows="6"
             ></b-form-textarea>
           </b-form-group>
-          <b-btn @click="UpdateSugestion">Ajouté</b-btn>
+          <b-btn @click="UpdateSuggestion">Ajouté</b-btn>
         </form>
       </b-modal>
       <b-modal
         id="modal_modifier"
         ref="modal"
-        title="Modifier la Sugestion"
+        title="Modifier la Suggestion"
       >
         <form ref="form" @submit.stop.prevent="handleSubmit">
           <b-form-group
@@ -215,7 +215,7 @@
           >
             <b-form-input
               id="name-input"
-              v-model="SugestionDetail.title"
+              v-model="SuggestionDetail.title"
               required
             ></b-form-input>
           </b-form-group>
@@ -226,7 +226,7 @@
           >
             <b-form-textarea
               id="textarea"
-              v-model="SugestionDetail.description"
+              v-model="SuggestionDetail.description"
               placeholder="Une description"
               rows="3"
               max-rows="6"
@@ -235,42 +235,42 @@
           <b-btn @click="M">Modifier</b-btn>
         </form>
       </b-modal>
-      <h2>Liste de mes sugestion<h2>
+      <h2>Liste de mes suggestion<h2>
         <div id="documents" >
-    <b-card-group deck v-for="sugestion in ListSugestion" :key="sugestion.id">
-      <div v-if="sugestion.appartien='oui'">
+    <b-card-group deck v-for="suggestion in ListSuggestion" :key="suggestion.id">
+      <div v-if="suggestion.appartien='oui'">
       <b-card >
-        <b-card-text class="document"> Titre {{ sugestion.title }} </b-card-text>
+        <b-card-text class="document"> Titre {{ suggestion.title }} </b-card-text>
         <b-card-text>
-          {{ sugestion.description}}
+          {{ suggestion.description}}
         </b-card-text>
 
-        <b-card-text> nb votes:{{ sugestion.number_votes}} </b-card-text>
-        <div v-if="sugestion.state=='1'">
+        <b-card-text>{{ suggestion.number_votes}} </b-card-text>
+        <div v-if="suggestion.state=='1'">
           <b-button  
             variant="success"
             v-b-modal.modal-1
-            @click="Updateetatsugestion(amodifier, sugesstion.id)"
+            @click="Updateetatsuggestion(amodifier, sugesstion.id)"
             >à Modifier</b-button
           >
-            <b-button v-if="sugestion.state=='1' ||sugestion.appartien=='oui' "
+            <b-button v-if="suggestion.state=='1' ||suggestion.appartien=='oui' "
             variant="danger"
-            @click="Updateetatsugestion(suprimer, sugesstion.id)"
+            @click="Updateetatsuggestion(suprimer, sugesstion.id)"
             >suprimer</b-button
 
           >
         </div>
-        <div v-else-if="sugestion.state='3'">
+        <div v-else-if="suggestion.state='3'">
            <b-button  
             variant="success"
           v-b-modal.modal-modif
-            @click=" Updateeta(modifier,sugestion.id)"
+            @click=" Updateeta(modifier,suggestion.id)"
             >Modifier</b-button
           >
            <b-button  
             variant="success"
             v-b-modal.modal-1
-            @click="Updateetatsugestion(suprimer, sugesstion.id)"
+            @click="Updateetatsuggestion(suprimer, sugesstion.id)"
             >suprimer</b-button
           >
 
@@ -295,106 +295,102 @@ export default defineComponent({
   data() {
     return {
       Role: "",
-      newSugestion: {
+      newSuggestion: {
         date: new Date(),
         title: "",
         description: "",
       },
-      SugestionDetail: {},
+      SuggestionDetail: {},
       search: "",
-      url: "http://127.0.0.1:8000",
+      url: window.location,
     };
   },
   created() {
     Fetchrole();
-    fetchAllsugestion(init);
+    fetchAllsuggestion(init);
   },
   methods: {
     Fetchrole() {
-      var root = "/role";
-      var url = window.location;
-      var requete = url + root;
-      axios.get(requete).response((response) => (this.Role = response.data));
+      let urlfinal = converturl("/role");
+
+      axios.get(urlfinal).response((response) => (this.Role = response.data));
     },
   },
-  CreateSugestion() {
-    var root = "/AddSuggestion";
-    var url = window.location;
-    var requete = url + root;
-    axios.post(requete, {
-      title: this.newSugestion.title,
-      description: this.newSugestion.description,
-      date: this.newSugestion.date,
+  CreateSuggestion() {
+    let urlfinal = converturl("/AddSuggestion");
+
+    axios.post(urlfinal, {
+      title: this.newSuggestion.title,
+      description: this.newSuggestion.description,
+      date: this.newSuggestion.date,
     });
   },
-  fetchAllsugestion(Place) {
-    var root = "/RecoverySuggestion";
-    var url = window.location;
-    var requete = url + root;
+  fetchAllsuggestion(Place) {
+   let urlfinal = converturl ("/RecoverySuggestion");
+    
     axios
-      .get(requete)
-      .response((response) => (this.ListSugestion = response.data));
+      .get(urlfinal)
+      .response((response) => (this.ListSuggestion = response.data));
 
     if (Place === "init") {
-      this.ListSugestion.sort((a, b) => a.number_votes - b.number_votes);
+      this.ListSuggestion.sort((a, b) => a.number_votes - b.number_votes);
     } else {
-      this.ListSugestion.sort((a, b) => a.start_date - b.start_date);
+      this.ListSuggestion.sort((a, b) => a.start_date - b.start_date);
     }
   },
-  Updateetatsugestion(type, id) {
+  Updateetatsuggestion(type, id) {
     if (type == "valide") {
-      var root = "/UpdateState";
-      var url = window.location;
-      var requete = url + root;
-      axios.put(requete, {
+    let urlfinal = converturl ( "/UpdateState");
+    
+      axios.put(urlfinal, {
         etat: 2,
-        id_sugestion: id,
+        id_suggestion: id,
       });
-      var root = "/AddVote";
-      var url = window.location;
-      var requete = url + root;
-      axios.post(requete, { date, id });
+      let urlfinal = converturl ( "/AddVote");
+     
+      axios.post(urlfinal, { date, id });
 
-      this.fetchAllsugestion(init);
+      this.fetchAllsuggestion(init);
     } else if ((type = "suprimer")) {
-      var root = "/Deletesugestion";
-      var url = window.location;
-      var requete = url + root;
-      axios.delete(requete + id);
-      var root = "/DeleteVote";
-      var urldelete = url + root;
-      axios.delete(url + { id });
-      this.fetchAllsugestion(init);
+     
+   let urlfinal = converturl ( "/Deletesuggestion");
+      
+      axios.delete(urlfinal + id);
+      let urlfinal = converturl ("/DeleteVote");
+    
+      axios.delete(urlfinal+ { id });
+      this.fetchAllsuggestion(init);
     } else if ((type = "modifier")) {
-      var root = "/Updateeta";
-      var url = window.location;
-      var requete = url + root;
-      axios.put(requete, {
+       let urlfinal = converturl ("/Updateeta");
+      
+      axios.put(urlfinal, {
         etat: 3,
-        id_sugestion: id,
+        id_suggestion: id,
       });
-      this.fetchAllsugestion(init);
+      this.fetchAllsuggestion(init);
     } else {
-      var root = "/UpdateState";
-      var url = window.location;
-      var requete = url + root;
-      axios.put(requete, {
+       let urlfinal = converturl ( "/UpdateState");
+    
+      axios.put(urlfinal, {
         etat: 4,
-        id_sugestion: id,
+        id_suggestion: id,
       });
-      this.fetchAllsugestion(init);
+      this.fetchAllsuggestion(init);
     }
   },
-  UpdateSugestion() {
-    var root = "/UpdateSuggestion";
-    var url = window.location;
-    var requete = url + root;
-
-    axios.put(requete, [
-      (title = this.SugestionDetail.title),
-      (description = this.SugestionDetail.description),
+  UpdateSuggestion() {
+     let urlfinal = converturl ("/UpdateSuggestion");
+   
+    axios.put(urlfinal, [
+      (title = this.SuggestionDetail.title),
+      (description = this.SuggestionDetail.description),
       (date = this.date),
     ]);
+  },
+  Voter() {},
+  converturl(root) {
+    urlfinal = url + root;
+    return urlfinal;
   },
 });
 </script>

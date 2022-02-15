@@ -17,7 +17,6 @@ class GeneratecsvController extends  BaseController
 	public function __construct()
 	{
 		$this->user = new User();
-		$this->user->isModerator();
 	}
 
 	// Importer les données ...

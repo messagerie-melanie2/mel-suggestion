@@ -12,7 +12,7 @@ class VotesController extends BaseController
     public function __construct()
     {
         $this->user = new User();
-        $this->user->__setfonction();
+     
     }
     /**
      * Display a listing of the resource.
@@ -38,7 +38,7 @@ class VotesController extends BaseController
         $vote = new Vote;
         $vote->user_email = $this->user->user;
         $vote->voting_day = $date;
-        $vote->sugestion_id = $request->id_sugestion;
+        $vote->sugestion_id = $id_sugestion;
         $vote->save();
     }
 
