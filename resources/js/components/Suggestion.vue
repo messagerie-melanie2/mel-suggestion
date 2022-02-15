@@ -302,6 +302,7 @@ export default defineComponent({
       },
       SugestionDetail: {},
       search: "",
+      url: "http://127.0.0.1:8000",
     };
   },
   created() {
@@ -310,22 +311,29 @@ export default defineComponent({
   },
   methods: {
     Fetchrole() {
-      axios
-        .get("/Role")
-        .response((response) => (this.Role = response.data));
+      var root = "/role";
+      var url = window.location;
+      var requete = url + root;
+      axios.get(requete).response((response) => (this.Role = response.data));
     },
   },
   CreateSugestion() {
-    axios.post("/AddSuggestion", {
+    var root = "/AddSuggestion";
+    var url = window.location;
+    var requete = url + root;
+    axios.post(requete, {
       title: this.newSugestion.title,
       description: this.newSugestion.description,
       date: this.newSugestion.date,
     });
   },
   fetchAllsugestion(Place) {
+    var root = "/RecoverySuggestion";
+    var url = window.location;
+    var requete = url + root;
     axios
-      .get("/RecoverySuggestion")
-      .response(response=>(this.ListSugestion = response.data));
+      .get(requete)
+      .response((response) => (this.ListSugestion = response.data));
 
     if (Place === "init") {
       this.ListSugestion.sort((a, b) => a.number_votes - b.number_votes);
@@ -335,38 +343,58 @@ export default defineComponent({
   },
   Updateetatsugestion(type, id) {
     if (type == "valide") {
-      axios.put("/UpdateState", {
-        etat : 2,
-        id_sugestion : id,
+      var root = "/UpdateState";
+      var url = window.location;
+      var requete = url + root;
+      axios.put(requete, {
+        etat: 2,
+        id_sugestion: id,
       });
-      axios.post("/AddVote", {date, id});
+      var root = "/AddVote";
+      var url = window.location;
+      var requete = url + root;
+      axios.post(requete, { date, id });
 
       this.fetchAllsugestion(init);
     } else if ((type = "suprimer")) {
-      axios.delete("/Deletesugestion" + id);
-      axios.delete("/DeleteVote"+{id})
+      var root = "/Deletesugestion";
+      var url = window.location;
+      var requete = url + root;
+      axios.delete(requete + id);
+      var root = "/DeleteVote";
+      var urldelete = url + root;
+      axios.delete(url + { id });
       this.fetchAllsugestion(init);
     } else if ((type = "modifier")) {
-      axios.put("/Updateeta", {
-        etat :3,
-        id_sugestion : id,
-    });
+      var root = "/Updateeta";
+      var url = window.location;
+      var requete = url + root;
+      axios.put(requete, {
+        etat: 3,
+        id_sugestion: id,
+      });
       this.fetchAllsugestion(init);
     } else {
-      axios.put("/UpdateState", {
-        etat : 4,
-        id_sugestion : id,
+      var root = "/UpdateState";
+      var url = window.location;
+      var requete = url + root;
+      axios.put(requete, {
+        etat: 4,
+        id_sugestion: id,
       });
       this.fetchAllsugestion(init);
     }
   },
   UpdateSugestion() {
-    axios.put("/UpdateSuggestion", [
-      title=this.SugestionDetail.title,
-      description=this.SugestionDetail.description,
-      date=this.date,
+    var root = "/UpdateSuggestion";
+    var url = window.location;
+    var requete = url + root;
+
+    axios.put(requete, [
+      (title = this.SugestionDetail.title),
+      (description = this.SugestionDetail.description),
+      (date = this.date),
     ]);
   },
-
 });
 </script>

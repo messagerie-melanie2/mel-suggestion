@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\sugestion as ModelsSugestion;
 use Illuminate\Http\Request;
-use App\Models\Sugestion;
+use App\Models\Suggestion;
 use Spatie\SimpleExcel\SimpleExcelWriter;
 use Spatie\SimpleExcel\SimpleExcelReader;
 use App\Models\User;
@@ -33,7 +33,7 @@ class GeneratecsvController extends  BaseController
 		// 2. Le nom du fichier avec l'extension : .xlsx ou .csv
 		$file_name = $request->name . "." . $request->extension;
 		// 3. On récupère données de la table "clients"
-		$Sugestions = Sugestion::where('instance', $this->user->instance)->get();
+		$Sugestions = Suggestion::where('instance', $this->user->instance)->get();
 
 
 		// 4. $writer : Objet Spatie\SimpleExcel\SimpleExcelWriter
