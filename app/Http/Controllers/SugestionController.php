@@ -19,7 +19,6 @@ class SugestionsController extends  BaseController
     public function __construct()
     {
         $this->user = new User();
-        $this->user->isModerator();
     }
 
     /**
@@ -68,7 +67,7 @@ class SugestionsController extends  BaseController
         $sugestion->created_date = $dateto;
         $sugestion->state = $state;
         $sugestion->instance = $this->user->instance;
-        $sugestion->update_date = $request->dateto;
+        $sugestion->update_date = $dateto;
         $sugestion->save();
     }
 
