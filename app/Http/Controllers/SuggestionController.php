@@ -3,18 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Sugestion;
+use App\Models\Suggestion;
 use Ramsey\Uuid\Type\Integer;
 use App\Models\Vote;
 use Illuminate\Database\Eloquent\Collection;
 use PHPUnit\Framework\Constraint\Count;
 use Illuminate\Routing\Controller as BaseController;
 use App\Models\User;
-use App\Models\lsugestion;
+use App\Models\Suggestionsend;
 
 
 
-class SugestionsController extends  BaseController
+class SuggestionController extends  BaseController
 {
     public function __construct()
     {
@@ -28,7 +28,7 @@ class SugestionsController extends  BaseController
      */
     /* public function index()
     {
-        $Sugestions = Sugestion::all();
+        $Sugestions = Suggestion::all();
         return response()->json($Sugestions);
     }*/
 
@@ -60,7 +60,7 @@ class SugestionsController extends  BaseController
         }
 
 
-        $sugestion = new Sugestion;
+        $sugestion = new Suggestion;
         $sugestion->title = $title;
         $sugestion->description = $description;
         $sugestion->user_email = $this->user->user;
@@ -87,7 +87,7 @@ class SugestionsController extends  BaseController
         $Description = $request->input('Description');
         $dateto = $request->input('date');
         $state = $request->input('state');
-        $sugestion = Sugestion::where('id', `$idsuggestion`)->get();
+        $sugestion = Suggestion::where('id', `$idsuggestion`)->get();
         $sugestion->update([
             "title" => $title,
             "description" => $Description,
@@ -99,7 +99,7 @@ class SugestionsController extends  BaseController
     }
     public function UpdateState(Request $request, $id)
     {
-        $sugestion = Sugestion::where('Id', `$id`)->get();
+        $sugestion = Suggestion::where('Id', `$id`)->get();
         $sugestion->update([
 
             "state" => $request->state,
@@ -121,13 +121,13 @@ class SugestionsController extends  BaseController
      */
     public function destroy($id)
     {
-        $sugestion = Sugestion::where('id', `$id`)->get();
+        $sugestion = Suggestion::where('id', `$id`)->get();
         $sugestion->delete();
     }
     public function Recupsugestion($type)
     {
 
-        $AdaptSugestion = new lsugestion();
+        $AdaptSugestion = new Suggestionsend();
         $LesSugestions = new Collection();
         if ($this->user->fonction == '1') {
 
@@ -135,11 +135,11 @@ class SugestionsController extends  BaseController
             $nombre = 0;
 
 
-            $Sugestions = Sugestion::where('id', $this->user->instance)->get();
+            $Sugestions = Suggestion::where('id', $this->user->instance)->get();
             ;
-            foreach ($Sugestions as $Sugestion) {
+            foreach ($Sugestions as $Suggestion) {
 
-                $vote = Vote::where('id', `$Sugestion->id`)->get();
+                $vote = Vote::where('id', `$Suggestion->id`)->get();
                 foreach ($vote as $votes) {
                     if ($votes->user === $this->user->user) {
                         $nombre = $nombre + 1;
@@ -154,12 +154,12 @@ class SugestionsController extends  BaseController
                     $AdaptSugestion->etvote = 'oui';
                 }
             }
-            $AdaptSugestion->title = $Sugestion->title;
-            $AdaptSugestion->description = $Sugestion->description;
-            $AdaptSugestion->start_date = $Sugestion->start_date;
+            $AdaptSugestion->title = $Suggestion->title;
+            $AdaptSugestion->description = $Suggestion->description;
+            $AdaptSugestion->start_date = $Suggestion->start_date;
 
-            $AdaptSugestion->state = $Sugestion->state;
-            if ($Sugestion->User == $this->user->user) {
+            $AdaptSugestion->state = $Suggestion->state;
+            if ($Suggestion->User == $this->user->user) {
                 $AdaptSugestion->appartient = 'oui';
             } else {
                 $AdaptSugestion->appartient = 'non';
@@ -167,14 +167,14 @@ class SugestionsController extends  BaseController
 
             $LesSugestions->push($AdaptSugestion);
         } else {
-            $AdaptSugestion = new lsugestion();
+            $AdaptSugestion = new Suggestionsend();
             $user = $_SESSION['email'];
             $nombre = 0;
 
 
-            $Sugestions = Sugestion::where('id', $this->user->instance)->get();
-            foreach ($Sugestions as $Sugestion) {
-                $vote = Vote::where('id', `$Sugestion->id`)->get();
+            $Sugestions = Suggestion::where('id', $this->user->instance)->get();
+            foreach ($Sugestions as $Suggestion) {
+                $vote = Vote::where('id', `$Suggestion->id`)->get();
                 foreach ($vote as $votes) {
                     if ($votes->user_email === $user) {
                         $nombre = $nombre + 1;
@@ -189,10 +189,10 @@ class SugestionsController extends  BaseController
                     $AdaptSugestion->voted = 'oui';
                 }
             }
-            $AdaptSugestion->title = $Sugestion->title;
-            $AdaptSugestion->description = $Sugestion->description;
-            $AdaptSugestion->start_date = $Sugestion->created_date;
-            $AdaptSugestion->state = $Sugestion->state;
+            $AdaptSugestion->title = $Suggestion->title;
+            $AdaptSugestion->description = $Suggestion->description;
+            $AdaptSugestion->start_date = $Suggestion->created_date;
+            $AdaptSugestion->state = $Suggestion->state;
             $AdaptSugestion->$user = $this->user->user;
             $AdaptSugestion->$user = $this->user->instance;
             $LesSugestions->push($AdaptSugestion);
@@ -213,7 +213,7 @@ class SugestionsController extends  BaseController
         return response()->json($type);
     }
     public function Detailsugestion($id){
-        $sugestion = Sugestion::where('id', `$id`)->get();
+        $sugestion = Suggestion::where('id', `$id`)->get();
         return response()->json($sugestion);
     }
 }

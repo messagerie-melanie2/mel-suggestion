@@ -4,7 +4,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\SugestionController;
+use App\Http\Controllers\SuggestionController;
 use App\Http\Controllers\VoteController;
 use App\Http\Controllers\GeneratecsvController;
 
@@ -20,18 +20,18 @@ use App\Http\Controllers\GeneratecsvController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('Suggestions');
 });
 
 
 
-Route::get('/RecoverySuggestion', [SugestionController::class, 'Recupsugestion']);
-Route::get('/Detail',[SugestionController::class,'Detailsugestion']);
-Route::post('/AddSuggestion', [SugestionController::class, 'store']);
-Route::put('/UpdateSuggestion', [SugestionController::class, 'UpdateSugestion']);
-Route::put('/UpdateState', [SugestionController::class, 'UpdateState']);
-Route::delete('/Deletesugestion', [SugestionController::class, 'destroy']);
+Route::get('/RecoverySuggestion', [SuggestionController::class, 'Recupsugestion']);
+Route::get('/Detail',[SuggestionController::class,'Detailsugestion']);
+Route::post('/AddSuggestion', [SuggestionController::class, 'store']);
+Route::put('/UpdateSuggestion', [SuggestionController::class, 'UpdateSugestion']);
+Route::put('/UpdateState', [SuggestionController::class, 'UpdateState']);
+Route::delete('/Deletesugestion', [SuggestionController::class, 'destroy']);
 Route::post('/AddVote', [VoteController::class, 'create']);
 Route::delete('/DeleteVote', [VoteController::class, 'destroy']);
 Route::post('/GenerationCSV', [GeneratecsvController::class, 'export']);
-Route::get('/Role',[SugestionController::class,'Moderateurorparticipent']);
+Route::get('/Role',[SuggestionController::class,'Moderateurorparticipent']);
