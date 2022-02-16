@@ -303,6 +303,7 @@ export default defineComponent({
       SuggestionDetail: {},
       search: "",
       url: window.location,
+      start_date: new Date(),
     };
   },
   created() {
@@ -387,7 +388,21 @@ export default defineComponent({
       (date = this.date),
     ]);
   },
-  Voter() {},
+  Voter(id) {
+    let urlfinal = converturl ("/AddVote");
+    axios.post(urlfinal,{date=start_date,id=id
+
+    })
+  },
+  DeleteVote(id){
+    let urlfinal = converturl ("/DeleteVote");
+    axios.delete(urlfinal,{id=id
+
+    })
+    
+  },
+  
+  
   converturl(root) {
     urlfinal = url + root;
     return urlfinal;
