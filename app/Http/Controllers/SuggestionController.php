@@ -189,6 +189,7 @@ class SuggestionController extends  BaseController
                     $AdaptSugestion->voted = 'oui';
                 }
             }
+            $AdaptSugestion->title = $Suggestion->id;
             $AdaptSugestion->title = $Suggestion->title;
             $AdaptSugestion->description = $Suggestion->description;
             $AdaptSugestion->start_date = $Suggestion->created_date;

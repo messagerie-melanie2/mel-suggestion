@@ -13,6 +13,9 @@
           >Top</b-button
         ></b-col
       >
+       <b-button variant="primary" @click="Generatefilr() "
+          >Top</b-button>
+        
       
       <b-col cols="2" md="4">
         <input
@@ -407,5 +410,12 @@ export default defineComponent({
     urlfinal = url + root;
     return urlfinal;
   },
+  Generatefilr(){
+   
+     let urlfinal = converturl ("/GenerationCSV");
+      axios.get(urlfinal
+
+    )
+  }
 });
 </script>

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Suggestionsend
 {
+    public $id;
     public $title;
     public $description;
     public $start_date;

@@ -10,7 +10,7 @@ class User extends Authenticatable
 {
     protected string $instance;
     protected string $user;
-    protected bool $fonction;
+    protected bool $role;
     public function __construct()
     {
         $this->instance = Config('Moderateur.instance');
@@ -27,6 +27,6 @@ class User extends Authenticatable
         } else {
             $type = 2;
         }
-        $this->attributes['fonction']= strtolower($type);
+        $this->attributes['role']= strtolower($type);
     }
 }

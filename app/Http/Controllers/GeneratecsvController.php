@@ -21,16 +21,13 @@ class GeneratecsvController extends  BaseController
 
 	// Importer les données ...
 	// Exporter les données
-	public function export(Request $request)
+	public function export()
 	{
 
 		// 1. Validation des informations du formulaire
-		$this->validate($request, [
-			'name' => 'bail|required|string',
-			'extension' => 'bail|required|string|in:xlsx,csv'
-		]);
+		
 		// 2. Le nom du fichier avec l'extension : .xlsx ou .csv
-		$file_name = $request->name . "." . $request->extension;
+		$file_name = "ListeSuggestion" . "." . ".csv";
 		// 3. On récupère données de la table "clients"
 		$Sugestions = Suggestion::where('instance', $this->user->instance)->get();
 
