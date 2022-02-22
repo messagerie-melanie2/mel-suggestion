@@ -14,23 +14,12 @@ CREATE TABLE IF NOT EXISTS "Sugestion".suggestions (
 
 -- Index: information_suggestion
 -- DROP INDEX IF EXISTS "Sugestion".information_suggestion;
-CREATE UNIQUE INDEX IF NOT EXISTS information_suggestion ON "Sugestion".suggestions USING btree (
-    title COLLATE pg_catalog."default" ASC NULLS LAST,
-    description COLLATE pg_catalog."default" ASC NULLS LAST,
+CREATE UNIQUE INDEX IF NOT EXISTS  identities_suggestion_id_idx ON "Sugestion".suggestions USING btree (
     instance COLLATE pg_catalog."default" ASC NULLS LAST
 ) TABLESPACE pg_default;
 
--- Index: suivi_suggestion
--- DROP INDEX IF EXISTS "Sugestion".suivi_suggestion;
-CREATE INDEX IF NOT EXISTS suivi_suggestion ON "Sugestion".suggestions USING btree (
-    state ASC NULLS LAST,
-    user_email COLLATE pg_catalog."default" ASC NULLS LAST,
-    instance COLLATE pg_catalog."default" ASC NULLS LAST
-) TABLESPACE pg_default;
+CREATE SEQUENCE IF NOT EXISTS suggestions_seq NO MAXVALUE NO MINVALUE INCREMENT 1 CACHE 1 OWNED BY suggestions.id;
 
-CREATE SEQUENCE IF NOT EXISTS suggestions.incremente NO MAXVALUE NO MINVALUE INCREMENT 1 CACHE 1 OWNED BY suggestions.id;
-
-ALTER SEQUENCE suggestions.incremente -- Table: Sugestion.votes
 -- DROP TABLE IF EXISTS "Sugestion".votes;
 CREATE TABLE IF NOT EXISTS "Sugestion".votes (
     id integer NOT NULL,
@@ -46,11 +35,8 @@ ALTER TABLE
 
 -- Index: vote_information
 -- DROP INDEX IF EXISTS "Sugestion".vote_information;
-CREATE INDEX IF NOT EXISTS vote_information ON "Sugestion".votes USING btree (
-    user_email COLLATE pg_catalog."default" ASC NULLS LAST,
+CREATE INDEX IF NOT EXISTS identities_suggestion_id_idx ON "Sugestion".votes USING btree (
     sugestion_id ASC NULLS LAST
 ) TABLESPACE pg_default;
 
-CREATE SEQUENCE IF NOT EXISTS suggestions.incrementeid - vote NO MAXVALUE NO MINVALUE INCREMENT 1 CACHE 1 OWNED BY vote.id;
-
-ALTER SEQUENCE suggestions.incrementeid - vote
+CREATE SEQUENCE IF NOT EXISTS vote-seq - vote NO MAXVALUE NO MINVALUE INCREMENT 1 CACHE 1 OWNED BY vote.id;
