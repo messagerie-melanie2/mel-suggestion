@@ -294,7 +294,7 @@
 import BootsrapVue from "bootstrap-vue";
 Vue.use(BootsrapVue);
 
-export default defineComponent({
+export default {
   data() {
     return {
       Role: "",
@@ -315,12 +315,6 @@ export default defineComponent({
     fetchAllsuggestion(init);
   },
   methods: {
-    Fetchrole() {
-      let urlfinal = converturl("/role");
-
-      axios.get(urlfinal).response((response) => (this.Role = response.data));
-    },
-  },
   CreateSuggestion() {
     let urlfinal = converturl("/AddSuggestion");
 
@@ -417,6 +411,8 @@ export default defineComponent({
       axios.get(urlfinal
 
     )
+  },
   }
-});
+}
+
 </script>
