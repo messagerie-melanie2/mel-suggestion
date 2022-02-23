@@ -9,12 +9,16 @@
     <body>
         <div id="app">
             
-        <example-component :prop=`@json($posts[0])`>><example-component/>
+        <example-component :prop=`@json($user)`>><example-component/>
 
         </div>
+        <?php 
+    use App\Models\User; 
+    $user = new User();
+        ?>
         <script src="{{ asset('js/app.js') }}"
       
-        window.posts = @json($posts);
+    
         ></script>
     </body>
 </html>

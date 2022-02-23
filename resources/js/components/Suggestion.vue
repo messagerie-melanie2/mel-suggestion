@@ -307,10 +307,11 @@ export default defineComponent({
       search: "",
       url: window.location,
       start_date: new Date(),
+     
     };
   },
   created() {
-    Fetchrole();
+    Role=JSON($user)
     fetchAllsuggestion(init);
   },
   methods: {
