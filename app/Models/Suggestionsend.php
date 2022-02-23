@@ -17,4 +17,5 @@ class Suggestionsend
     public $date_update;
     public $appartient;
     public $instance;
+    public $createur;
 }
