@@ -325,17 +325,22 @@ export default {
     });
   },
   fetchAllsuggestion(Place) {
-   let urlfinal = converturl ("/RecoverySuggestion");
+    if(this.ListSuggestion.length()=0){
+      let urlfinal = converturl ("/RecoverySuggestion");
     
     axios
       .get(urlfinal)
       .response((response) => (this.ListSuggestion = response.data));
-
-    if (Place === "init") {
+    }else{
+          if (Place === "init") {
       this.ListSuggestion.sort((a, b) => a.number_votes - b.number_votes);
     } else {
       this.ListSuggestion.sort((a, b) => a.start_date - b.start_date);
     }
+
+    }
+
+
   },
   Updateetatsuggestion(type, id) {
     if (type == "valide") {
