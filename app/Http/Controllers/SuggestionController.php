@@ -148,14 +148,15 @@ class SuggestionController extends  BaseController
         $LesSugestions = new Collection();
         $Sugestions = Suggestion::where('id', $this->user->instance)->get();
         $Listvote = new Collection();
-        $list = array();
+        $list = [];
         $nombre = 0;
         foreach ($Sugestions as $Suggestion) {
             $this->$list->array_push($Suggestion->id);
         }
+        $AdaptSugestion = new Suggestionsend();
         $result = Suggestion::select('SELECT * FROM votes where suggestion_id IN', $this->$list);
         foreach ($Sugestions as $Suggestion) {
-            $AdaptSugestion = new Suggestionsend();
+            
             foreach ($result as $votes) {
                 if ($votes->sugestion_id == $Suggestion->id) {
                     $Listvote->push($votes);
@@ -189,7 +190,8 @@ class SuggestionController extends  BaseController
 
                 $LesSugestions->push($AdaptSugestion);
             }
-            return response()->json($LesSugestions);
+           
         }
+        return response()->json($LesSugestions);
     }
 }
