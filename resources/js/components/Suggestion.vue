@@ -97,21 +97,21 @@
         <div v-if="(suggestion.etat = '1')">
           <b-button
             variant="danger"
-            @click="Updateetatsuggestion(suprimer, sugesstion.id)"
+            @click="Updateetatsuggestion(5, sugesstion.id)"
             >Pas bon</b-button
           >
           <b-button
             variant="success"
             v-b-modal.modal-1
-            @click="Updateetatsuggestion(amodifier, sugesstion.id)"
+            @click="Updateetatsuggestion(2, sugesstion.id)"
             >à Modifier</b-button
           >
           <b-button
             variant="outline-primary"
-            @click="Updateetatsuggestion(valide, sugesstion.id)"
+            @click="Updateetatsuggestion(3, sugesstion.id)"
             >Valide</b-button
           >
-          <b-button @click="Updateetatsuggestion(vérouiller, sugesstion.id)">Vérouiller</b-button> 
+          <b-button @click="Updateetatsuggestion(4, sugesstion.id)">Vérouiller</b-button> 
         </div>
         <div v-else>
           <b-card-text> {{ suggestion.Title }} </b-card-text>
@@ -253,7 +253,7 @@
           <b-button  
             variant="success"
             v-b-modal.modal-1
-            @click="Updateetatsuggestion(amodifier, sugesstion.id)"
+            @click="Updateetatsuggestion(2, sugesstion.id)"
             >à Modifier</b-button
           >
             <b-button v-if="suggestion.state=='1' ||suggestion.appartien=='oui' "
@@ -273,7 +273,7 @@
            <b-button  
             variant="success"
             v-b-modal.modal-1
-            @click="Updateetatsuggestion(suprimer, sugesstion.id)"
+            @click="Updateetatsuggestion(5, sugesstion.id)"
             >suprimer</b-button
           >
 
@@ -342,48 +342,27 @@ export default {
 
 
   },
-  Updateetatsuggestion(type, id) {
-    if (type == "valide") {
-    let urlfinal = converturl ( "/UpdateState");
+ 
+Updateetatsuggestion(type, id) {
     
-      axios.put(urlfinal, {
-        etat: 2,
-        id_suggestion: id,
-      });
-      let urlfinal = converturl ( "/AddVote");
-     
-      axios.post(urlfinal, { date, id });
-
-      this.fetchAllsuggestion(init);
-    } else if ((type = "suprimer")) {
-     
-   let urlfinal = converturl ( "/Deletesuggestion");
+      if(type="5"){
+         urlfinal = converturl ( "/Deletesuggestion");
       
-      axios.delete(urlfinal + id);
+      axios
+      .delete(urlfinal + id);
       let urlfinal = converturl ("/DeleteVote");
-    
-      axios.delete(urlfinal+ { id });
-      this.fetchAllsuggestion(init);
-    } else if ((type = "modifier")) {
-       let urlfinal = converturl ("/Updateeta");
-      
-      axios.put(urlfinal, {
-        etat: 3,
-        id_suggestion: id,
-      });
-      this.fetchAllsuggestion(init);
-    } else {
-       let urlfinal = converturl ( "/UpdateState");
-    
-      axios.put(urlfinal, {
-        etat: 4,
-        id_suggestion: id,
-      });
-      this.fetchAllsuggestion(init);
-    }
+      }else{
+        let urlfinal = converturl ( "/UpdateState");
+     axios.
+      put(urlfinal, {etat: type,id_suggestion: id});
+
+      }
+
+   
   },
   UpdateSuggestion() {
      let urlfinal = converturl ("/UpdateSuggestion");
+     
    
     axios.put(urlfinal, [
       (title = this.SuggestionDetail.title),
