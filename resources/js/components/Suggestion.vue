@@ -332,13 +332,13 @@ export default {
       .get(urlfinal)
       .response((response) => (this.ListSuggestion = response.data));
     }else{
-          if (Place === "init") {
+     if (Place === "init") {
       this.ListSuggestion.sort((a, b) => a.number_votes - b.number_votes);
     } else {
-      this.ListSuggestion.sort((a, b) => a.start_date - b.start_date);
+      this.ListSuggestion.sort((a, b) => a.start_date - b.start_date);a
     }
 
-    }
+  }
 
 
   },
@@ -391,17 +391,17 @@ export default {
       (date = this.date),
     ]);
   },
-  Voter(id) {
+  Vote(id) {
     let urlfinal = converturl ("/AddVote");
-    axios.post(urlfinal,{date=start_date,id=id
-
-    })
+    axios
+    .post(urlfinal,{date=start_date,id=id})
   },
   DeleteVote(id){
     let urlfinal = converturl ("/DeleteVote");
-    axios.delete(urlfinal,{id=id
+    axios
+    .delete(urlfinal ,{suggestion_id=id}
 
-    })
+    )
     
   },
   

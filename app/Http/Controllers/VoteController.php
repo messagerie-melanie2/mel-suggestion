@@ -8,29 +8,25 @@ use Illuminate\Routing\Controller as BaseController;
 use App\Models\User;
 
 class VotesController extends BaseController
+/**
+ * J'initialise mon objet User qui correspondra à l'utilisateur connecter.
+ * Pour ainsi pouvoir utiliser ces données dans les functions
+ */
 {
     public function __construct()
     {
         $this->user = new User();
      
+   
     }
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * La function create permet de creer un vote.
+     * il prend en paramètre ce qu'envoie la requête api faite par le fronte.
+     * IL récupère et vérifie les données envoyer par la requête api t-elle que la date du jour  et l'id qui correspond à l'id de la suggestion sur laquelle il à voter
+     * Je déclare un nouvel objet Vote , avec lequelle je définir ces atributs
+     * J'execute la requête de création du vote
      */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-    
-     */
-    public function create(Request $request)
+    public function Creat(Request $request)
     {
 
         $date = $request->input('today_date');        
@@ -43,20 +39,15 @@ class VotesController extends BaseController
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Cette fonction ce déclanche des qu"on à besoin de suprimer un vote
+     * C'est à dire lors de la supresion d'une suggestion 
+     * Elle prend un id qui correspond à l'id de la suggestion 
+     * J'initialise tous les votes dont suggestion-id est égale à suggestion id
+     * je lance la supression de ces vote
      */
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroybysugestion($id)
+    public function destroybysugestion(Request $request)
     {
+        $id = $request->input('suggestion_id');
         $vote = Vote::where('sugestion_id', `$id`)->get();
         $vote->delete();
     }

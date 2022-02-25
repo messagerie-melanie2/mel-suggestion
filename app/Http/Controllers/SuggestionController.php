@@ -15,36 +15,21 @@ use PhpParser\Builder\Function_;
 
 class SuggestionController extends  BaseController
 {
+    /**
+     * Initialise un utilisateur connecter pour pouvoir utiliser
+     */
     public function __construct()
     {
         $this->user = new User();
     }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    /* public function index()
-    {
-        $Sugestions = Suggestion::all();
-        return response()->json($Sugestions);
-    }*/
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-    }
-
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
+     */
+    /**
+     * 
      */
     public function store(Request $request)
     {
@@ -144,7 +129,7 @@ class SuggestionController extends  BaseController
     }
     public function Recupsugestion()
     {
-        $AdaptSugestion = new Suggestionsend();
+    
         $LesSugestions = new Collection();
         $Sugestions = Suggestion::where('id', $this->user->instance)->get();
         $Listvote = new Collection();
@@ -153,10 +138,10 @@ class SuggestionController extends  BaseController
         foreach ($Sugestions as $Suggestion) {
             $this->$list->array_push($Suggestion->id);
         }
-        $AdaptSugestion = new Suggestionsend();
+        
         $result = Suggestion::select('SELECT * FROM votes where suggestion_id IN', $this->$list);
         foreach ($Sugestions as $Suggestion) {
-            
+            $AdaptSugestion = new Suggestionsend();
             foreach ($result as $votes) {
                 if ($votes->sugestion_id == $Suggestion->id) {
                     $Listvote->push($votes);
@@ -171,25 +156,24 @@ class SuggestionController extends  BaseController
                 } else {
                     $AdaptSugestion->etvote = 'oui';
                 }
-                $AdaptSugestion->nbvote = Count($Listvote);
-                $AdaptSugestion->title = $Suggestion->title;
-                $AdaptSugestion->description = $Suggestion->description;
-                $AdaptSugestion->start_date = $Suggestion->created_date;
-
-                $AdaptSugestion->state = $Suggestion->state;
-                if ($Suggestion->User == $this->user->user) {
-                    $AdaptSugestion->appartient = 'oui';
-                } else {
-                    $AdaptSugestion->appartient = 'non';
-                }
-                if ($this->user->fonction == '1') {
-                    $AdaptSugestion->createur = $Sugestions->user_email;
-                } else {
-                    $AdaptSugestion->createur = $Sugestions->user_email;
-                }
-
-                $LesSugestions->push($AdaptSugestion);
+               
             }
+            $AdaptSugestion->nbvote = Count($Listvote);
+            $AdaptSugestion->title = $Suggestion->title;
+            $AdaptSugestion->description = $Suggestion->description;
+            $AdaptSugestion->start_date = $Suggestion->created_date;
+
+            $AdaptSugestion->state = $Suggestion->state;
+            if ($Suggestion->User == $this->user->user) {
+                $AdaptSugestion->appartient = 'oui';
+            } else {
+                $AdaptSugestion->appartient = 'non';
+            }
+            if ($this->user->fonction == '1') {
+                $AdaptSugestion->createur = $Sugestions->user_email;
+            }
+
+            $LesSugestions->push($AdaptSugestion);
            
         }
         return response()->json($LesSugestions);
