@@ -1,4 +1,5 @@
 <template>
+
 <div v-if="Role === 'moderateur'">
   <div>
       <b-row>
@@ -298,6 +299,7 @@ export default {
   data() {
     return {
       Role: "",
+      /** */
       newSuggestion: {
         date: new Date(),
         title: "",
@@ -318,7 +320,8 @@ export default {
   CreateSuggestion() {
     let urlfinal = converturl("/AddSuggestion");
 
-    axios.post(urlfinal, {
+    axios.
+    post(urlfinal, {
       title: this.newSuggestion.title,
       description: this.newSuggestion.description,
       date: this.newSuggestion.date,

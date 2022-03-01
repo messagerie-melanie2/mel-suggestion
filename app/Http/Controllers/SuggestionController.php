@@ -23,13 +23,12 @@ class SuggestionController extends  BaseController
         $this->user = new User();
     }
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    /**
-     * 
+     * La fonction store nous permet de créer une nouvel suggestion
+     * Il prend en paramètre les données envoyer par l'api depuis vuejs
+     * Il vérifie l'authenticité des données envoyer par l'api t-elle que le titre la description et la date.
+     * Il vérifie le rôle de l'utilisateur est Moderateur est connecter ou pas
+     * Il donne en fonction du rôle une valeur à l'état de la suggestion
+     * Finir par créer la suggestion en prennat les données envoyer par la request
      */
     public function store(Request $request)
     {
@@ -37,7 +36,7 @@ class SuggestionController extends  BaseController
         $description = $request->input('description');
         $dateto = $request->input('date');
 
-        if ($this->user->fonction == 'Moderateur') {
+        if ($this->user->role == '1') {
             $state = '2';
         } else {
             $state = '1';
@@ -58,12 +57,11 @@ class SuggestionController extends  BaseController
 
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+     * Permet de modifier une suggestion
+     * Il prend en paramètre les données envoyer par l'api depuis vuejs
+     * Il vérifie l'authenticité des données envoyer par l'api t-elle que l'id de la suggestion à modifier et le reste
+     * Je vais chercher la suggestion correspondant à l'id
+     * Et je modifie les valeurs récupérer par l'api     */
     public function UpdateSugestion(Request $request)
     {
         $idsuggestion = $request->input('id');
@@ -81,12 +79,22 @@ class SuggestionController extends  BaseController
 
         ]);
     }
-    public function UpdateState(Request $request, $id)
+    /**
+     * Elle permet de modifier l'état de la sugestion
+     * Elle prend en paramètre les données envoyer par l'api ainsi que l'id de la suggestion
+     * Il Va chercher la suggestion de l'id envoyer en paramètre
+     * il modifie l'état de la suggestion récupérer
+     * Ci l'état est passer à valider alors il créer le vote du créateur de a suggestion
+     */
+    public function UpdateState(Request $request)
+    
+    
     {
-        $sugestion = Suggestion::where('Id', `$id`)->get();
+        $idsuggestion = $request->input('id');
+        $etat = $request->input('state');
+        $sugestion = Suggestion::where('Id', `$idsuggestion`)->get();
         $sugestion->update([
-
-            "state" => $request->state,
+            "state" => $etat,
         ]);
         if ($request->state == '2') {
             $vote = new Vote;
@@ -98,35 +106,29 @@ class SuggestionController extends  BaseController
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Permet de supprimer une suggestion
      */
     public function destroy($id)
+    
     {
+        
         $sugestion = Suggestion::where('id', `$id`)->get();
         $sugestion->delete();
     }
+    /**Permet de récupérer les détails de la suggestion dont l'id est passer en paramètre */
 
-    public function Moderateurorparticipent()
-    {
-
-        $user = $_SESSION['email'];
-        $listemoderateur = [];
-        $listemoderateur = config('Moderateur.Moderateur');
-        if (in_array($user, $listemoderateur)) {
-            $type = 1;
-        } else {
-            $type = 2;
-        }
-        return response()->json($type);
-    }
+    
     public function Detailsugestion($id)
     {
         $sugestion = Suggestion::where('id', `$id`)->get();
         return response()->json($sugestion);
     }
+    /**
+     * Permet de récupérer toutes les suggestions en fonction du rôle de l'utilisateur connecté
+     * Il va chercher toutes les suggestion de l'instance passez en paramètre et récupère leur id
+     * Il récupère tous les votes dont l'id est passer en paramètre
+     * 
+     */
     public function Recupsugestion()
     {
     
@@ -146,16 +148,16 @@ class SuggestionController extends  BaseController
                 if ($votes->sugestion_id == $Suggestion->id) {
                     $Listvote->push($votes);
                 }
-                if ($votes->user_email === $this->user->user) {
+                   if ($votes->user_email === $this->user->user) {
                     $nombre = $nombre + 1;
-                } else {
+                    } else {
                     $nombre = $nombre;
-                }
-                if ($nombre == 0) {
-                    $AdaptSugestion->etvote = 'non';
-                } else {
-                    $AdaptSugestion->etvote = 'oui';
-                }
+                    }
+                       if ($nombre == 0) {
+                       $AdaptSugestion->etvote = 'non';
+                        } else {
+                        $AdaptSugestion->etvote = 'oui';
+                       }
                
             }
             $AdaptSugestion->nbvote = Count($Listvote);
@@ -169,9 +171,9 @@ class SuggestionController extends  BaseController
             } else {
                 $AdaptSugestion->appartient = 'non';
             }
-            if ($this->user->fonction == '1') {
+               if ($this->user->fonction == '1') {
                 $AdaptSugestion->createur = $Sugestions->user_email;
-            }
+             }
 
             $LesSugestions->push($AdaptSugestion);
            

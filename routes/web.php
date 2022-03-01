@@ -34,4 +34,4 @@ Route::delete('/Deletesugestion', [SuggestionController::class, 'destroy']);
 Route::post('/AddVote', [VoteController::class, 'create']);
 Route::delete('/DeleteVote', [VoteController::class, 'destroy']);
 Route::get('/GenerationCSV', [GeneratecsvController::class, 'export']);
-Route::get('/Role',[SuggestionController::class,'Moderateurorparticipent']);
+
