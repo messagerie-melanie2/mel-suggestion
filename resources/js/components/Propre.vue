@@ -242,7 +242,7 @@
           <b-btn @click="M">Modifier</b-btn>
         </form>
       </b-modal>
-      <h2>Liste de mes suggestion<h2>
+     
         <div id="documents" >
     <b-card-group deck v-for="suggestion in ListSuggestion" :key="suggestion.id">
       <div v-if="suggestion.appartien='oui'">

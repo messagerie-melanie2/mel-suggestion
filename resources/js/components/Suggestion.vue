@@ -12,7 +12,7 @@
           >Top</b-button
         ></b-col
       >
-       <b-button variant="primary" @click="Generatefilr() " v-if="Role=1"
+       <b-button variant="primary" @click="Generatefil() " v-if="Role=1"
           >Top</b-button>
         
       
@@ -89,6 +89,59 @@
           <b-btn @click="CreateSuggestion">Ajouté</b-btn>
         </form>
       </b-modal>
+       <b-modal
+        id="modal_modifier"
+        ref="modal"
+        title="Modifier la Suggestion"
+      >
+        <form ref="form" @submit.stop.prevent="handleSubmit">
+          <b-form-group
+            label="Titre"
+            label-for="name-input"
+            invalid-feedback="Name is required"
+          >
+            <b-form-input
+              id="name-input"
+              v-model="SuggestionDetail.title"
+              required
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group
+            label="Description"
+            label-for="name-input"
+            invalid-feedback="Name is required"
+          >
+            <b-form-textarea
+              id="textarea"
+              v-model="SuggestionDetail.description"
+              placeholder="Une description"
+              rows="3"
+              max-rows="6"
+            ></b-form-textarea>
+          </b-form-group>
+          <b-btn @click="UpdateSuggestion(SuggestionDetail.id)">Modifier</b-btn>
+        </form>
+      </b-modal>
+     
+       <h2 v-if="role=''">Liste de mes suggestion<h2>
+         <b-card-group deck v-for="suggestion in ListSuggestion" :key="suggestion.id">
+      <b-card v-if="appartien='oui'">
+        <b-card-text> Titre {{ suggestion.Title }} </b-card-text>
+        <b-card-text>
+          {{ suggestion.Description }}
+        </b-card-text>
+        <b-card-text> nb votes:{{ suggestion.number_votes }} </b-card-text>
+        <b-button v-b-modal.modal_modifier class="pull-right" v-if="suggestion.state==='3'" @click="RecupDetailsuggestion(suggeston.id)"
+          >Modifier</b-button
+        >
+         <b-button v-b-modal.modal_modifier class="pull-right" v-if="suggestion.state==='2'"
+          >Modifier</b-button
+        >
+
+      </b-card>
+
+         </b-card-group>
+
   </div>
 </template>
 <script>
@@ -123,6 +176,13 @@ export default {
     fetchAllsuggestion(init);
   },
   methods: {
+     /**
+   * Permet en prennant une root en paramètre d'écrire l'url de la requête
+   */
+  converturl(root) {
+    urlfinal = url + root;
+    return urlfinal;
+  },
   CreateSuggestion() {
     let urlfinal = converturl("/AddSuggestion");
 
@@ -177,11 +237,12 @@ Updateetatsuggestion(type, id) {
 
    
   },
-  UpdateSuggestion() {
+  UpdateSuggestion(ids) {
      let urlfinal = converturl ("/UpdateSuggestion");
      
    
     axios.put(urlfinal, [
+      (id=ids),
       (title = this.SuggestionDetail.title),
       (description = this.SuggestionDetail.description),
       (date = this.date),
@@ -200,13 +261,17 @@ Updateetatsuggestion(type, id) {
     )
     
   },
-  
-  
-  converturl(root) {
-    urlfinal = url + root;
-    return urlfinal;
+  RecupDetailsuggestion(id_suggestion){
+    let urlfinal = converturl ("/Detail");
+    axios.get(urlfinal+id_suggestion)  .response((response) => (this.SuggestionDetail= response.data));
   },
-  Generatefilr(){
+  
+  
+ 
+  /**
+   * Permet au Moderateur de générer un fichier Csv contenant les suggestions de chez eux
+   */
+  Generatefil(){
    
      let urlfinal = converturl ("/GenerationCSV");
       axios.get(urlfinal)
