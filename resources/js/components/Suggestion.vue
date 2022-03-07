@@ -134,13 +134,73 @@
         <b-button v-b-modal.modal_modifier class="pull-right" v-if="suggestion.state==='3'" @click="RecupDetailsuggestion(suggeston.id)"
           >Modifier</b-button
         >
+         <b-button v-b-modal.modal_modifier class="pull-right" v-if="suggestion.state==='1'" @click="RecupDetailsuggestion"
+          >Modifier</b-button
+        >
+         <b-button
+            variant="danger"
+            v-if="suggestion.etat =1 "
+            @click="Updateetatsuggestion(5, sugestion.id)" 
+            >Suprimer</b-button
+          >
+           <b-button
+            variant="danger"
+            v-if="suggestion.etat =3 "
+            @click="Updateetatsuggestion(5, sugestion.id)" 
+            >Suprimer</b-button
+          >
+
+      </b-card>
+         </b-card-group>
+    <h2 v-if="role=''">Liste de des suggestion<h2>
+         <b-card-group deck v-for="suggestion in ListSuggestion" :key="suggestion.id">
+      <b-card v-if="appartien='oui'">
+        <b-card-text> Titre {{ suggestion.Title }} </b-card-text>
+        <b-card-text>
+          {{ suggestion.Description }}
+        </b-card-text>
+        <b-card-text v-if="Role=1">
+          {{ suggestion.createur }}
+        </b-card-text>
+        <b-card-text> nb votes:{{ suggestion.number_votes }} </b-card-text>
+        <b-button v-b-modal.modal_modifier class="pull-right" v-if="suggestion.state==='3'" @click="RecupDetailsuggestion(suggeston.id)"
+          >Modifier</b-button
+        >
          <b-button v-b-modal.modal_modifier class="pull-right" v-if="suggestion.state==='2'"
           >Modifier</b-button
         >
-
+         <b-button
+            variant="danger"
+            v-if="suggestion.etat =1 "
+            @click="Updateetatsuggestion(5, sugestion.id)" 
+            >Suprimer</b-button
+          >
+           <b-button
+            variant="danger"
+             v-if="role=1 && suggestion.state===3 "
+            @click="Updateetatsuggestion(5, sugestion.id)" 
+            >Suprimer</b-button
+            
+          >
+          <b-button
+            variant="outline-primary"
+             v-if="role=1 && suggestion.state===1 || suggestion.state===3"
+            @click="Updateetatsuggestion(3, sugesstion.id)"
+            >Valide</b-button
+          >
+          <b-button
+           v-if="role=1 && suggestion.state===2 "
+             
+            @click="Updateetatsuggestion(4, sugestion.id)"
+            >Vérouiller</b-button>
+           <b-btn @click="Vote(suggestion.id)" v-if="suggedtion.voted='non'">Vote</b-btn>
+          <b-btn @click="DeleteVote(suggestion.id)" v-if="suggedtion.voted='oui'">Enlever vote</b-btn>
+ <b-button v-b-modal.modal_modifier class="pull-right"  v-if="role=1 && suggestion.state===1 || suggestion.state===3" @click="RecupDetailsuggestion"
+          >Modifier</b-button
+        >
       </b-card>
-
          </b-card-group>
+         
 
   </div>
 </template>
