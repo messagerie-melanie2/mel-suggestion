@@ -1,3 +1,96 @@
+<template>
+  <div>
+    <b-row>
+        <b-col cols="6" md="4"> </b-col>
+        <b-col cols="12" md="8"><h1>Suggestion</h1> </b-col>
+      </b-row>
+      <b-col cols="6" md="4">
+        <b-button variant="primary" @click="fetchAllsuggestion(today)"
+          >New</b-button
+        >
+        <b-button variant="primary" @click="fetchAllsuggestion(top)"
+          >Top</b-button
+        ></b-col
+      >
+       <b-button variant="primary" @click="Generatefilr() " v-if="Role=1"
+          >Top</b-button>
+        
+      
+      <b-col cols="2" md="4">
+        <input
+          type="Search"
+          id="Search"
+          placeholder="Search une suggestion"
+          class="
+            appearance-none
+            border border-gray-400 border-b
+            block
+            pl-8
+            pr-6
+            py-2
+            w-full
+            bg-white
+            text-sm
+            placeholder-gray-400
+            rounded-lg
+            text-gray-700
+            focus:bg-white
+            focus:placeholder-gray-600
+            focus:text-gray-700
+            focus:outline-none
+          "
+          @keyup="ser"
+          v-on:change="Search"
+          v-model="search"
+        />
+      </b-col>
+       <b-col cols="2" md="4"
+        ><b-button v-b-modal.modal-prevent-closing class="pull-right" v-if="role=1"
+          >Creer Suggestion</b-button
+
+        >
+      </b-col>
+ <b-col cols="2" md="4"
+        ><b-button v-b-modal.modal-prevent-closing class="pull-right" v-if="role=2 && this.search!=''"
+          >Creer Suggestion</b-button
+          
+        >
+      </b-col>
+       <b-modal
+        id="modal-prevent-closing"
+        ref="modal"
+        title="Faire une Suggestion"
+      >
+        <form ref="form" @submit.stop.prevent="handleSubmit">
+          <b-form-group
+            label="Titre"
+            label-for="name-input"
+            invalid-feedback="Name is required"
+          >
+            <b-form-input
+              id="name-input"
+              v-model="newSuggestion.title"
+              required
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group
+            label="Description"
+            label-for="name-input"
+            invalid-feedback="Name is required"
+          >
+            <b-form-textarea
+              id="textarea"
+              v-model="description"
+              placeholder="Une description"
+              rows="3"
+              max-rows="6"
+            ></b-form-textarea>
+          </b-form-group>
+          <b-btn @click="CreateSuggestion">Ajouté</b-btn>
+        </form>
+      </b-modal>
+  </div>
+</template>
 <script>
 import BootsrapVue from "bootstrap-vue";
 Vue.use(BootsrapVue);
