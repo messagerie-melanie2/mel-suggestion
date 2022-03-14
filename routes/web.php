@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SuggestionController;
+use App\Http\Controllers\VoteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +18,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/RecoverySuggestion', [SuggestionController::class, 'Recupsugestion']);
+Route::get('/Detail',[SuggestionController::class,'Detailsugestion']);
+Route::post('/AddSuggestion', [SuggestionController::class, 'store']);
+Route::put('/UpdateSuggestion', [SuggestionController::class, 'UpdateSugestion']);
+Route::put('/UpdateState', [SuggestionController::class, 'UpdateState']);
+Route::delete('/Deletesugestion', [SuggestionController::class, 'destroy']);
+Route::post('/AddVote', [VoteController::class, 'create']);
+Route::delete('/DeleteVote', [VoteController::class, 'destroy']);
