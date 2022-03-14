@@ -1,8 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SuggestionController;
-use App\Http\Controllers\VoteController;
+
 
 /*
 |--------------------------------------------------------------------------

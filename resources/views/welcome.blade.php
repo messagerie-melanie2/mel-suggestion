@@ -9,7 +9,7 @@
     <body>
         <div id="app">
             
-        <example-component :prop=`@json($user)`>><example-component/>
+        <mel-suggestion :prop=`@json($user)`></mel-suggestion>
 
         </div>
         <?php 
