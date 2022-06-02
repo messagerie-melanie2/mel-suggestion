@@ -1,6 +1,0 @@
-Listes des état
-1=à valider
-2= valider
-3= à modifier
-4= Vérouiller
-5= Suprimer
