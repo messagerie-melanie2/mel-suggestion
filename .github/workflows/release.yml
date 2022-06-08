@@ -1,0 +1,22 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  release:
+    name: "Release"
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: "Build & test"
+        run: npm install && npm run build
+        working-directory: ./mel-suggestion-front
+      - name: Move files
+        uses: canastro/copy-file-action@master
+        with:
+          source: "./mel-suggestion-front/dist/index.html"
+          target: "./mel-suggestion-back/public/index.html"
