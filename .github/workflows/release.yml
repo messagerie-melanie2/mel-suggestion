@@ -17,16 +17,25 @@ jobs:
         working-directory: ./mel-suggestion-front
       - name: "Copy Folder"
         run: cd mel-suggestion-front && cp -r dist/index.html ../mel-suggestion-back/public && cp -r dist/css ../mel-suggestion-back/public && cp -r dist/js ../mel-suggestion-back/public
+
+      - name: Copy .env
+        run: cd mel-suggestion-back && php -r "file_exists('.env') || copy('.env.example', '.env');"
         
       - uses: papeloto/action-zip@v1
         with:
           files: "./mel-suggestion-back"
           dest: suggestion.zip
-          
+
+      - name: 'Get Previous tag'
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        with:
+          fallback: 1.0.0 # Optional fallback tag to use when no tag can be found
+
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
+          automatic_release_tag: "${{ steps.previoustag.outputs.tag }}"
           prerelease: false
           title: "Suggestion"
           files: suggestion.zip
