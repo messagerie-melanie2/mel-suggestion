@@ -18,39 +18,19 @@ jobs:
       - name: "Go in Folder"
         run: cd mel-suggestion-front
       - name: "copy Folder"
-        run: cp dist ../mel-suggestion-back/public
+        run: cp -r dist ../mel-suggestion-back/public
       - name: "Display Folder"
         run: cd ../mel-suggestion-back/public && ls -la
-      # - name: Move files
-      #   uses: canastro/copy-file-action@master
-      #   with:
-      #     source: "./mel-suggestion-front/dist/index.html"
-      #     target: "./mel-suggestion-back/public/index.html"
-
-      # # - uses: "marvinpinto/action-automatic-releases@latest"
-      #   with:
-      #     repo_token: "${{ secrets.GITHUB_TOKEN }}"
-      #     automatic_release_tag: "latest"
-      #     prerelease: false
-      #     title: "Development Build"
-      #     files: "./mel-suggestion-back"
-
-      # - name: Move files
-      #   uses: canastro/copy-file-action@master
-      #   with:
-      #     source: "./mel-suggestion-front/dist"
-      #     target: "./mel-suggestion-back/public"
-
-      # - uses: actions/checkout@v2
-      # - uses: papeloto/action-zip@v1
-      #   with:
-      #     files: "./mel-suggestion-back"
-      #     dest: suggestion.zip
+        
+      - uses: papeloto/action-zip@v1
+        with:
+          files: "./mel-suggestion-back"
+          dest: suggestion.zip
           
-      # - uses: "marvinpinto/action-automatic-releases@latest"
-      #   with:
-      #     repo_token: "${{ secrets.GITHUB_TOKEN }}"
-      #     automatic_release_tag: "latest"
-      #     prerelease: false
-      #     title: "Suggestion"
-      #     files: suggestion.zip
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "Suggestion"
+          files: suggestion.zip
