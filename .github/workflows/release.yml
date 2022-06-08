@@ -12,6 +12,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: "Build & test"
         run: npm install && npm run build
         working-directory: ./mel-suggestion-front
