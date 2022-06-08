@@ -15,10 +15,8 @@ jobs:
       - name: "Build & test"
         run: npm install && npm run build
         working-directory: ./mel-suggestion-front
-      - name: "Go in Folder"
-        run: cd mel-suggestion-front
-      - name: "copy Folder"
-        run: cp -r dist ../mel-suggestion-back/public
+      - name: "Copy Folder"
+        run: cd mel-suggestion-front && cp -r dist ../mel-suggestion-back/public
       - name: "Display Folder"
         run: cd ../mel-suggestion-back/public && ls -la
         
