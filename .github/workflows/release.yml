@@ -6,11 +6,13 @@ on:
       - "master"
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  release:
+    name: "Release"
+    runs-on: "ubuntu-latest"
+
     steps:
       - uses: actions/checkout@v2
-      - name: Build Front End
+      - name: "Build & test"
         run: npm install && npm run build
         working-directory: ./mel-suggestion-front
       - name: Move files
@@ -18,4 +20,11 @@ jobs:
         with:
           source: "./mel-suggestion-front/dist/index.html"
           target: "./mel-suggestion-back/public/index.html"
-        
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "Development Build"
+          files: "./mel-suggestion-back"
