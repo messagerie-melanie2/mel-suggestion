@@ -20,8 +20,9 @@ jobs:
 
       - name: Copy .env
         run: cd mel-suggestion-back && php -r "file_exists('.env') || copy('.env.example', '.env');"
-        
-      - uses: papeloto/action-zip@v1
+
+      - name: Zip folder
+        uses: papeloto/action-zip@v1
         with:
           files: "./mel-suggestion-back"
           dest: suggestion.zip
