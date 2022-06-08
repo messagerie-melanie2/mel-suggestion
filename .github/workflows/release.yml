@@ -20,3 +20,10 @@ jobs:
         with:
           source: "./mel-suggestion-front/dist/index.html"
           target: "./mel-suggestion-back/public/index.html"
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "Development Build"
+          files: "./mel-suggestion-back"
