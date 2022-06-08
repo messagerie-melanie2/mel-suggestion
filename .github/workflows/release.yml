@@ -16,7 +16,7 @@ jobs:
         run: npm install && npm run build
         working-directory: ./mel-suggestion-front
       - name: "Copy Folder"
-        run: cd mel-suggestion-front && cp -r dist ../mel-suggestion-back/public
+        run: cd mel-suggestion-front && cp -r dist/index.html ../mel-suggestion-back/public && cp -r dist/css ../mel-suggestion-back/public && cp -r dist/js ../mel-suggestion-back/public
       - name: "Display Folder"
         run: cd mel-suggestion-back/public && ls -la
         
