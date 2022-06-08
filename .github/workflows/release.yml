@@ -16,7 +16,7 @@ jobs:
         run: npm install && npm run build
         working-directory: ./mel-suggestion-front
       - name: "Display Folder"
-        run: ls -la
+        run: cd mel-suggestion-front && ls -la
       # - name: Move files
       #   uses: canastro/copy-file-action@master
       #   with:
