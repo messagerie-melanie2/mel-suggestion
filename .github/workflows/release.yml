@@ -18,7 +18,7 @@ jobs:
       - name: "Copy Folder"
         run: cd mel-suggestion-front && cp -r dist ../mel-suggestion-back/public
       - name: "Display Folder"
-        run: cd ../mel-suggestion-back/public && ls -la
+        run: cd mel-suggestion-back/public && ls -la
         
       - uses: papeloto/action-zip@v1
         with:
