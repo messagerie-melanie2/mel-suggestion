@@ -18,8 +18,8 @@ jobs:
       - name: Move files
         uses: canastro/copy-file-action@master
         with:
-          source: "./mel-suggestion-front/dist/index.html"
-          target: "./mel-suggestion-back/public/index.html"
+          source: "./mel-suggestion-front/dist"
+          target: "./mel-suggestion-back/public"
 
       - uses: actions/checkout@v2
       - uses: papeloto/action-zip@v1
