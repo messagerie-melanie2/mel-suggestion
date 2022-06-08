@@ -15,16 +15,18 @@ jobs:
       - name: "Build & test"
         run: npm install && npm run build
         working-directory: ./mel-suggestion-front
-      - name: Move files
-        uses: canastro/copy-file-action@master
-        with:
-          source: "./mel-suggestion-front/dist/index.html"
-          target: "./mel-suggestion-back/public/index.html"
+      - name: "Display Folder"
+        run: ls -la
+      # - name: Move files
+      #   uses: canastro/copy-file-action@master
+      #   with:
+      #     source: "./mel-suggestion-front/dist/index.html"
+      #     target: "./mel-suggestion-back/public/index.html"
 
-      - uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: false
-          title: "Development Build"
-          files: "./mel-suggestion-back"
+      # # - uses: "marvinpinto/action-automatic-releases@latest"
+      #   with:
+      #     repo_token: "${{ secrets.GITHUB_TOKEN }}"
+      #     automatic_release_tag: "latest"
+      #     prerelease: false
+      #     title: "Development Build"
+      #     files: "./mel-suggestion-back"
