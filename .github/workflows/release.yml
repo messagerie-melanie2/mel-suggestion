@@ -21,7 +21,7 @@ jobs:
         run: cd mel-suggestion-front && cp -r dist/index.html ../mel-suggestion-back/public && cp -r dist/css ../mel-suggestion-back/public && cp -r dist/js ../mel-suggestion-back/public
 
       - name: Copy .env
-        run: cd mel-suggestion-back && php -r "file_exists('.env') || copy('.env.example', '.env');"
+        run: cd mel-suggestion-back && php -r "copy('.env.example', '.env');"
 
       - name: Zip folder
         uses: papeloto/action-zip@v1
