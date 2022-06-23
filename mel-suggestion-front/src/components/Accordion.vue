@@ -6,7 +6,7 @@
         <span class="up-Arrow" v-show="active"><i class="fa-solid fa-chevron-up"></i></span>
       </a>
     </div>
-    <div class="tab__content p-2" v-show="active">
+    <div class="tab__content p-2" v-show="active" :class="$darkTheme ? 'dark-text' : ''">
       <div class="ql-snow" v-if="active">
         <div class="ql-editor">
           <div v-html="suggestion.description"></div>

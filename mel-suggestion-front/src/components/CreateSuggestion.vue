@@ -16,10 +16,10 @@
                 leading-tight
                 focus:outline-none focus:shadow-outline
               " id="title" v-model="title" type="text" placeholder="Titre..." maxlength="255"
-        :class="titleError ? 'border-red-500' : ''" />
+        :class="[titleError ? 'border-red-500' : '', $darkTheme ? 'dark-text' : '']" />
       <span class="text-red-500" v-show="titleError">Merci de renseigner un titre</span>
     </div>
-    <div class="mb-6">
+    <div class="mb-6" :class="$darkTheme ? 'dark-text' : ''">
       <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
         Description
       </label>
@@ -29,7 +29,7 @@
     </div>
     <div class="flex items-center justify-between">
       <button  class="text-gray-900 bg-white border border-gray-300 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 mt-2"
-          :class="darkTheme ? 'hover:bg-gray-600' : 'hover:bg-gray-100'" type="submit">
+          :class="$darkTheme ? 'hover:bg-gray-600' : 'hover:bg-gray-100'" type="submit">
         Valider
       </button>
     </div>
@@ -43,8 +43,7 @@ import { mapActions } from "vuex";
 export default {
   name: "CreateSuggestion",
   props: {
-    titleprops: String,
-    darkTheme: Boolean,
+    titleprops: String
   },
   data() {
     return {

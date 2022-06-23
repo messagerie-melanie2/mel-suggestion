@@ -1,14 +1,14 @@
 <template>
   <div>
-    <h1 v-if="$moderator">Modérateur</h1>
-
-    <body class="flex items-center justify-center" :class="isDarkTheme ? 'dark-mode-suggestion' : ''">
+    <div v-if="$moderator">MODERATEUR</div>
+    <body class="flex items-center justify-center" :class="$darkTheme ? 'dark-mode-suggestion' : ''">
       <div class="w-full max-w-4xl px-4">
         <Header :title="allText.title" />
-        <div class="border rounded-lg border pb-6 border-gray-300">
-          <div class="flex items-center border-b border-gray-300 justify-between px-6 py-3">
-            <SortingButton :darkTheme="isDarkTheme" />
-            <Search />
+        <div class="rounded-lg pb-6" :class="$darkTheme ? 'dark-background' : 'border border-gray-300'">
+          <div class="flex items-center justify-between px-6 py-3"
+            :class="$darkTheme ? '' : ' border-b border-gray-300'">
+            <SortingButton/>
+            <Search/>
           </div>
           <div>
             <section v-if="errored" class="flex justify-center my-3">
@@ -19,7 +19,7 @@
                 <Preloader color="gray" />
               </div>
               <div v-else>
-                <Suggestions :suggestions="allSuggestions" :darkTheme="isDarkTheme"/>
+                <Suggestions :suggestions="allSuggestions"/>
               </div>
             </section>
           </div>
@@ -50,11 +50,10 @@ export default {
   },
   created() {
     this.fetchSuggestions(),
-      this.fetchText(),
-      this.checkTheme()
+      this.fetchText()
   },
   methods: {
-    ...mapActions(['fetchSuggestions', 'fetchText', 'checkTheme']),
+    ...mapActions(['fetchSuggestions', 'fetchText']),
   },
   components: {
     Header,
@@ -63,21 +62,39 @@ export default {
     Suggestions,
     Preloader
   },
-  computed: mapGetters(['allSuggestions', 'loadingStatus', 'allText', 'isDarkTheme']),
+  computed: mapGetters(['allSuggestions', 'loadingStatus', 'allText']),
 };
 </script>
 
 
 <style>
 /* Css for Dark Theme */
+.dark-mode .dark-background {
+  background-color: #323F4B;
+}
+
+.dark-mode-suggestion .dark-title {
+  color: #96b9e7;
+  border-color: #96b9e7;
+}
+
+.dark-mode-suggestion .dark-text {
+  color: #c7dfff;
+}
+
+.dark-mode-suggestion .dark-voted {
+  color: rgb(17, 202, 140);
+  border-color: rgb(17, 202, 140);
+}
+
 .dark-mode-suggestion h1,
 .dark-mode-suggestion label,
-.dark-mode-suggestion .ql-picker-label::before,
-.dark-mode-suggestion p {
+.dark-mode-suggestion .ql-picker-label::before {
   color: #96b9e7;
 }
 
 .dark-mode-suggestion .border-gray-300,
+.dark-mode-suggestion .fas.fa-magnifying-glass,
 .dark-mode-suggestion input {
   border-color: #E1C58F;
   color: #E1C58F;
@@ -95,16 +112,19 @@ export default {
 .ql-toolbar.ql-snow {
   border-radius: 0.25rem 0.25rem 0 0;
 }
+
 .ql-container.ql-snow {
   border-radius: 0 0 0.25rem 0.25rem;
 }
 
 .dark-mode-suggestion .ql-toolbar.ql-snow {
-  border-color:#E1C58F;
+  border-color: #E1C58F;
 }
+
 .dark-mode-suggestion .ql-container.ql-snow {
-  border-color:#E1C58F;
+  border-color: #E1C58F;
 }
+
 .dark-mode-suggestion svg {
   filter: invert(69%) sepia(75%) saturate(408%) hue-rotate(184deg) brightness(100%) contrast(82%)
 }

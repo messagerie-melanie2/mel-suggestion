@@ -16,12 +16,20 @@ Vue.prototype.$moderator = false;
 
 new Vue({
   store,
-  beforeCreate: function () {
-    axiosClient
-      .get("moderator")
-      .then((response) => {
-        Vue.prototype.$moderator = response.data
-      })
-  },
+  beforeCreate:
+    function () {
+      Vue.prototype.$darkTheme = false;
+
+      const element = document.querySelector("html");
+      if (element.classList.contains('dark-mode')) {
+        Vue.prototype.$darkTheme = true;
+      }
+
+      axiosClient
+        .get("moderator")
+        .then((response) => {
+          Vue.prototype.$moderator = response.data
+        })
+    },
   render: h => h(App),
 }).$mount('#app')

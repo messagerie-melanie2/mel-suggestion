@@ -5,6 +5,7 @@
         Titre
       </label>
       <input class="
+              bg-white
                 shadow
                 appearance-none
                 border
@@ -12,31 +13,22 @@
                 w-full
                 py-2
                 px-3
-                text-gray-700
                 leading-tight
                 focus:outline-none focus:shadow-outline
               " id="title" v-model="localSuggestion.title" type="text" placeholder="Titre..." maxlength="255"
-        :class="titleError ? 'border-red-500' : ''" />
+        :class="[titleError ? 'border-red-500' : '', $darkTheme ? 'dark-text' : '']" />
       <span class="text-red-500" v-show="titleError">Merci de renseigner un titre</span>
     </div>
-    <div class="mb-6">
+    <div class="mb-6" :class="$darkTheme ? 'dark-text' : ''" @click.stop>
       <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
         Description
       </label>
-      <vue-editor v-model="localSuggestion.description"></vue-editor>
+      <vue-editor v-model="localSuggestion.description" ></vue-editor>
       <span class="text-red-500" v-show="descriptionError">Merci de renseigner une description</span>
     </div>
     <div class="flex items-center justify-between">
-      <button @click.stop class="
-                bg-blue-500
-                hover:bg-blue-700
-                text-white
-                font-bold
-                py-2
-                px-4
-                rounded
-                focus:outline-none focus:shadow-outline
-              " type="submit">
+  <button @click.stop  class="text-gray-900 bg-white border border-gray-300 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 mt-2"
+          :class="$darkTheme ? 'hover:bg-gray-600' : 'hover:bg-gray-100'" type="submit">
         Valider
       </button>
     </div>
