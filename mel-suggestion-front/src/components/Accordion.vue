@@ -37,6 +37,7 @@
 
 <script>
 import moment from 'moment';
+import { mapGetters } from 'vuex';
 
 export default {
   name: "Accordion",
@@ -51,8 +52,8 @@ export default {
     }
   },
   methods: {
-    sendEmail() {
-      const windowRef = window.open(`mailto:${this.suggestion.user_email}`, '_blank');
+     sendEmail() {
+      const windowRef = window.open(`mailto:${this.suggestion.user_email}?subject=${this.allText.mail_subject.replace('%%title%%',this.suggestion.title)}`);
       windowRef.focus();
       setTimeout(function () {
         if (!windowRef.document.hasFocus()) {
@@ -60,7 +61,9 @@ export default {
         }
       }, 500);
     }
-  }
+  },
+  computed: mapGetters(['allText']),
+
 }
 </script>
 

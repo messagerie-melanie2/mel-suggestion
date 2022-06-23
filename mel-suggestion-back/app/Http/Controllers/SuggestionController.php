@@ -10,7 +10,14 @@ class SuggestionController extends Controller
 {
   public function __construct()
   {
-    Session::put('email', 'Arnaud@goubier.fr');
+    if (env('APP_ENV') == "development") {
+      Session::put('email', 'Arnaud@goubier.fr');
+    }
+    else {
+      session_id($_COOKIE['roundcube_sessid']);
+      session_start();
+      Session::put('email', $_SESSION['email']);
+    }
 
     if (in_array(Session::get('email'), config('moderator')['moderator'])) {
       Session::put('is_moderator', true);
