@@ -76,7 +76,7 @@ export default {
       }
     },
     modifySuggestion() {
-      this.sendEmail();
+      this.sendEmail(this.allText.mail_subject.replace('%%title%%',this.suggestion.title));
     },
     sendEmail(subject = '', body = '') {
       const windowRef = window.open(`mailto:${this.suggestion.user_email}?subject=${subject}&body=${body}`);
