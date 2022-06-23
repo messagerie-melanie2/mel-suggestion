@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div v-if="$moderator">MODERATEUR</div>
     <body class="flex items-center justify-center" :class="$darkTheme ? 'dark-mode-suggestion' : ''">
       <div class="w-full max-w-4xl px-4">
         <Header :title="allText.title" />

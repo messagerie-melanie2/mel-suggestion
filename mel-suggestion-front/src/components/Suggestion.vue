@@ -1,6 +1,6 @@
 <template>
-  <tr class="inline-block w-full px-6 pt-3"
-    :class="[suggestion.state == 'moderate' ? 'border-yellow-500' : '', suggestion.state == 'validate' ? 'border-green-500' : '']"
+  <tr class="inline-block w-full px-6 pt-3 cursor-pointer"
+    :class="[!showSuggestion && !$darkTheme ?  'hover:bg-gray-100' : '', !showSuggestion && $darkTheme ? 'hover:bg-gray-800' : '', suggestion.state == 'moderate' ? 'border-l-2 border-yellow-500' : '', suggestion.state == 'validate' ? 'border-l-2 border-green-500' : '']"
     @click.prevent="description = !description">
     <td class="inline-block w-full">
       <div class="flex justify-between" v-show="!showSuggestion">

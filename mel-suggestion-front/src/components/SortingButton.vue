@@ -3,16 +3,16 @@
     <div class="inline-flex">
       <button class="bg-white text-slate-600 font-semibold py-2 px-3 border border-gray-300 rounded-l shadow"
         @click="sort('nb_votes', false)"
-        v-bind:class="[sortBy === 'nb_votes' && validateOnly === false ? 'bg-gray-200 hover:bg-gray-200': '', $darkTheme ? 'hover:bg-gray-700' : 'hover:bg-gray-100']">
+        v-bind:class="[sortBy === 'nb_votes' && validateOnly === false ? 'bg-gray-200 hover:bg-gray-200': '', $darkTheme ? 'hover:bg-gray-800' : 'hover:bg-gray-100']">
         <i class="far fa-star text-slate-400"></i> Top
       </button>
       <button class="bg-white text-slate-600 font-semibold py-2 px-3 border border-gray-300 shadow"
         @click="sort('updated_at', false)"
-        v-bind:class="[sortBy === 'updated_at' && validateOnly === false ? 'bg-gray-200 hover:bg-gray-200' : '', $darkTheme ? 'hover:bg-gray-700' : 'hover:bg-gray-100']">
+        v-bind:class="[sortBy === 'updated_at' && validateOnly === false ? 'bg-gray-200 hover:bg-gray-200' : '', $darkTheme ? 'hover:bg-gray-800' : 'hover:bg-gray-100']">
         <i class="far fa-clock text-slate-400"></i> Nouveau
       </button>
       <button class="bg-white text-slate-600 font-semibold py-2 px-3 border border-gray-300 rounded-r shadow"
-        @click="sort('updated_at', true)" v-bind:class="[validateOnly === true ? 'bg-gray-200 hover:bg-gray-200' : '', $darkTheme ? 'hover:bg-gray-700' : 'hover:bg-gray-100']">
+        @click="sort('updated_at', true)" v-bind:class="[validateOnly === true ? 'bg-gray-200 hover:bg-gray-200' : '', $darkTheme ? 'hover:bg-gray-800' : 'hover:bg-gray-100']">
         <i class="fas fa-list-check text-slate-400 mr-1"></i> A venir
       </button>
     </div>

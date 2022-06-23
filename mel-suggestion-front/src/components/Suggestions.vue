@@ -4,7 +4,7 @@
       <tbody>
         <div v-for="suggestion in sortedSuggestions" :key="suggestion.id">
           <Suggestion :suggestion="suggestion"/>
-          <hr />
+          <!-- <hr /> -->
         </div>
       </tbody>
     </table>
