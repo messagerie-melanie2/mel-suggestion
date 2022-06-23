@@ -14,7 +14,7 @@ const actions = {
   fetchSuggestions({ commit }) {
     commit('loadingStatus', true)
     axiosClient
-      .get("suggestions/")
+      .get("suggestions")
       .then((response) => {
         commit('setSuggestions', response.data);
       })
