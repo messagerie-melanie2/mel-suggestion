@@ -1,13 +1,14 @@
 <template>
-  <tr class="inline-block w-full px-6 pt-3 border-l-2"
+  <tr class="inline-block w-full px-6 pt-3"
     :class="[suggestion.state == 'moderate' ? 'border-yellow-500' : '', suggestion.state == 'validate' ? 'border-green-500' : '']"
     @click.prevent="description = !description">
     <td class="inline-block w-full">
       <div class="flex justify-between" v-show="!showSuggestion">
         <div id="suggestion" class="flex items-center w-full">
-          <div class="bg-gray-300 rounded-sm p-2.5 cursor-pointer"
-            :class="[suggestion.voted ? 'bg-green-200' : '', suggestion.state != 'validate' && !suggestion.my_suggestion ? 'hover:bg-gray-200' : '']"
-            @mouseenter="changeVoteText" @mouseleave="resetVoteText" @click.stop="toggleVote">
+          <div class="rounded-sm p-2.5 cursor-pointer" :class="[$darkTheme ? 'border dark-title' : 'bg-gray-300',
+          $darkTheme && suggestion.voted ? 'dark-voted' : '',
+          !$darkTheme && suggestion.voted ? 'bg-green-200' : '',
+          ]" @mouseenter="changeVoteText" @mouseleave="resetVoteText" @click.stop="toggleVote">
             <div v-if="voteHover" class="text-center mb-2">
               <div v-if="suggestion.voted">
                 <i class="fa-solid fa-xl fa-times"></i>
@@ -16,24 +17,25 @@
                 <i class="fa-solid fa-xl fa-circle-up"></i>
               </div>
             </div>
-            <div v-else>
-              <p class="text-center text-lg font-bold">{{ suggestion.nb_votes }}</p>
+            <div v-else >
+              <p class="text-center text-lg font-bold">{{
+                  suggestion.nb_votes
+              }}</p>
             </div>
-            <p>Votes</p>
+            <p >Votes</p>
           </div>
           <div class="pl-3">
-            <div class="flex items-center text-sm leading-none">
-              <p class="font-semibold text-gray-800 overflow-hidden truncate custom_width">
+            <div class="flex items-center text-sm leading-none" >
+              <p class="font-semibold overflow-hidden truncate custom_width"  :class="$darkTheme ? 'dark-title' : 'text-gray-800'">
                 {{ suggestion.title | strippedContent }}
               </p>
             </div>
-            <div :class="description ? 'invisible' : 'visible'" class="overflow-hidden truncate custom_width">
+            <div :class="[description ? 'invisible' : 'visible', $darkTheme ? 'dark-text' : '']" class="overflow-hidden truncate custom_width">
               <span>{{ suggestion.description | strippedContent }}</span>
             </div>
           </div>
         </div>
-        <div id="user-actions"
-          v-show="(suggestion.my_suggestion || $moderator) && suggestion.state == 'moderate' ">
+        <div id="user-actions" v-show="(suggestion.my_suggestion || $moderator) && suggestion.state == 'moderate'">
           <i class="fa-solid fa-edit mb-4 hover:text-blue-500 cursor-pointer" @click="toggleSuggestion"
             title="Éditer la suggestion"></i>
           <br>
@@ -41,7 +43,7 @@
             title="Supprimer la suggestion" @click.stop="onDelete"></i>
         </div>
       </div>
-      
+
       <ModeratorCommands :suggestion="suggestion" />
 
       <div v-if="showSuggestion">
@@ -49,10 +51,10 @@
           <i class="fa-solid fa-edit mb-4 hover:text-blue-500 cursor-pointer" @click="toggleSuggestion"></i>
         </div>
 
-        <UpdateSuggestion @update-suggestion="updateSuggestions" :suggestion="suggestion" />
+        <UpdateSuggestion @update-suggestion="updateSuggestions" :suggestion="suggestion"/>
       </div>
     </td>
-    <Accordion :suggestion="suggestion" :active="description" v-show="!showSuggestion" />
+    <Accordion :suggestion="suggestion" :active="description" v-show="!showSuggestion"/>
   </tr>
 </template>
 
@@ -68,7 +70,7 @@ import Accordion from "./Accordion";
 export default {
   name: "Suggestion",
   props: {
-    suggestion: Object,
+    suggestion: Object
   },
   data() {
     return {
@@ -157,7 +159,7 @@ export default {
 </script>
 <style scoped>
 *>>>.ql-editor {
-  padding: 12px 20px 12px 0px;
+  padding: 5px 20px 12px 15px;
   min-height: 100px;
 }
 
@@ -189,9 +191,5 @@ export default {
   .custom_width {
     width: 45rem;
   }
-}
-
-.ql-editor>>>img {
-  border-radius: 0.25rem;
 }
 </style>

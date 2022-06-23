@@ -16,7 +16,9 @@ Vue.prototype.$moderator = false;
 
 new Vue({
   store,
-  beforeCreate: function () {
+  beforeCreate: 
+  checkTheme, 
+  function () {
     axiosClient
       .get("moderator")
       .then((response) => {
@@ -25,3 +27,12 @@ new Vue({
   },
   render: h => h(App),
 }).$mount('#app')
+
+function checkTheme() {
+  Vue.prototype.$darkTheme = false;
+
+  const element = document.querySelector("html");
+  if (element.classList.contains('dark-mode')) {
+    Vue.prototype.$darkTheme = true;
+  }
+}

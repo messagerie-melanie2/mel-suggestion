@@ -3,23 +3,23 @@
     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
       <tbody>
         <div v-for="suggestion in sortedSuggestions" :key="suggestion.id">
-          <Suggestion :suggestion="suggestion" />
+          <Suggestion :suggestion="suggestion"/>
           <hr />
         </div>
       </tbody>
     </table>
     <div v-if="search.length >= 3 || !filteredSuggestions.length">
       <div class="flex justify-center">
-        <p v-show="!filteredSuggestions.length" class="my-3">Aucun résultat</p>
+        <p v-show="!filteredSuggestions.length" class="my-3" :class="$darkTheme ? 'dark-text' : ''">Aucun résultat</p>
       </div>
       <div class="flex justify-center">
         <button @click="showCreateSuggestion"
           class="text-gray-900 bg-white border border-gray-300 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 mt-2"
-          :class="darkTheme ? 'hover:bg-gray-600' : 'hover:bg-gray-100'">Créer
+          :class="$darkTheme ? 'hover:bg-gray-600' : 'hover:bg-gray-100'">Créer
           une suggestion</button>
       </div>
       <div v-show="create">
-        <CreateSuggestion :titleprops=search :darkTheme="darkTheme" />
+        <CreateSuggestion :titleprops=search />
       </div>
     </div>
   </div>
@@ -32,8 +32,7 @@ import CreateSuggestion from "./CreateSuggestion";
 export default {
   name: "Suggestions",
   props: {
-    suggestions: Array,
-    darkTheme: Boolean,
+    suggestions: Array
   },
   data() {
     return {
