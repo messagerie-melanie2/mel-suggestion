@@ -69,6 +69,7 @@ export default {
 
 
 <style>
+/* Css for Dark Theme */
 .dark-mode-suggestion h1,
 .dark-mode-suggestion label,
 .dark-mode-suggestion .ql-picker-label::before,
