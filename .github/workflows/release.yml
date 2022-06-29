@@ -1,0 +1,52 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  release:
+    name: "Release"
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: "Build & test"
+        run: npm install && npm run build
+        working-directory: ./mel-suggestion-front
+      - name: "Copy Folder"
+        run: cd mel-suggestion-front && cp -r dist/index.html ../mel-suggestion-back/public && cp -r dist/css ../mel-suggestion-back/public && cp -r dist/js ../mel-suggestion-back/public
+
+      - name: Copy .env
+        run: cd mel-suggestion-back && php -r "copy('.env.example', '.env');"
+
+      - name: Zip folder
+        uses: papeloto/action-zip@v1
+        with:
+          files: "./mel-suggestion-back"
+          dest: suggestion.zip
+
+
+      - name: 'Get Previous tag'
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        with:
+          fallback: 1.0.0 # Optional fallback tag to use when no tag can be found
+
+      - name: Check next version
+        id: bump_version
+        uses: christian-draeger/increment-semantic-version@1.0.2
+        with:
+          current-version: "${{ steps.previoustag.outputs.tag }}"
+          version-fragment: 'feature'
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "${{ steps.bump_version.outputs.next-version }}"
+          prerelease: false
+          title: "Suggestion"
+          files: suggestion.zip
