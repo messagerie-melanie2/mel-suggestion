@@ -1,35 +1,37 @@
 <template>
   <form @submit="onSubmit" class="px-8 pt-6 pb-8 mb-4">
     <div class="mb-4">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
+      <label class="block text-slate-700 dark:text-title-blue text-sm font-bold mb-2" for="title">
         Titre
       </label>
       <input class="
-      bg-white
-                shadow
+              bg-white
+              dark:bg-light-blue
                 appearance-none
                 border
+                border-gray-300
+                dark:text-common-blue
                 rounded
                 w-full
                 py-2
                 px-3
                 leading-tight
-                focus:outline-none focus:shadow-outline
+                focus:outline-none
               " id="title" v-model="title" type="text" placeholder="Titre..." maxlength="255"
-        :class="[titleError ? 'border-red-500' : '', $darkTheme ? 'dark-text' : '']" />
+        :class="[titleError ? 'border-red-500' : 'dark:border-light-yellow']" />
       <span class="text-red-500" v-show="titleError">Merci de renseigner un titre</span>
     </div>
-    <div class="mb-6" :class="$darkTheme ? 'dark-text' : ''">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+    <div class="mb-6">
+      <label class="block text-gray-700 dark:text-title-blue text-sm font-bold mb-2" for="password">
         Description
       </label>
       <vue-editor v-model="description"></vue-editor>
-
       <span class="text-red-500" v-show="descriptionError">Merci de renseigner une description</span>
     </div>
     <div class="flex items-center justify-between">
-      <button  class="text-gray-900 bg-white border border-gray-300 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 mt-2"
-          :class="$darkTheme ? 'hover:bg-gray-600' : 'hover:bg-gray-100'" type="submit">
+      <button
+        class="text-gray-900 dark:text-light-yellow bg-white dark:bg-light-blue border border-gray-300 dark:border-light-yellow hover:bg-gray-100 dark:hover:bg-dark-blue rounded-md text-sm px-5 py-2.5 mr-2 mb-2 mt-2"
+        type="submit">
         Valider
       </button>
     </div>
