@@ -1,12 +1,12 @@
 <template>
   <div>
     <div class="tab__header">
-      <a href="#" class="tab__link pb-2 block bg-blue-dark text-gray-600 flex justify-center">
+      <a href="#" class="tab__link pb-2 block bg-blue-dark text-gray-600 dark:text-common-blue flex justify-center">
         <span v-show="!active"><i class="fa-solid fa-chevron-down"></i></span>
         <span class="up-Arrow" v-show="active"><i class="fa-solid fa-chevron-up"></i></span>
       </a>
     </div>
-    <div class="tab__content p-2" v-show="active" :class="$darkTheme ? 'dark-text' : ''">
+    <div class="tab__content p-2 dark:text-common-blue" v-show="active">
       <div class="ql-snow" v-if="active">
         <div class="ql-editor">
           <div v-html="suggestion.description"></div>

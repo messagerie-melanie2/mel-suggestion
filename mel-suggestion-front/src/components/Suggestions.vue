@@ -1,6 +1,6 @@
 <template>
   <div class="relative overflow-x-auto">
-    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+    <table class="w-full text-sm text-left">
       <tbody>
         <div v-for="suggestion in sortedSuggestions" :key="suggestion.id">
           <Suggestion :suggestion="suggestion"/>
@@ -9,13 +9,12 @@
       </tbody>
     </table>
     <div v-if="search.length >= 3 || !filteredSuggestions.length">
-      <div class="flex justify-center">
-        <p v-show="!filteredSuggestions.length" class="my-3" :class="$darkTheme ? 'dark-text' : ''">Aucun résultat</p>
+      <div class="flex justify-center dark:text-title-blue">
+        <p v-show="!filteredSuggestions.length" class="my-3">Aucun résultat</p>
       </div>
       <div class="flex justify-center">
         <button @click="showCreateSuggestion"
-          class="text-gray-900 bg-white border border-gray-300 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 mt-2"
-          :class="$darkTheme ? 'hover:bg-gray-600' : 'hover:bg-gray-100'">Créer
+          class="text-gray-900 dark:text-light-yellow bg-white dark:bg-light-blue border border-gray-300 dark:border-light-yellow hover:bg-gray-100 dark:hover:bg-dark-blue rounded-md text-sm px-5 py-2.5 mr-2 mb-2 mt-2">Créer
           une suggestion</button>
       </div>
       <div v-show="create">

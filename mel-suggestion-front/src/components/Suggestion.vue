@@ -1,14 +1,15 @@
 <template>
-  <tr class="inline-block w-full px-6 pt-3 cursor-pointer"
-    :class="[!showSuggestion && !$darkTheme ?  'hover:bg-gray-100' : '', !showSuggestion && $darkTheme ? 'hover:bg-gray-800' : '', suggestion.state == 'moderate' ? 'border-l-2 border-yellow-500' : '', suggestion.state == 'validate' ? 'border-l-2 border-green-500' : '']"
+  <tr class="inline-block w-full px-6 pt-3 cursor-pointer "
+    :class="[!showSuggestion ? 'hover:bg-gray-100 dark:hover:bg-dark-blue' : '', suggestion.state == 'moderate' ? 'border-l-2 border-yellow-500' : '', suggestion.state == 'validate' ? 'border-l-2 border-green-500' : '']"
     @click.prevent="description = !description">
     <td class="inline-block w-full">
       <div class="flex justify-between" v-show="!showSuggestion">
         <div id="suggestion" class="flex items-center w-full">
-          <div class="rounded-sm p-2.5 cursor-pointer" :class="[$darkTheme ? 'border dark-title' : 'bg-gray-300',
-          $darkTheme && suggestion.voted ? 'dark-voted' : '',
-          !$darkTheme && suggestion.voted ? 'bg-green-200' : '',
-          ]" @mouseenter="changeVoteText" @mouseleave="resetVoteText" @click.stop="toggleVote">
+          <div
+            class="rounded-sm p-2.5 cursor-pointer dark:bg-light-blue "
+            :class="[
+              suggestion.voted ? 'bg-green-200 border dark:border-voted-green dark:text-voted-green' : 'bg-gray-300  border dark:border-title-blue text-slate-800 dark:text-title-blue',
+            ]" @mouseenter="changeVoteText" @mouseleave="resetVoteText" @click.stop="toggleVote">
             <div v-if="voteHover" class="text-center mb-2">
               <div v-if="suggestion.voted">
                 <i class="fa-solid fa-xl fa-times"></i>
@@ -17,29 +18,30 @@
                 <i class="fa-solid fa-xl fa-circle-up"></i>
               </div>
             </div>
-            <div v-else >
+            <div v-else>
               <p class="text-center text-lg font-bold">{{
                   suggestion.nb_votes
               }}</p>
             </div>
-            <p >Votes</p>
+            <p>Votes</p>
           </div>
           <div class="pl-3">
-            <div class="flex items-center text-sm leading-none" >
-              <p class="font-semibold overflow-hidden truncate custom_width"  :class="$darkTheme ? 'dark-title' : 'text-gray-800'">
+            <div class="flex items-center text-sm leading-none">
+              <p class="font-semibold overflow-hidden truncate custom_width text-slate-800 dark:text-title-blue">
                 {{ suggestion.title | strippedContent }}
               </p>
             </div>
-            <div :class="[description ? 'invisible' : 'visible', $darkTheme ? 'dark-text' : '']" class="overflow-hidden truncate custom_width">
+            <div :class="[description ? 'invisible' : 'visible', $darkTheme ? 'dark-text' : '']"
+              class="overflow-hidden truncate custom_width dark:text-common-blue">
               <span>{{ suggestion.description | strippedContent }}</span>
             </div>
           </div>
         </div>
         <div id="user-actions" v-show="(suggestion.my_suggestion || $moderator) && suggestion.state == 'moderate'">
-          <i class="fa-solid fa-edit mb-4 hover:text-blue-500 cursor-pointer" @click="toggleSuggestion"
+          <i class="fa-solid fa-edit mb-4 dark:text-title-blue dark:hover:text-blue-500 hover:text-blue-500 cursor-pointer" @click="toggleSuggestion"
             title="Éditer la suggestion"></i>
           <br>
-          <i v-show="!$moderator" class="fa-solid fa-trash mt-4 hover:text-red-500 cursor-pointer"
+          <i v-show="!$moderator" class="fa-solid fa-trash mt-4 dark:text-title-blue dark:hover:text-red-500 hover:text-red-500 cursor-pointer"
             title="Supprimer la suggestion" @click.stop="onDelete"></i>
         </div>
       </div>
@@ -51,10 +53,10 @@
           <i class="fa-solid fa-edit mb-4 hover:text-blue-500 cursor-pointer" @click="toggleSuggestion"></i>
         </div>
 
-        <UpdateSuggestion @update-suggestion="updateSuggestions" :suggestion="suggestion"/>
+        <UpdateSuggestion @update-suggestion="updateSuggestions" :suggestion="suggestion" />
       </div>
     </td>
-    <Accordion :suggestion="suggestion" :active="description" v-show="!showSuggestion"/>
+    <Accordion :suggestion="suggestion" :active="description" v-show="!showSuggestion" />
   </tr>
 </template>
 
@@ -130,6 +132,7 @@ export default {
           })
         }
       }
+      this.resetVoteText();
     },
     onDelete() {
       if (confirm('Voulez-vous supprimer cette suggestion ?')) {

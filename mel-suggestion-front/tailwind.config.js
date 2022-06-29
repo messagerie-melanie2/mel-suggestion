@@ -3,9 +3,19 @@ module.exports = {
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
-  darkMode: false, // or 'media' or 'class'
+  purge: [],
+  darkMode: 'class', // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'dark-blue': '#1f2933',
+        'light-blue': '#323f4b',
+        'title-blue': '#96b9e7',
+        'common-blue': '#c7dfff',
+        'light-yellow': '#E1C58F',
+        'voted-green': '#11ca8c',
+      }
+    },
   },
   variants: {
     extend: {},
