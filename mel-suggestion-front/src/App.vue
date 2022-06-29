@@ -1,14 +1,14 @@
 <template>
-  <div>
+  <div class="bg-white dark:bg-dark-blue">
     <div v-if="$moderator">MODERATEUR</div>
+
     <body class="flex items-center justify-center" :class="$darkTheme ? 'dark-mode-suggestion' : ''">
       <div class="w-full max-w-4xl px-4">
         <Header :title="allText.title" />
-        <div class="rounded-lg pb-6" :class="$darkTheme ? 'dark-background' : 'border border-gray-300'">
-          <div class="flex items-center justify-between px-6 py-3"
-            :class="$darkTheme ? '' : ' border-b border-gray-300'">
-            <SortingButton/>
-            <Search/>
+        <div class="rounded-lg pb-6 border border-gray-300 dark:border-gray-800 bg-white dark:bg-light-blue">
+          <div class="flex items-center justify-between px-6 py-3 border-b border-gray-300 dark:border-light-blue">
+            <SortingButton />
+            <Search />
           </div>
           <div>
             <section v-if="errored" class="flex justify-center my-3">
@@ -19,7 +19,7 @@
                 <Preloader color="gray" />
               </div>
               <div v-else>
-                <Suggestions :suggestions="allSuggestions"/>
+                <Suggestions :suggestions="allSuggestions" />
               </div>
             </section>
           </div>
@@ -62,14 +62,14 @@ export default {
     Suggestions,
     Preloader
   },
-  computed: mapGetters(['allSuggestions', 'loadingStatus', 'allText']),
+  computed: mapGetters(['allSuggestions', 'loadingStatus', 'allText', 'dark']),
 };
 </script>
 
 
 <style>
 /* Css for Dark Theme */
-.dark-mode .dark-background {
+/* .dark-mode .dark-background {
   background-color: #323F4B;
 }
 
@@ -127,5 +127,5 @@ export default {
 
 .dark-mode-suggestion svg {
   filter: invert(69%) sepia(75%) saturate(408%) hue-rotate(184deg) brightness(100%) contrast(82%)
-}
+} */
 </style>

@@ -13,6 +13,7 @@
     "flowbite": "^1.4.5",
     "moment": "^2.29.3",
     "vue": "^2.6.11",
+    "vue-cookies": "^1.8.1",
     "vue-router": "^3.5.3",
     "vue-toastification": "^1.7.14",
     "vue2-editor": "^2.10.3",
