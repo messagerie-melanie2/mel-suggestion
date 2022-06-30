@@ -6,9 +6,7 @@ import store from './store'
 import "vue-toastification/dist/index.css";
 import './index.css'
 
-window.addEventListener('colorMode', getTheme());
 
-getTheme();
 
 Vue.config.productionTip = false
 Vue.use(Toast, { position: "bottom-right" });
@@ -18,6 +16,10 @@ Vue.prototype.$axios = axios;
 
 new Vue({
   store,
+  beforeCreate: function () {
+    window.addEventListener('colorMode', getTheme());
+    getTheme();
+  },
   render: h => h(App),
 }).$mount('#app')
 
@@ -25,5 +27,4 @@ new Vue({
 function getTheme() {
   Vue.prototype.$darkTheme = localStorage.getItem('colorMode') == "dark" ? true : false;
   document.getElementsByTagName("html")[0].setAttribute('class', localStorage.getItem('colorMode'));
-
 } 
