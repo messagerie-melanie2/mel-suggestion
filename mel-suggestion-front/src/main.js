@@ -26,5 +26,5 @@ new Vue({
 
 function getTheme() {
   Vue.prototype.$darkTheme = localStorage.getItem('colorMode') == "dark" ? true : false;
-  document.getElementsByTagName("html")[0].setAttribute('class', localStorage.getItem('colorMode'));
+  document.getElementsByTagName("html")[0].setAttribute('class', JSON.parse(localStorage.getItem('colorMode')));
 } 
