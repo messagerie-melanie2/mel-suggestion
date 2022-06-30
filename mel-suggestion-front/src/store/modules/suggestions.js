@@ -20,19 +20,18 @@ const actions = {
       .get("moderator")
       .then((response) => {
         Vue.prototype.$moderator = response.data;
-      });
-
-    axiosClient
-      .get("suggestions")
-      .then((response) => {
-        commit('setSuggestions', response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-        this._vm.$toast.error("Erreur lors du chargement des données");
-      }).finally(() => {
-        commit('loadingStatus', false)
-      });
+        axiosClient
+        .get("suggestions")
+        .then((response) => {
+          commit('setSuggestions', response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+          this._vm.$toast.error("Erreur lors du chargement des données");
+        }).finally(() => {
+          commit('loadingStatus', false)
+        });
+      });   
   },
 
   addSuggestion({ commit }, suggestion) {
