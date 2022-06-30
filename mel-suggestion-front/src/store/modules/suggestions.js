@@ -1,4 +1,7 @@
+import Vue from 'vue'
 import axiosClient from '../../axios';
+
+Vue.prototype.$moderator = false;
 
 const state = {
   suggestions: [],
@@ -13,6 +16,12 @@ const getters = {
 const actions = {
   fetchSuggestions({ commit }) {
     commit('loadingStatus', true)
+    axiosClient
+      .get("moderator")
+      .then((response) => {
+        Vue.prototype.$moderator = response.data;
+      });
+
     axiosClient
       .get("suggestions")
       .then((response) => {
