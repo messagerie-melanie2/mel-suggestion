@@ -11,10 +11,7 @@
             <Search />
           </div>
           <div>
-            <section v-if="errored" class="flex justify-center my-3">
-              <p>Une erreur s'est produite lors du chargement des données</p>
-            </section>
-            <section v-else>
+            <section>
               <div v-if="loadingStatus">
                 <Preloader color="gray" />
               </div>
@@ -42,9 +39,6 @@ export default {
   name: "App",
   data() {
     return {
-      suggestions: [],
-      loading: false,
-      errored: false,
       title: "Module de suggestion"
     };
   },
@@ -62,7 +56,7 @@ export default {
     Suggestions,
     Preloader
   },
-  computed: mapGetters(['allSuggestions', 'loadingStatus', 'allText', 'dark']),
+  computed: mapGetters(['allSuggestions', 'loadingStatus', 'allText']),
 };
 </script>
 
@@ -81,11 +75,11 @@ export default {
 }
 
 .dark .ql-toolbar.ql-snow span {
-    color: #96b9e7;
+  color: #96b9e7;
 }
 
 .dark .ql-container.ql-snow {
-    color: #96b9e7;
+  color: #96b9e7;
   border-color: #E1C58F;
 }
 
