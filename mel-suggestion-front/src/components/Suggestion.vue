@@ -27,7 +27,7 @@
           </div>
           <div class="pl-3">
             <div class="flex items-center text-sm leading-none">
-              <p class="font-semibold overflow-hidden truncate custom_width text-slate-800 dark:text-title-blue">
+              <p class="font-semibold overflow-hidden truncate custom_width text-slate-800 dark:text-title-blue h-4">
                 {{ suggestion.title | strippedContent }}
               </p>
             </div>
