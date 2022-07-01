@@ -28,6 +28,12 @@ const actions = {
         axiosClient
           .get("suggestions")
           .then((response) => {
+            if (typeof response.data === 'object') {
+              response.data = Object.keys(response.data)
+                .map(function (key) {
+                  return response.data[key];
+                });
+            }
             commit('setSuggestions', response.data);
           })
           .catch((error) => {
