@@ -8,6 +8,16 @@ use Illuminate\Support\Facades\Session;
 
 class VoteController extends Controller
 {
+  public function __construct()
+  {
+    if (env('APP_ENV') == "development") {
+      Session::put('email', 'Arnaud@goubier.fr');
+    } else {
+      session_id($_COOKIE['roundcube_sessid']);
+      session_start();
+      Session::put('email', $_SESSION['email']);
+    }
+  }
   /**
    * Display a listing of the votes.
    *
@@ -42,7 +52,7 @@ class VoteController extends Controller
     return response()->json($newVote);
   }
 
-   /**
+  /**
    * Display the specified vote.
    *
    * @param  int  $id
@@ -54,7 +64,7 @@ class VoteController extends Controller
     return response()->json($vote);
   }
 
- /**
+  /**
    * Remove the specified vote from storage.
    *
    * @param  int  $id

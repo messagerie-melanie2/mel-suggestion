@@ -61,7 +61,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import axiosClient from '../axios';
+
 import moment from 'moment';
 import { mapActions } from "vuex";
 import ModeratorCommands from "./Moderator/ModeratorCommands";
@@ -111,7 +112,7 @@ export default {
         this.suggestion.voted = !this.suggestion.voted
         if (this.suggestion.voted) {
           this.suggestion.nb_votes++
-          axios.post("index.php/api/votes", {            
+          axiosClient.post("votes", {            
             suggestion_id: this.suggestion.id
           }).then((res) => {
             this.voteId = res.data.id
@@ -126,7 +127,7 @@ export default {
             this.voteId = this.suggestion.vote_id;
             delete this.suggestion.vote_id;
           }
-          axios.delete(`index.php/api/votes/${this.voteId}`).catch((error) => {
+          axiosClient.delete(`votes/${this.voteId}`).catch((error) => {
             console.log(error);
           })
         }
