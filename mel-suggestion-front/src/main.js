@@ -17,7 +17,7 @@ Vue.prototype.$axios = axios;
 new Vue({
   store,
   beforeCreate: function () {
-    window.addEventListener('colorMode', getTheme());
+    window.addEventListener('colorMode', getTheme);
     getTheme();
   },
   render: h => h(App),
