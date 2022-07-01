@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Vote;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class VoteController extends Controller
 {
@@ -28,12 +29,11 @@ class VoteController extends Controller
   public function store(Request $request)
   {
     $request->validate([
-      'user_email' => 'required',
       'suggestion_id' => 'required'
     ]);
 
     $newVote = new Vote([
-      'user_email' => $request->get('user_email'),
+      'user_email' => Session::get('email'),
       'suggestion_id' => $request->get('suggestion_id')
     ]);
 
