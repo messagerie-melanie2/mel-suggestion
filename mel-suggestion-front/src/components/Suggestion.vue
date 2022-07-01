@@ -111,8 +111,7 @@ export default {
         this.suggestion.voted = !this.suggestion.voted
         if (this.suggestion.voted) {
           this.suggestion.nb_votes++
-          axios.post("index.php/api/votes", {
-            user_email: 'Arnaud@goubier.fr',
+          axios.post("index.php/api/votes", {            
             suggestion_id: this.suggestion.id
           }).then((res) => {
             this.voteId = res.data.id
