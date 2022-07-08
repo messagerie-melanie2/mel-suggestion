@@ -55,8 +55,6 @@ class Suggestion extends Model
       $suggestion->nb_votes = $nb_votes;
     }
 
-    // dd($suggestions);
-
     return $suggestions;
   }
 

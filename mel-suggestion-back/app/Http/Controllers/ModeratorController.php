@@ -9,6 +9,11 @@ class ModeratorController extends Controller
 {
   public function index()
   {
-    return response()->json(Session::get('is_moderator'));
+    $res = [
+      "moderator" => Session::get('is_moderator'),
+      "enable_noauth_suggestion" => env('ENABLE_NOAUTH_SUGGESTION')
+    ];
+
+    return response()->json($res);
   }
 }

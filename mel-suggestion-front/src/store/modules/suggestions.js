@@ -2,6 +2,7 @@ import Vue from 'vue'
 import axiosClient from '../../axios';
 
 Vue.prototype.$moderator = false;
+Vue.prototype.$enable_noauth_suggestion = false;
 
 const state = {
   suggestions: [],
@@ -24,7 +25,8 @@ const actions = {
         this._vm.$toast.error("Erreur lors du chargement des données");
       })
       .then((response) => {
-        Vue.prototype.$moderator = response.data;
+        Vue.prototype.$moderator = response.data.moderator;
+        Vue.prototype.$enable_noauth_suggestion = response.data.enable_noauth_suggestion;
         axiosClient
           .get("suggestions")
           .then((response) => {
