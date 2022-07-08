@@ -11,8 +11,10 @@ class ModeratorController extends Controller
   {
     $res = [
       "moderator" => Session::get('is_moderator'),
-      "enable_noauth_suggestion" => env('ENABLE_NOAUTH_SUGGESTION')
     ];
+    if (Session::get("no_auth") && env('ENABLE_NOAUTH_SUGGESTION')) {
+      $res['no_auth'] = true;
+    }
 
     return response()->json($res);
   }

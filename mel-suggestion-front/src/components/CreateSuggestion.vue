@@ -1,23 +1,41 @@
 <template>
   <form @submit="onSubmit" class="px-8 pt-6 pb-8 mb-4">
+    <div class="flex flex-wrap -mx-3 mb-6">
+      <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+        <label class="block text-slate-700 dark:text-title-blue text-sm font-bold mb-2" for="title">
+          Prénom
+        </label>
+        <input
+          class="bg-white dark:bg-light-blue appearance-none border border-gray-300 dark:text-common-blue rounded w-full py-2 px-3 leading-tight focus:outline-none"
+          id="grid-first-name" type="text" placeholder="Jane">
+      </div>
+      <div class="w-full md:w-1/2 px-3">
+        <label class="block text-slate-700 dark:text-title-blue text-sm font-bold mb-2" for="title">
+          Nom
+        </label>
+        <input
+          class="bg-white dark:bg-light-blue appearance-none border border-gray-300 dark:text-common-blue rounded w-full py-2 px-3 leading-tight focus:outline-none"
+          id="grid-last-name" type="text" placeholder="Doe">
+      </div>
+    </div>
+    <div class="mb-4">
+      <label class="block text-slate-700 dark:text-title-blue text-sm font-bold mb-2" for="title">
+        Email
+      </label>
+      <input
+        class="bg-white dark:bg-light-blue appearance-none border border-gray-300 dark:text-common-blue rounded w-full py-2 px-3 leading-tight focus:outline-none"
+        id="title" v-model="title" type="text" placeholder="Titre..." maxlength="255"
+        :class="[titleError ? 'border-red-500' : 'dark:border-light-yellow']" />
+      <span class="text-red-500" v-show="titleError">Merci de renseigner un titre</span>
+    </div>
+    <hr class="my-6">
     <div class="mb-4">
       <label class="block text-slate-700 dark:text-title-blue text-sm font-bold mb-2" for="title">
         Titre
       </label>
-      <input class="
-              bg-white
-              dark:bg-light-blue
-                appearance-none
-                border
-                border-gray-300
-                dark:text-common-blue
-                rounded
-                w-full
-                py-2
-                px-3
-                leading-tight
-                focus:outline-none
-              " id="title" v-model="title" type="text" placeholder="Titre..." maxlength="255"
+      <input
+        class="bg-white dark:bg-light-blue appearance-none border border-gray-300 dark:text-common-blue rounded w-full py-2 px-3 leading-tight focus:outline-none"
+        id="title" v-model="title" type="text" placeholder="Titre..." maxlength="255"
         :class="[titleError ? 'border-red-500' : 'dark:border-light-yellow']" />
       <span class="text-red-500" v-show="titleError">Merci de renseigner un titre</span>
     </div>
