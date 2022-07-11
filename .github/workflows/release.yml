@@ -43,10 +43,10 @@ jobs:
         uses: papeloto/action-zip@v1
         with:
           files: "./mel-suggestion-back"
-          dest: suggestion-"${{ steps.bump_version.outputs.next-version }}".zip
+          dest: suggestion.zip
           
       - name: Tar folder
-        run: tar -zcvf suggestion-"${{ steps.bump_version.outputs.next-version }}".tar.gz ./mel-suggestion-back
+        run: tar -zcvf suggestion.tar.gz ./mel-suggestion-back
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
