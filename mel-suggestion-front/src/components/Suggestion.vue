@@ -37,7 +37,7 @@
             </div>
           </div>
         </div>
-        <div id="user-actions" v-show="(suggestion.my_suggestion || $moderator) && suggestion.state == 'moderate'">
+        <div id="user-actions" v-show="(suggestion.my_suggestion || $moderator) && suggestion.state == 'moderate' && !this.$no_auth">
           <i class="fa-solid fa-edit mb-4 dark:text-title-blue dark:hover:text-blue-500 hover:text-blue-500 cursor-pointer" @click="toggleSuggestion"
             title="Éditer la suggestion"></i>
           <br>
@@ -100,15 +100,15 @@ export default {
   methods: {
     ...mapActions(['deleteSuggestion']),
     changeVoteText() {
-      if (!this.suggestion.my_suggestion && this.suggestion.state != 'validate')
+      if (!this.suggestion.my_suggestion && this.suggestion.state != 'validate' && !this.$no_auth)
         this.voteHover = true
     },
     resetVoteText() {
-      if (!this.suggestion.my_suggestion && this.suggestion.state != 'validate')
+      if (!this.suggestion.my_suggestion && this.suggestion.state != 'validate' && !this.$no_auth)
         this.voteHover = false
     },
     toggleVote() {
-      if (!this.suggestion.my_suggestion && this.suggestion.state != 'validate') {
+      if (!this.suggestion.my_suggestion && this.suggestion.state != 'validate' && !this.$no_auth) {
         this.suggestion.voted = !this.suggestion.voted
         if (this.suggestion.voted) {
           this.suggestion.nb_votes++

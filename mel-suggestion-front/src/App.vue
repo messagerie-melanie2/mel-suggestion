@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div>    
     <body class="flex items-center justify-center">
       <div class="w-full max-w-4xl px-4">
         <Header :title="allText.title" />
         <div class="rounded-lg pb-6 border border-gray-300 dark:border-gray-800 bg-white dark:bg-light-blue">
-          <div class="flex items-center justify-between px-6 py-3 border-b border-gray-300 dark:border-light-blue">
+          <div class="flex flex-wrap items-center justify-between px-6 py-3 border-b border-gray-300 dark:border-light-blue">
             <SortingButton />
             <Search />
           </div>
@@ -60,6 +60,9 @@ export default {
 
 
 <style>
+.dark body {
+  background-color: rgba(31, 41, 51,100);
+}
 .ql-toolbar.ql-snow {
   border-radius: 0.25rem 0.25rem 0 0;
 }

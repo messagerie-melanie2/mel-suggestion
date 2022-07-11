@@ -14,6 +14,9 @@ module.exports = {
         'common-blue': '#c7dfff',
         'light-yellow': '#E1C58F',
         'voted-green': '#11ca8c',
+      },
+      screens: {
+        'sm-md': '755px',
       }
     },
   },
