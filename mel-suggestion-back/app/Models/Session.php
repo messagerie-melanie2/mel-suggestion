@@ -8,12 +8,13 @@ use Illuminate\Support\Facades\Session as FacadesSession;
 
 class Session extends Model
 {
-    use HasFactory;
+  use HasFactory;
 
-    public static function sessionConnect()
+  public static function sessionConnect()
   {
     if (env('APP_ENV') == "development") {
       FacadesSession::put('email', 'Arnaud@goubier.fr');
+      FacadesSession::put('no_auth', true);
     } else {
       session_id($_COOKIE['roundcube_sessid']);
       session_start();
@@ -29,9 +30,17 @@ class Session extends Model
         $vars = unserialize($m->get($_COOKIE['roundcube_sessid']));
         session_decode($vars['vars']);
       }
-      FacadesSession::put('email', $_SESSION['email']);
+      if (isset($_SESSION['fullname'])) {
+        FacadesSession::put('fullname', $_SESSION['fullname']);
+      }
+      if (isset($_SESSION['email'])) {
+        FacadesSession::put('email', $_SESSION['email']);
+      }
+      else {
+        FacadesSession::put('no_auth', true);
+      }
     }
-
+    
     if (in_array(FacadesSession::get('email'), config('moderator')['moderator'])) {
       FacadesSession::put('is_moderator', true);
     } else {

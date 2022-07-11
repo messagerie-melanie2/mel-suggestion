@@ -3,7 +3,7 @@
     <table class="w-full text-sm text-left">
       <tbody>
         <div v-for="suggestion in sortedSuggestions" :key="suggestion.id">
-          <Suggestion :suggestion="suggestion"/>
+          <Suggestion :suggestion="suggestion" />
           <!-- <hr /> -->
         </div>
       </tbody>
@@ -27,6 +27,12 @@
 <script>
 import Suggestion from "./Suggestion";
 import CreateSuggestion from "./CreateSuggestion";
+import {
+  mapActions as mapSearchActions,
+  mapGetters as mapSearchGetters,
+  getterTypes,
+  actionTypes,
+} from 'vuex-search';
 
 export default {
   name: "Suggestions",
@@ -49,6 +55,7 @@ export default {
     }),
       this.$root.$on('search', (e) => {
         this.searchValue(e)
+        this.doSearch()
       }),
       this.$root.$on('reset-search', () => {
         this.resetSearch()
@@ -63,6 +70,12 @@ export default {
     }
   },
   methods: {
+    ...mapSearchActions('suggestion', {
+      searchContacts: actionTypes.search,
+    }),
+    doSearch() {
+      this.searchContacts(this.search);
+    },
     sort(s, v) {
       this.sortBy = s;
       this.validateOnly = v;
@@ -76,9 +89,15 @@ export default {
     resetSearch() {
       this.search = "";
       this.$root.$emit('reset-search-text');
+      this.doSearch();
     }
   },
   computed: {
+    ...mapSearchGetters('suggestion', {
+      resultIds: getterTypes.result,
+      isLoading: getterTypes.isSearching,
+    }),
+
     sortedSuggestions() {
       return this.filteredSuggestions.slice(0).sort((p1, p2) => {
         let modifier = 1;
@@ -98,7 +117,11 @@ export default {
       });
 
       return filteredlocalSuggestions.filter(suggestion => {
-        return suggestion.title.toLowerCase().includes(this.search.toLowerCase())
+        if (this.resultIds.map(str => {
+          return Number(str);
+        }).includes(suggestion.id)) {
+          return suggestion;
+        }
       })
     }
   },

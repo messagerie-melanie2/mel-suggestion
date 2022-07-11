@@ -2,6 +2,7 @@ import Vue from 'vue'
 import axiosClient from '../../axios';
 
 Vue.prototype.$moderator = false;
+Vue.prototype.$no_auth = false;
 
 const state = {
   suggestions: [],
@@ -24,7 +25,9 @@ const actions = {
         this._vm.$toast.error("Erreur lors du chargement des données");
       })
       .then((response) => {
-        Vue.prototype.$moderator = response.data;
+        Vue.prototype.$moderator = response.data.moderator;
+        Vue.prototype.$no_auth = response.data.no_auth;
+        Vue.prototype.$fullname = response.data.fullname;
         axiosClient
           .get("suggestions")
           .then((response) => {
@@ -49,7 +52,10 @@ const actions = {
     axiosClient
       .post("suggestions", {
         title: suggestion.title,
-        description: suggestion.description
+        description: suggestion.description,
+        user_firstname: suggestion.user_firstname,
+        user_lastname: suggestion.user_lastname,
+        user_email: suggestion.user_email
       })
       .then((response) => {
         response.data.my_suggestion = true;

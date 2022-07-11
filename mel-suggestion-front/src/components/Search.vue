@@ -6,9 +6,7 @@
     </span>
     <input type="text" placeholder="Rechercher ou créer une suggestion"
       class="px-3 py-2 placeholder-slate-300 text-slate-600 dark:text-light-yellow relative bg-white dark:bg-light-blue rounded text-sm border border-gray-300 dark:border-light-yellow outline-none focus:outline-none pl-10 w-96"
-      v-model="search"
-      @input="handleSearch"
-     />
+      v-model="search" @input="handleSearch" />
     <i class="fas fa-times text-red-500 ml-2 hover:text-red-700 cursor-pointer" @click="resetSearch"></i>
   </div>
 </template>
@@ -16,16 +14,16 @@
 <script>
 export default {
   name: "Search",
-  data () {
+  data() {
     return {
       search: ""
     }
   },
   methods: {
-    handleSearch () {
+    handleSearch() {
       this.$root.$emit('search', this.search)
     },
-    resetSearch () {
+    resetSearch() {
       this.$root.$emit('reset-search')
       this.search = ""
     }

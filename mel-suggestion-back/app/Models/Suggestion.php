@@ -13,6 +13,8 @@ class Suggestion extends Model
     'id',
     'title',
     'description',
+    'user_firstname',
+    'user_lastname',
     'user_email',
     'instance',
     'state',
@@ -54,7 +56,6 @@ class Suggestion extends Model
       }
       $suggestion->nb_votes = $nb_votes;
     }
-    // dd($suggestions);
 
     return $suggestions;
   }

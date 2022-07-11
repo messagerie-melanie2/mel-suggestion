@@ -11,7 +11,6 @@ import './index.css'
 Vue.config.productionTip = false
 Vue.use(Toast, { position: "bottom-right" });
 Vue.prototype.$axios = axios;
-// Vue.prototype.$moderator = false;
 
 
 new Vue({

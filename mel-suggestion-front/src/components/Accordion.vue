@@ -17,7 +17,7 @@
         <div class="flex justify-between mt-3">
           <div>
             Suggestion ajoutée par : <a href="#" class="font-bold" @click.stop="sendEmail">{{
-                suggestion.user_email
+                displayName
             }}</a>
           </div>
           <div>
@@ -47,13 +47,13 @@ export default {
   filters: {
     formatDate: function (value) {
       if (value) {
-        return moment(String(value)).format('MM/DD/YYYY')
+        return moment(String(value)).format('DD/MM/YYYY')
       }
     }
   },
   methods: {
-     sendEmail() {
-      const windowRef = window.open(`mailto:${this.suggestion.user_email}?subject=${this.allText.mail_subject.replace('%%title%%',this.suggestion.title)}`);
+    sendEmail() {
+      const windowRef = window.open(`mailto:${this.suggestion.user_email}?subject=${this.allText.mail_subject.replace('%%title%%', this.suggestion.title)}`);
       windowRef.focus();
       setTimeout(function () {
         if (!windowRef.document.hasFocus()) {
@@ -62,7 +62,18 @@ export default {
       }, 500);
     }
   },
-  computed: mapGetters(['allText']),
+  computed: {
+    ...mapGetters(['allText']),
+    displayName: function () {
+      if (this.suggestion.user_lastname) {
+        return this.suggestion.user_firstname + ' ' + this.suggestion.user_lastname;
+      }
+      if (this.$fullname) {
+        return this.$fullname;
+      }
+      return this.suggestion.user_email;
+    }
+  },
 
 }
 </script>
