@@ -51,7 +51,10 @@ const actions = {
     axiosClient
       .post("suggestions", {
         title: suggestion.title,
-        description: suggestion.description
+        description: suggestion.description,
+        user_firstname: suggestion.user_firstname,
+        user_lastname: suggestion.user_lastname,
+        user_email: suggestion.user_email
       })
       .then((response) => {
         response.data.my_suggestion = true;

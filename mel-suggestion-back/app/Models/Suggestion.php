@@ -13,6 +13,8 @@ class Suggestion extends Model
     'id',
     'title',
     'description',
+    'user_firstname',
+    'user_lastname',
     'user_email',
     'instance',
     'state',

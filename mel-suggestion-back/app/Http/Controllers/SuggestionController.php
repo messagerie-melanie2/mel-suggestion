@@ -31,16 +31,31 @@ class SuggestionController extends Controller
     $request->validate([
       'title' => 'required|max:255',
       'description' => 'required',
+      'user_firstname' => '',
+      'user_lastname' => '',
+      'user_email' => '',
     ]);
 
-    //TODO Static values
-    $newSuggestion = new Suggestion([
-      'title' => $request->get('title'),
-      'description' => $request->get('description'),
-      'user_email' => Session::get('email'),
-      'state' => 'moderate',
-      'instance' => env('INSTANCE'),
-    ]);
+    if ($request->get('user_firstname')) {
+      $newSuggestion = new Suggestion([
+        'title' => $request->get('title'),
+        'description' => $request->get('description'),
+        'user_email' => $request->get('user_email'),
+        'user_firstname' => $request->get('user_firstname'),
+        'user_lastname' => $request->get('user_lastname'),
+        'state' => 'moderate',
+        'instance' => env('INSTANCE'),
+      ]);
+    }
+    else {
+      $newSuggestion = new Suggestion([
+        'title' => $request->get('title'),
+        'description' => $request->get('description'),
+        'user_email' => Session::get('email'),
+        'state' => 'moderate',
+        'instance' => env('INSTANCE'),
+      ]);
+    }
 
     $newSuggestion->save();
     $newSuggestion->nb_votes = 0;
