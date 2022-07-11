@@ -25,6 +25,9 @@ jobs:
         
       - name: Composer Autoload
         run: cd mel-suggestion-back && composer dumpautoload
+        
+      - name: Tar folder
+        run: tar -zcvf suggestion.tar.gz mel-suggestion-back
 
       - name: 'Get Previous tag'
         id: previoustag
@@ -38,23 +41,6 @@ jobs:
         with:
           current-version: "${{ steps.previoustag.outputs.tag }}"
           version-fragment: 'feature'
-      
-      - name: Zip folder
-        uses: papeloto/action-zip@v1
-        with:
-          files: "./mel-suggestion-back"
-          dest: suggestion.zip
-          
-      - name: Tar folder
-        run: tar -zcvf suggestion.tar.gz ./mel-suggestion-back
-
-      - uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "${{ steps.bump_version.outputs.next-version }}"
-          prerelease: false
-          title: "Suggestion"
-          files: suggestion.zip
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
