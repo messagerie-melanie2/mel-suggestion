@@ -14,7 +14,7 @@ class Session extends Model
   {
     if (env('APP_ENV') == "development") {
       FacadesSession::put('email', 'Arnaud@goubier.fr');
-      FacadesSession::put('no_auth', true);
+      // FacadesSession::put('no_auth', true);
     } else {
       session_id($_COOKIE['roundcube_sessid']);
       session_start();
