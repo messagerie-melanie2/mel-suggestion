@@ -30,8 +30,9 @@ class Session extends Model
         $vars = unserialize($m->get($_COOKIE['roundcube_sessid']));
         session_decode($vars['vars']);
       }
-      if (isset($_SESSION['fullname'])) {
-        FacadesSession::put('fullname', $_SESSION['fullname']);
+      if (isset($_SESSION['firstname']) && isset($_SESSION['lastname']) ) {
+        FacadesSession::put('firstname', $_SESSION['firstname']);
+        FacadesSession::put('lastname', $_SESSION['lastname']);
       }
       if (isset($_SESSION['email'])) {
         FacadesSession::put('email', $_SESSION['email']);

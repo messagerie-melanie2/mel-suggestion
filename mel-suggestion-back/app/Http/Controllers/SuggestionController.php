@@ -16,7 +16,7 @@ class SuggestionController extends Controller
   public function index()
   {
     $suggestions = Suggestion::getAllSuggestionsByInstance(Session::get('is_moderator'));
-    
+
     return response()->json($suggestions);
   }
 
@@ -46,12 +46,13 @@ class SuggestionController extends Controller
         'state' => 'moderate',
         'instance' => env('INSTANCE'),
       ]);
-    }
-    else {
+    } else {
       $newSuggestion = new Suggestion([
         'title' => $request->get('title'),
         'description' => $request->get('description'),
         'user_email' => Session::get('email'),
+        'user_firstname' =>  Session::get('firstname'),
+        'user_lastname' =>  Session::get('lastname'),
         'state' => 'moderate',
         'instance' => env('INSTANCE'),
       ]);
