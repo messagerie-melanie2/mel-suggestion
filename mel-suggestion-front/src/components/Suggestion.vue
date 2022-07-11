@@ -7,12 +7,12 @@
         <div id="suggestion" class="flex items-center w-full">
           <div class="rounded-sm p-2.5 cursor-pointer dark:bg-light-blue " :class="[
             suggestion.voted ? 'bg-green-200 border dark:border-voted-green dark:text-voted-green' : 'bg-gray-300  border dark:border-title-blue text-slate-800 dark:text-title-blue',
-          ]" @mouseenter="changeVoteText" @mouseleave="resetVoteText" @click.stop="toggleVote" :title="suggestion.voted ? 'Annuler mon vote' : 'Ajouter un vote'">
+          ]" @mouseenter="changeVoteText" @mouseleave="resetVoteText" @click.stop="toggleVote" :title="title()">
             <div v-if="voteHover" class="text-center mb-2">
-              <div v-if="suggestion.voted" title="Annuler mon vote">
+              <div v-if="suggestion.voted">
                 <i class="fa-solid fa-xl fa-times"></i>
               </div>
-              <div v-else  title="Ajouter un vote">
+              <div v-else>
                 <i class="fa-solid fa-xl fa-circle-up"></i>
               </div>
             </div>
@@ -82,7 +82,6 @@ export default {
       showSuggestion: false,
       modifiedSuggestion: false,
       description: false,
-      title: null,
     }
   },
   filters: {
@@ -152,7 +151,20 @@ export default {
     },
     showDescription() {
       this.description = !this.description
+    },
+    title() {
+      if (this.suggestion.my_suggestion)
+        return "Il n'est pas possible de voter pour sa suggestion";
+      if (this.suggestion.voted && !this.suggestion.my_suggestion)
+        return "Annuler mon vote";
+      if (!this.suggestion.voted && !this.suggestion.my_suggestion)
+        return "Ajouter un vote";
+
+      return '';
     }
+  },
+  computed: {
+
   },
   components: {
     UpdateSuggestion,
