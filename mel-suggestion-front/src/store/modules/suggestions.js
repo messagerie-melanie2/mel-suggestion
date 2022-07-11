@@ -27,7 +27,6 @@ const actions = {
       .then((response) => {
         Vue.prototype.$moderator = response.data.moderator;
         Vue.prototype.$no_auth = response.data.no_auth;
-        Vue.prototype.$fullname = response.data.fullname;
         axiosClient
           .get("suggestions")
           .then((response) => {

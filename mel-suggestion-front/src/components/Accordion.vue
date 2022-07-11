@@ -68,9 +68,6 @@ export default {
       if (this.suggestion.user_lastname) {
         return this.suggestion.user_firstname + ' ' + this.suggestion.user_lastname;
       }
-      if (this.$fullname) {
-        return this.$fullname;
-      }
       return this.suggestion.user_email;
     }
   },
