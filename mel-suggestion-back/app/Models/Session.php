@@ -15,7 +15,6 @@ class Session extends Model
     if (env('APP_ENV') == "development") {
       FacadesSession::put('email', 'Arnaud@goubier.fr');
       FacadesSession::put('no_auth', true);
-
     } else {
       session_id($_COOKIE['roundcube_sessid']);
       session_start();
@@ -30,6 +29,9 @@ class Session extends Model
         }
         $vars = unserialize($m->get($_COOKIE['roundcube_sessid']));
         session_decode($vars['vars']);
+      }
+      if (isset($_SESSION['fullname'])) {
+        FacadesSession::put('fullname', $_SESSION['fullname']);
       }
       if (isset($_SESSION['email'])) {
         FacadesSession::put('email', $_SESSION['email']);

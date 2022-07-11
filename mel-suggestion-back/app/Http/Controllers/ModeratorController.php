@@ -12,10 +12,12 @@ class ModeratorController extends Controller
     $res = [
       "moderator" => Session::get('is_moderator'),
     ];
+    if (Session::get('fullname')) {
+      $res['fullname'] = Session::get('fullname');
+    }
     if (Session::get("no_auth") && env('ENABLE_NOAUTH_SUGGESTION')) {
       $res['no_auth'] = true;
     }
-
     return response()->json($res);
   }
 }
