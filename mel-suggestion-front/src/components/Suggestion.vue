@@ -5,11 +5,9 @@
     <td class="inline-block w-full">
       <div class="flex justify-between" v-show="!showSuggestion">
         <div id="suggestion" class="flex items-center w-full">
-          <div
-            class="rounded-sm p-2.5 cursor-pointer dark:bg-light-blue "
-            :class="[
-              suggestion.voted ? 'bg-green-200 border dark:border-voted-green dark:text-voted-green' : 'bg-gray-300  border dark:border-title-blue text-slate-800 dark:text-title-blue',
-            ]" @mouseenter="changeVoteText" @mouseleave="resetVoteText" @click.stop="toggleVote">
+          <div class="rounded-sm p-2.5 cursor-pointer dark:bg-light-blue " :class="[
+            suggestion.voted ? 'bg-green-200 border dark:border-voted-green dark:text-voted-green' : 'bg-gray-300  border dark:border-title-blue text-slate-800 dark:text-title-blue',
+          ]" @mouseenter="changeVoteText" @mouseleave="resetVoteText" @click.stop="toggleVote" :title="title()">
             <div v-if="voteHover" class="text-center mb-2">
               <div v-if="suggestion.voted">
                 <i class="fa-solid fa-xl fa-times"></i>
@@ -37,11 +35,13 @@
             </div>
           </div>
         </div>
-        <div id="user-actions" v-show="(suggestion.my_suggestion || $moderator) && suggestion.state == 'moderate'">
-          <i class="fa-solid fa-edit mb-4 dark:text-title-blue dark:hover:text-blue-500 hover:text-blue-500 cursor-pointer" @click="toggleSuggestion"
-            title="Éditer la suggestion"></i>
+        <div id="user-actions"
+          v-show="(suggestion.my_suggestion || $moderator) && suggestion.state == 'moderate' && !this.$no_auth">
+          <i class="fa-solid fa-edit mb-4 dark:text-title-blue dark:hover:text-blue-500 hover:text-blue-500 cursor-pointer"
+            @click="toggleSuggestion" title="Éditer la suggestion"></i>
           <br>
-          <i v-show="!$moderator" class="fa-solid fa-trash mt-4 dark:text-title-blue dark:hover:text-red-500 hover:text-red-500 cursor-pointer"
+          <i v-show="!$moderator"
+            class="fa-solid fa-trash mt-4 dark:text-title-blue dark:hover:text-red-500 hover:text-red-500 cursor-pointer"
             title="Supprimer la suggestion" @click.stop="onDelete"></i>
         </div>
       </div>
@@ -100,19 +100,20 @@ export default {
   methods: {
     ...mapActions(['deleteSuggestion']),
     changeVoteText() {
-      if (!this.suggestion.my_suggestion && this.suggestion.state != 'validate')
+      if (!this.suggestion.my_suggestion && this.suggestion.state != 'validate' && !this.$no_auth)
         this.voteHover = true
     },
     resetVoteText() {
-      if (!this.suggestion.my_suggestion && this.suggestion.state != 'validate')
+      if (!this.suggestion.my_suggestion && this.suggestion.state != 'validate' && !this.$no_auth)
         this.voteHover = false
+
     },
     toggleVote() {
-      if (!this.suggestion.my_suggestion && this.suggestion.state != 'validate') {
+      if (!this.suggestion.my_suggestion && this.suggestion.state != 'validate' && !this.$no_auth) {
         this.suggestion.voted = !this.suggestion.voted
         if (this.suggestion.voted) {
           this.suggestion.nb_votes++
-          axiosClient.post("votes", {            
+          axiosClient.post("votes", {
             suggestion_id: this.suggestion.id
           }).then((res) => {
             this.voteId = res.data.id
@@ -150,7 +151,20 @@ export default {
     },
     showDescription() {
       this.description = !this.description
+    },
+    title() {
+      if (this.suggestion.my_suggestion)
+        return "Il n'est pas possible de voter pour sa suggestion";
+      if (this.suggestion.voted && !this.suggestion.my_suggestion)
+        return "Annuler mon vote";
+      if (!this.suggestion.voted && !this.suggestion.my_suggestion)
+        return "Ajouter un vote";
+
+      return '';
     }
+  },
+  computed: {
+
   },
   components: {
     UpdateSuggestion,
