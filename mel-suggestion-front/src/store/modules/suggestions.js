@@ -112,7 +112,11 @@ const mutations = {
   loadingStatus: (state, newLoadingStatus) => (state.loadingStatus = newLoadingStatus),
   setSuggestions: (state, suggestions) => (state.suggestions = suggestions),
   setIndexes: (state, indexes) => (state.indexes = indexes),
-  newSuggestion: (state, suggestion) => state.suggestions.unshift(suggestion),
+  newSuggestion: (state, suggestion) => {
+    state.suggestions.push(suggestion)
+    console.log(state.suggestions);
+    state.indexes = createIndex(state.suggestions);
+  },
   deleteSuggestion: (state, id) => state.suggestions = state.suggestions.filter(suggestion => suggestion.id !== id),
   updateSuggestion: (state, updSuggestion) => {
     const index = state.suggestions.findIndex(suggestion => suggestion.id === updSuggestion.id);
@@ -130,6 +134,8 @@ export default {
 }
 
 function createIndex(suggestions) {
+  const jsonData = require('./dictionary.json');
+
   let index = [];
   let k = -1;
   for (const element of suggestions) {
@@ -137,6 +143,20 @@ function createIndex(suggestions) {
 
     let keywords = element.description.replace(/(<([^>]+)>)/gi, "").toLowerCase() + ' ' + element.title.replace(/(<([^>]+)>)/gi, "").toLowerCase();
     let array = keywords.split(' ');
+
+    array.forEach(word => {
+      jsonData.synonyme.forEach((e) => {
+        if (e.includes(word)) {
+          array = array.concat(e)
+          array.splice(array.indexOf(word), 1);
+        }
+      })
+      jsonData.exclude.forEach((e) => {
+        if (e.includes(word)) {
+          array = array.filter(e => e !== word);
+        }
+      })
+    });
 
     array.forEach(word => {
       if (index[word]) {
@@ -148,5 +168,6 @@ function createIndex(suggestions) {
       }
     });
   }
-   return index;
+  console.log(index);
+  return index;
 }

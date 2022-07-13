@@ -33,6 +33,7 @@
 <script>
 import Suggestion from "./Suggestion";
 import CreateSuggestion from "./CreateSuggestion";
+import { mapGetters } from "vuex";
 
 export default {
   name: "Suggestions",
@@ -47,7 +48,6 @@ export default {
       sortBy: 'nb_votes',
       sortDirection: 'desc',
       localSuggestions: this.suggestions,
-      localIndex: this.index,
       validateOnly: false,
     }
   },
@@ -88,8 +88,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['allIndexes']),
     sortedSuggestions() {
-       let filteredlocalSuggestions = this.localSuggestions.slice(0).filter(suggestion => {
+      let filteredlocalSuggestions = this.localSuggestions.slice(0).filter(suggestion => {
         if (this.validateOnly) {
           return suggestion.state.toLowerCase().includes("validate")
         }
@@ -111,11 +112,11 @@ export default {
 
       if (this.search.length > 2) {
         let values = this.search.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().split(' ');
-        for (const word in this.localIndex) {
+        for (const word in this.allIndexes) {
           for (const value of values) {
             if (value.length > 2) {
               if (word.indexOf(value) !== -1) {
-                for (const key of this.localIndex[word]) {
+                for (const key of this.allIndexes[word]) {
                   if (results[key]) {
                     results[key]++;
                   } else {
