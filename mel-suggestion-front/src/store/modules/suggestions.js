@@ -134,7 +134,8 @@ function createIndex(suggestions) {
   let k = -1;
   for (const element of suggestions) {
     k++
-    let keywords = element.description.replace(/(<([^>]+)>)/gi, "") + ' ' + element.title.replace(/(<([^>]+)>)/gi, "");
+
+    let keywords = element.description.replace(/(<([^>]+)>)/gi, "").toLowerCase() + ' ' + element.title.replace(/(<([^>]+)>)/gi, "").toLowerCase();
     let array = keywords.split(' ');
 
     array.forEach(word => {

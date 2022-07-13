@@ -114,7 +114,7 @@ export default {
         for (const word in this.localIndex) {
           for (const value of values) {
             if (value.length > 2) {
-              if (word.toLowerCase().indexOf(value) !== -1) {
+              if (word.indexOf(value) !== -1) {
                 for (const key of this.localIndex[word]) {
                   if (results[key]) {
                     results[key]++;
