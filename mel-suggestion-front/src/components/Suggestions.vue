@@ -2,9 +2,15 @@
   <div class="relative overflow-x-auto">
     <table class="w-full text-sm text-left">
       <tbody>
-        <div v-for="suggestion in sortedSuggestions" :key="suggestion.id">
-          <Suggestion :suggestion="suggestion" />
-          <!-- <hr /> -->
+        <div v-if="search.length >= 3 || !filteredSuggestions.length">
+          <div v-for="suggestion in filteredSuggestions" :key="suggestion.id">
+            <Suggestion :suggestion="suggestion" />
+          </div>
+        </div>
+        <div v-else>
+          <div v-for="suggestion in sortedSuggestions" :key="suggestion.id">
+            <Suggestion :suggestion="suggestion" />
+          </div>
         </div>
       </tbody>
     </table>
@@ -27,17 +33,12 @@
 <script>
 import Suggestion from "./Suggestion";
 import CreateSuggestion from "./CreateSuggestion";
-import {
-  mapActions as mapSearchActions,
-  mapGetters as mapSearchGetters,
-  getterTypes,
-  actionTypes,
-} from 'vuex-search';
 
 export default {
   name: "Suggestions",
   props: {
-    suggestions: Array
+    suggestions: Array,
+    index: Array
   },
   data() {
     return {
@@ -46,16 +47,17 @@ export default {
       sortBy: 'nb_votes',
       sortDirection: 'desc',
       localSuggestions: this.suggestions,
+      localIndex: this.index,
       validateOnly: false,
     }
   },
   mounted() {
     this.$root.$on('sort-suggestion', (sortBy, validateOnly) => {
       this.sort(sortBy, validateOnly)
+      this.resetSearch();
     }),
       this.$root.$on('search', (e) => {
         this.searchValue(e)
-        this.doSearch()
       }),
       this.$root.$on('reset-search', () => {
         this.resetSearch()
@@ -70,12 +72,6 @@ export default {
     }
   },
   methods: {
-    ...mapSearchActions('suggestion', {
-      searchContacts: actionTypes.search,
-    }),
-    doSearch() {
-      this.searchContacts(this.search);
-    },
     sort(s, v) {
       this.sortBy = s;
       this.validateOnly = v;
@@ -89,25 +85,11 @@ export default {
     resetSearch() {
       this.search = "";
       this.$root.$emit('reset-search-text');
-      this.doSearch();
     }
   },
   computed: {
-    ...mapSearchGetters('suggestion', {
-      resultIds: getterTypes.result,
-      isLoading: getterTypes.isSearching,
-    }),
-
     sortedSuggestions() {
-      return this.filteredSuggestions.slice(0).sort((p1, p2) => {
-        let modifier = 1;
-        if (this.sortDirection === 'desc') modifier = -1;
-        if (p1[this.sortBy] < p2[this.sortBy]) return -1 * modifier; if (p1[this.sortBy] > p2[this.sortBy]) return 1 * modifier;
-        return 0;
-      });
-    },
-    filteredSuggestions() {
-      let filteredlocalSuggestions = this.localSuggestions.slice(0).filter(suggestion => {
+       let filteredlocalSuggestions = this.localSuggestions.slice(0).filter(suggestion => {
         if (this.validateOnly) {
           return suggestion.state.toLowerCase().includes("validate")
         }
@@ -116,13 +98,55 @@ export default {
         }
       });
 
-      return filteredlocalSuggestions.filter(suggestion => {
-        if (this.resultIds.map(str => {
-          return Number(str);
-        }).includes(suggestion.id)) {
-          return suggestion;
+      return filteredlocalSuggestions.slice(0).sort((p1, p2) => {
+        let modifier = 1;
+        if (this.sortDirection === 'desc') modifier = -1;
+        if (p1[this.sortBy] < p2[this.sortBy]) return -1 * modifier; if (p1[this.sortBy] > p2[this.sortBy]) return 1 * modifier;
+        return 0;
+      });
+    },
+    filteredSuggestions() {
+      let results = {};
+      let searchResults = [];
+
+      if (this.search.length > 2) {
+        let values = this.search.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().split(' ');
+        for (const word in this.localIndex) {
+          for (const value of values) {
+            if (value.length > 2) {
+              if (word.toLowerCase().indexOf(value) !== -1) {
+                for (const key of this.localIndex[word]) {
+                  if (results[key]) {
+                    results[key]++;
+                  } else {
+                    results[key] = 1;
+                  }
+                }
+              }
+            }
+          }
         }
-      })
+        if (Object.keys(results).length) {
+          var _res = [];
+          for (const key in results) {
+            _res.push({ key: key, value: results[key] });
+          }
+          _res.sort((a, b) => (a.value < b.value) ? 1 : -1)
+
+          var i = 0;
+
+          for (const r of _res) {
+            if (i++ > 4) {
+              break;
+            }
+            searchResults.push(this.localSuggestions[r.key])
+          }
+        }
+      }
+      if (this.search.length <= 2 && searchResults.length == 0) {
+        return this.localSuggestions;
+      }
+      return searchResults;
     }
   },
   components: {
@@ -131,6 +155,3 @@ export default {
   },
 };
 </script>
-
-<style>
-</style>

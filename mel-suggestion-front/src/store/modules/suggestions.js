@@ -6,11 +6,13 @@ Vue.prototype.$no_auth = false;
 
 const state = {
   suggestions: [],
+  indexes: [],
   loadingStatus: false
 };
 
 const getters = {
   allSuggestions: (state) => state.suggestions,
+  allIndexes: (state) => state.indexes,
   loadingStatus: (state) => state.loadingStatus
 };
 
@@ -37,6 +39,8 @@ const actions = {
                 });
             }
             commit('setSuggestions', response.data);
+            commit('setIndexes', createIndex(response.data));
+            // createIndex(response.data);
           })
           .catch((error) => {
             console.log(error);
@@ -107,6 +111,7 @@ const actions = {
 const mutations = {
   loadingStatus: (state, newLoadingStatus) => (state.loadingStatus = newLoadingStatus),
   setSuggestions: (state, suggestions) => (state.suggestions = suggestions),
+  setIndexes: (state, indexes) => (state.indexes = indexes),
   newSuggestion: (state, suggestion) => state.suggestions.unshift(suggestion),
   deleteSuggestion: (state, id) => state.suggestions = state.suggestions.filter(suggestion => suggestion.id !== id),
   updateSuggestion: (state, updSuggestion) => {
@@ -122,4 +127,25 @@ export default {
   getters,
   actions,
   mutations
+}
+
+function createIndex(suggestions) {
+  let index = [];
+  let k = -1;
+  for (const element of suggestions) {
+    k++
+    let keywords = element.description.replace(/(<([^>]+)>)/gi, "") + ' ' + element.title.replace(/(<([^>]+)>)/gi, "");
+    let array = keywords.split(' ');
+
+    array.forEach(word => {
+      if (index[word]) {
+        if (index[word] != k) {
+          index[word].push(k);
+        }
+      } else {
+        index[word] = [k]
+      }
+    });
+  }
+   return index;
 }
