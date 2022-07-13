@@ -1,0 +1,56 @@
+{
+  "synonyme": [
+    [
+      "calendrier",
+      "agenda"
+    ],
+    [
+      "mail",
+      "courriel",
+      "message"
+    ]
+  ],
+  "exclude": [
+    "d",
+    "du",
+    "de",
+    "la",
+    "des",
+    "le",
+    "ma",
+    "et",
+    "est",
+    "elle",
+    "une",
+    "en",
+    "que",
+    "aux",
+    "qui",
+    "ces",
+    "les",
+    "dans",
+    "sur",
+    "l",
+    "un",
+    "pour",
+    "par",
+    "il",
+    "ou",
+    "à",
+    "ce",
+    "a",
+    "sont",
+    "cas",
+    "plus",
+    "leur",
+    "se",
+    "s",
+    "vous",
+    "au",
+    "c",
+    "aussi",
+    "toutes",
+    "autre",
+    "comme"
+  ]
+}
