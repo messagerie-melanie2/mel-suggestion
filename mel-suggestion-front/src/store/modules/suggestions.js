@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 import axiosClient from '../../axios';
 
 Vue.prototype.$moderator = false;
@@ -114,15 +114,18 @@ const mutations = {
   setIndexes: (state, indexes) => (state.indexes = indexes),
   newSuggestion: (state, suggestion) => {
     state.suggestions.push(suggestion)
-    console.log(state.suggestions);
     state.indexes = createIndex(state.suggestions);
   },
-  deleteSuggestion: (state, id) => state.suggestions = state.suggestions.filter(suggestion => suggestion.id !== id),
+  deleteSuggestion: (state, id) => {
+    state.suggestions = state.suggestions.filter(suggestion => suggestion.id !== id)
+    state.indexes = createIndex(state.suggestions);
+  },
   updateSuggestion: (state, updSuggestion) => {
     const index = state.suggestions.findIndex(suggestion => suggestion.id === updSuggestion.id);
     if (index !== -1) {
       state.suggestions.splice(index, 1, updSuggestion);
     }
+    state.indexes = createIndex(state.suggestions);
   }
 };
 
