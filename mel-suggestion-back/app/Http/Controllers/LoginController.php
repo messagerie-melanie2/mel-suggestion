@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Jumbojett\OpenIDConnectClient;
 
 class LoginController extends Controller
@@ -30,6 +31,8 @@ class LoginController extends Controller
     $oidc->authenticate();
     $email = $oidc->requestUserInfo('email');
     $name = $oidc->requestUserInfo('name');
+    Session::put('email', $email);
+    Session::put('no_auth', false);
 
     return Redirect::to('http://localhost:8080/')->with(['email' => $email, 'name' => $name]);
   }

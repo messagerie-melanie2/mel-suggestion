@@ -1,5 +1,15 @@
 <template>
   <div>
+    <div class="flex justify-between">
+      <a v-show="!$noauth" href="https://roundcube.ida.melanie2.com/suggestiondev/index.php">Se connecter</a>
+      <div class="mr-2">
+        <div class="rounded-lg p-2 border border-gray-300 dark:border-gray-800 bg-white dark:bg-light-blue">
+
+          Connecté en tant que
+        </div>
+      </div>
+
+    </div>
 
     <body class="flex items-center justify-center">
       <div class="w-full max-w-4xl px-4">
@@ -16,7 +26,7 @@
                 <Preloader color="gray" />
               </div>
               <div v-else>
-                <Suggestions :suggestions="allSuggestions" :index="allIndexes"/>
+                <Suggestions :suggestions="allSuggestions" :index="allIndexes" />
               </div>
             </section>
           </div>
