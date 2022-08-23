@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Jumbojett\OpenIDConnectClient;
@@ -28,6 +27,7 @@ class LoginController extends Controller
     $oidc->addScope('email');
     $oidc->addScope('profile');
     $oidc->setCertPath(__DIR__ . '/cacert.pem');
+    $oidc->setHttpProxy("pfrie-std.proxy.e2.rie.gouv.fr:8080"); 
     $oidc->authenticate();
     $email = $oidc->requestUserInfo('email');
     $name = $oidc->requestUserInfo('name');
