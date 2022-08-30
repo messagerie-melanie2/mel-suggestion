@@ -14,10 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/welcome', function () {
-    return view('welcome');
+Route::group(['middleware' => ['web']], function () {
+  Route::get('/', [LoginController::class, 'index'])->name('connection');
+  Route::get('/connexion/google', [LoginController::class, 'googleConnection'])->name('connection.google');
 });
-
-Route::get('/', [LoginController::class, 'index'])->name('connection');
-
-Route::get('/connexion/google', [LoginController::class, 'googleConnection'])->name('connection.google');

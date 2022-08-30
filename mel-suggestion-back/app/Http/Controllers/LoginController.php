@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Jumbojett\OpenIDConnectClient;
@@ -17,7 +19,7 @@ class LoginController extends Controller
     return view('connection');
   }
 
-  public function googleConnection()
+  public function googleConnection(Request $request)
   {
     $oidc = new OpenIDConnectClient(
       'https://accounts.google.com',
@@ -27,13 +29,17 @@ class LoginController extends Controller
     $oidc->addScope('email');
     $oidc->addScope('profile');
     $oidc->setCertPath(__DIR__ . '/cacert.pem');
-    $oidc->setHttpProxy("pfrie-std.proxy.e2.rie.gouv.fr:8080"); 
+    $oidc->setHttpProxy("pfrie-std.proxy.e2.rie.gouv.fr:8080");
     $oidc->authenticate();
-    $email = $oidc->requestUserInfo('email');
-    $name = $oidc->requestUserInfo('name');
-    Session::put('email', $email);
-    Session::put('no_auth', false);
 
-    return Redirect::to('http://localhost:8080/')->with(['email' => $email, 'name' => $name]);
+    $user = new User([
+      'origin' => 'google',
+      'name' => $oidc->requestUserInfo('name'),
+      'email' => $oidc->requestUserInfo('email'),
+      'picture' => $oidc->requestUserInfo('picture'),
+    ]);
+    $request->session()->put('utilisateur', $user);
+
+    return Redirect::to('https://roundcube.ida.melanie2.com/suggestiondev/');
   }
 }

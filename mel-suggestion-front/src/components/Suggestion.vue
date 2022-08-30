@@ -36,11 +36,11 @@
           </div>
         </div>
         <div id="user-actions"
-          v-show="(suggestion.my_suggestion || $moderator) && suggestion.state == 'moderate' && !this.$no_auth">
+          v-show="(suggestion.my_suggestion || $user.moderator) && suggestion.state == 'moderate' && !this.$no_auth">
           <i class="fa-solid fa-edit mb-4 dark:text-title-blue dark:hover:text-blue-500 hover:text-blue-500 cursor-pointer"
             @click="toggleSuggestion" title="Éditer la suggestion"></i>
           <br>
-          <i v-show="!$moderator"
+          <i v-show="!$user.moderator"
             class="fa-solid fa-trash mt-4 dark:text-title-blue dark:hover:text-red-500 hover:text-red-500 cursor-pointer"
             title="Supprimer la suggestion" @click.stop="onDelete"></i>
         </div>

@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import axiosClient from '../../axios';
 
-Vue.prototype.$moderator = false;
-Vue.prototype.$no_auth = false;
+Vue.prototype.$user = {};
+Vue.prototype.$no_auth = true;
 
 const state = {
   suggestions: [],
@@ -20,15 +20,20 @@ const actions = {
   fetchSuggestions({ commit }) {
     commit('loadingStatus', true)
     axiosClient
-      .get("moderator")
+      .get("user")
       .catch((error) => {
         console.log(error);
         commit('loadingStatus', false)
         this._vm.$toast.error("Erreur lors du chargement des données");
       })
       .then((response) => {
-        Vue.prototype.$moderator = response.data.moderator;
-        Vue.prototype.$no_auth = response.data.no_auth;
+        Vue.prototype.$user = response.data;
+        console.log(response.data);
+
+        //Si l'utilisateur n'est pas connecté
+        if (Object.keys(response.data).length === 0) {
+          Vue.prototype.$no_auth = true;
+        }
         axiosClient
           .get("suggestions")
           .then((response) => {
@@ -171,6 +176,5 @@ function createIndex(suggestions) {
       }
     });
   }
-  console.log(index);
   return index;
 }

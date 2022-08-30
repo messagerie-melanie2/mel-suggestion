@@ -1,5 +1,5 @@
 <template>
-  <div id="moderator_commands" v-if="$moderator">
+  <div id="moderator_commands" v-if="$user.moderator">
     <!-- <hr class="mt-2"> -->
     <div class="flex justify-between mt-5" v-if="suggestion.state == 'moderate'">
       <button @click.stop="refuseSuggestion"

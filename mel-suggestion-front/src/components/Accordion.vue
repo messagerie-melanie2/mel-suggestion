@@ -13,7 +13,7 @@
         </div>
       </div>
       <hr class="mb-2">
-      <div id="moderator_commands" v-if="$moderator">
+      <div id="moderator_commands" v-if="$user.moderator">
         <div class="flex justify-between mt-3">
           <div>
             Suggestion ajoutée par : <a href="#" class="font-bold" @click.stop="sendEmail">{{
