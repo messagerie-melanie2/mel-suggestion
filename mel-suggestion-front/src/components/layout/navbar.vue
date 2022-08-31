@@ -19,7 +19,7 @@
                 class="flex justify-between items-center py-2 pr-4 pl-3 w-full font-medium text-gray-700 rounded md:hover:bg-transparent md:border-0 md:p-0 md:w-auto dark:text-gray-400 dark:hover:text-white dark:focus:text-white dark:border-gray-700">
                 <!-- CHANGE TO DYNAMIC DATA -->
                 <img :src="$user.picture" referrerpolicy="no-referrer" class="rounded-full" width="40">
-                <span class="ml-3 text-white">{{ $user.name }}</span>
+                <span class="ml-3 dark:text-white">{{ $user.name }}</span>
               </div>
               <button @click="disconnect">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="ml-8 w-5 h-5">

@@ -14,7 +14,7 @@
         </div>
       </tbody>
     </table>
-    <div v-if="search.length >= 3 || !filteredSuggestions.length">
+    <div v-if="(search.length >= 3 || !filteredSuggestions.length) && !$no_auth">
       <div class="flex justify-center dark:text-title-blue">
         <p v-show="!filteredSuggestions.length" class="my-3">Aucun résultat</p>
       </div>
