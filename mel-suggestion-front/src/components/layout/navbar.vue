@@ -8,6 +8,7 @@
         class="inline-flex justify-center items-center ml-3 text-gray-400 rounded-lg md:hidden hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-300 dark:text-gray-400 dark:hover:text-white dark:focus:ring-gray-500"
         aria-controls="mobile-menu-2" aria-expanded="false">
         <span class="sr-only">Ouvrir le menu principal</span>
+        
         <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
           xmlns="http://www.w3.org/2000/svg">
           <path fill-rule="evenodd"
@@ -28,15 +29,10 @@
             <div v-if="!$no_auth && $user.origin == 'google'">
               <button @click="isHidden = !isHidden"
                 class="flex justify-between items-center py-2 pr-4 pl-3 w-full font-medium text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto dark:text-gray-400 dark:hover:text-white dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent">
-                <img :src="$user.picture"
-                  referrerpolicy="no-referrer" class="rounded-full" width="40">
+                <img :src="$user.picture" referrerpolicy="no-referrer" class="rounded-full" width="40">
                 <span class="ml-3">{{ $user.name }}</span>
-                <svg class="ml-1 w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    clip-rule="evenodd"></path>
-                </svg>
+                <i v-if="isHidden" class="fa-solid fa-chevron-down ml-2 w-3 h-3"></i>
+                <i v-else class="fa-solid fa-chevron-up ml-2 w-3 h-3"></i>
               </button>
               <!-- Dropdown menu -->
               <div id="dropdownNavbar"
