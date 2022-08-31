@@ -19,6 +19,13 @@ class LoginController extends Controller
     return view('connection');
   }
 
+  public function disconnect(Request $request)
+  {
+    $request->session()->flush();
+
+    return response()->json("Disconnected");
+  }
+
   public function googleConnection(Request $request)
   {
     $oidc = new OpenIDConnectClient(

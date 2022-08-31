@@ -1,6 +1,9 @@
 <template>
   <div>
-    <Navbar />
+    <div v-if="!loadingStatus && $user.origin != 'mel'">
+      <Navbar />
+    </div>
+
     <body class="flex items-center justify-center">
       <div class="w-full max-w-4xl px-4 mt-14">
         <Header :title="allText.title" />
@@ -90,6 +93,6 @@ export default {
 }
 
 .dark svg {
-  filter: invert(69%) sepia(75%) saturate(408%) hue-rotate(184deg) brightness(100%) contrast(82%)
+  filter: invert(69%) sepia(75%) saturate(408%) hue-rotate(184deg) brightness(100%) contrast(82%);
 }
 </style>

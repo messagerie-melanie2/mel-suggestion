@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ModeratorController;
 use App\Http\Controllers\SuggestionController;
 use App\Http\Controllers\UserController;
@@ -23,5 +24,6 @@ Route::group(['middleware' => ['web']], function () {
   Route::apiResource('suggestions', SuggestionController::class);
   Route::put('suggestions/state/{id}', [SuggestionController::class, 'updateState']);
   Route::get('text', [SuggestionController::class, 'getText']);
+  Route::get('disconnect', [LoginController::class, 'disconnect']);
   Route::apiResource('votes', VoteController::class);
 });

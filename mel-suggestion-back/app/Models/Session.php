@@ -47,6 +47,9 @@ class Session extends Model
         }
         FacadesSession::put('utilisateur', $user);
       }
+      else {
+        FacadesSession::put('no_auth', true);
+      }
     }
   }
 }

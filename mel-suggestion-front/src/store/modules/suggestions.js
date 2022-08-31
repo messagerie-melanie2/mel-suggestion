@@ -3,8 +3,6 @@ import axiosClient from '../../axios';
 
 Vue.prototype.$user = {};
 Vue.prototype.$no_auth = false;
-Vue.prototype.$user.origin = "google";
-Vue.prototype.$user.picture = "https://lh3.googleusercontent.com/a-/AFdZucrtBOWgTHnR9xCR_kwc_vpBmlbSzoKEtigaGN_gSQ=s96-c";
 
 const state = {
   suggestions: [],
@@ -30,8 +28,7 @@ const actions = {
       })
       .then((response) => {
         Vue.prototype.$user = response.data;
-      
-
+        
         //Si l'utilisateur n'est pas connecté
         if (Object.keys(response.data).length === 0) {
           Vue.prototype.$no_auth = true;
