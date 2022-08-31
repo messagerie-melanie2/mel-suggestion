@@ -14,6 +14,6 @@ class Controller extends BaseController
   
   public function __construct()
   {
-    Session::sessionConnect();
+    // Session::sessionConnect();
   }
 }
