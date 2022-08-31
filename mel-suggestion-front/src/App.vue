@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-4">
+  <div>
     <Navbar />
     <body class="flex items-center justify-center">
       <div class="w-full max-w-4xl px-4 mt-14">
