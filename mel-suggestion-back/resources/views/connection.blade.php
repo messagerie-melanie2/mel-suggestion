@@ -10,7 +10,7 @@
 <body>
   
 
-<div class="grid place-items-center h-screen">
+<div class="grid place-items-center h-screen pb-20">
 <div class="p-4 max-w-sm bg-white rounded-lg border shadow-md sm:p-6 ">
         <h5 class="mb-3 text-base font-semibold text-gray-900 lg:text-xl">
             Se connecter à Suggestion

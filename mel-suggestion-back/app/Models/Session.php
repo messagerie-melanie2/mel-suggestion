@@ -14,37 +14,39 @@ class Session extends Model
   public static function sessionConnect()
   {
     if (!FacadesSession::exists('utilisateur')) {
-      session_id($_COOKIE['roundcube_sessid']);
-      session_start();
-      if (env('CACHE_TYPE') == "memcached") {
-        $m = new \Memcache();
-        $memcached_hosts = explode(',', env('MEMCACHED_HOSTS'));
-        foreach ($memcached_hosts as $host) {
-          list($host, $port) = explode(':', $host);
-          if (!$port) $port = 11211;
-          $m->addServer($host, $port);
+      if (isset($_COOKIE['roundcube_sessid'])) {
+        session_id($_COOKIE['roundcube_sessid']);
+        session_start();
+        if (env('CACHE_TYPE') == "memcached") {
+          $m = new \Memcache();
+          $memcached_hosts = explode(',', env('MEMCACHED_HOSTS'));
+          foreach ($memcached_hosts as $host) {
+            list($host, $port) = explode(':', $host);
+            if (!$port) $port = 11211;
+            $m->addServer($host, $port);
+          }
+          $vars = unserialize($m->get($_COOKIE['roundcube_sessid']));
+          session_decode($vars['vars']);
         }
-        $vars = unserialize($m->get($_COOKIE['roundcube_sessid']));
-        session_decode($vars['vars']);
+        if (isset($_SESSION['firstname']) && isset($_SESSION['lastname']) && isset($_SESSION['email'])) {
+          $user = new User([
+            'origin' => 'mel',
+            'name' => $_SESSION['firstname'] . ' ' . $_SESSION['lastname'],
+            'email' => $_SESSION['email'],
+            'moderator' => in_array($_SESSION['email'], config('moderator')['moderator']) ? true : false,
+          ]);
+        }
+        //DEV ONLY
+        else {
+          $user = new User([
+            'origin' => 'mel',
+            'name' => "Arnaud Goubier",
+            'email' => "Arnaud@goubier.fr",
+            'moderator' => in_array("Arnaud@goubier.fr2", config('moderator')['moderator']) ? true : false,
+          ]);
+        }
+        FacadesSession::put('utilisateur', $user);
       }
-      if (isset($_SESSION['firstname']) && isset($_SESSION['lastname']) && isset($_SESSION['email'])) {
-        $user = new User([
-          'origin' => 'mel',
-          'name' => $_SESSION['firstname'] . ' ' . $_SESSION['lastname'],
-          'email' => $_SESSION['email'],
-          'moderator' => in_array($_SESSION['email'], config('moderator')['moderator']) ? true : false,
-        ]);
-      }
-      //DEV ONLY
-      else {
-        $user = new User([
-          'origin' => 'mel',
-          'name' => "Arnaud Goubier",
-          'email' => "Arnaud@goubier.fr",
-          'moderator' => in_array("Arnaud@goubier.fr2", config('moderator')['moderator']) ? true : false,
-        ]);
-      }
-      FacadesSession::put('utilisateur', $user);
     }
   }
 }

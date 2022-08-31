@@ -39,6 +39,7 @@ class LoginController extends Controller
       'picture' => $oidc->requestUserInfo('picture'),
     ]);
     $request->session()->put('utilisateur', $user);
+    $request->session()->put('no_auth', false);
 
     return Redirect::to('https://roundcube.ida.melanie2.com/suggestiondev/');
   }
