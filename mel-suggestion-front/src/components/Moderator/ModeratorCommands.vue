@@ -51,6 +51,15 @@
         Supprimer
       </button>
     </div>
+
+    <div class="flex justify-between mt-3" v-if="suggestion.state == 'refused'">
+      <button @click.stop="restoreSuggestion"
+        class="text-green-500 border border-green-500 hover:bg-green-500 hover:text-white active:bg-green-600 font-bold uppercase text-xs px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+        type="button">
+        <i class="fa-solid fa-trash-arrow-up mr-1"></i>
+        Restaurer
+      </button>
+    </div>
   </div>
 </template>
 
@@ -75,6 +84,11 @@ export default {
     refuseSuggestion() {
       if (confirm('Voulez-vous marquer cette suggestion comme refusée ?')) {
         this.changeStateSuggestion({ id: this.suggestion.id, state: 'refused' })
+      }
+    },
+    restoreSuggestion() {
+      if (confirm('Voulez-vous restaurer cette suggestion ?')) {
+        this.changeStateSuggestion({ id: this.suggestion.id, state: 'moderate' })
       }
     },
     validateSuggestion() {
