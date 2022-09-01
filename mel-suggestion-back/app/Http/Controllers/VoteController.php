@@ -33,7 +33,7 @@ class VoteController extends Controller
     ]);
 
     $newVote = new Vote([
-      'user_email' => Session::get('email'),
+      'user_email' => $request->session()->get('utilisateur')->email,
       'suggestion_id' => $request->get('suggestion_id')
     ]);
 

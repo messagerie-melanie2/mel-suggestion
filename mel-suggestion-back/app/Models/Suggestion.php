@@ -28,7 +28,7 @@ class Suggestion extends Model
 
     foreach ($suggestions as $key => $suggestion) {
       if (!$moderator) {
-        if ($suggestion->state == 'moderate' && $suggestion->user_email != Session::get('email')) {
+        if ($suggestion->state == 'moderate' && $suggestion->user_email != Session::get('utilisateur')->email) {
           unset($suggestions[$key]);
           continue;
         }
@@ -36,7 +36,7 @@ class Suggestion extends Model
       if ($suggestion->state == 'moderate') {
         $suggestion->updated_at = now();
       }
-      if ($suggestion->user_email == Session::get('email')) {
+      if ($suggestion->user_email == Session::get('utilisateur')->email) {
         $suggestion->my_suggestion = true;
       }
       array_push($suggestions_ids, $suggestion->id);
@@ -48,7 +48,7 @@ class Suggestion extends Model
       foreach ($votes as $vote) {
         if ($vote->suggestion_id == $suggestion->id) {
           $nb_votes++;
-          if ($vote->user_email == Session::get('email')) {
+          if ($vote->user_email == Session::get('utilisateur')->email) {
             $suggestion->voted = true;
             $suggestion->vote_id = $vote->id;
           }
@@ -69,7 +69,7 @@ class Suggestion extends Model
 
   public static function isMySuggestion($suggestion)
   {
-    if ($suggestion->user_email == Session::get('email')) {
+    if ($suggestion->user_email == Session::get('utilisateur')->email) {
       $suggestion->my_suggestion = true;
     }
     return $suggestion;
