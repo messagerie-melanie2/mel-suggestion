@@ -26,13 +26,16 @@
                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Se
                 connecter</a>
             </div>
-            <div v-if="!$no_auth && $user.origin == 'google'">
+            <div v-if="!$no_auth">
               <button @click="isHidden = !isHidden"
                 class="flex justify-between items-center py-2 pr-4 pl-3 w-full font-medium text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:w-auto dark:text-gray-400 dark:hover:text-white dark:focus:text-white dark:border-gray-700 dark:hover:bg-gray-700 md:dark:hover:bg-transparent">
-                <img :src="$user.picture" referrerpolicy="no-referrer" class="rounded-full" width="40">
-                <span class="ml-3">{{ $user.name }}</span>
-                <i v-if="isHidden" class="fa-solid fa-chevron-down ml-2 w-3 h-3"></i>
-                <i v-else class="fa-solid fa-chevron-up ml-2 w-3 h-3"></i>
+
+                <img v-show="$user.picture" :src="$user.picture" referrerpolicy="no-referrer" class="rounded-full"
+                  width="40">
+                <span class="ml-3" :class="[!$user.picture ? 'mt-3' : '']">{{ $user.name }}</span>
+                <i v-if="isHidden" class="fa-solid fa-chevron-down ml-2 w-3 h-3"
+                  :class="[!$user.picture ? 'mt-3' : '']"></i>
+                <i v-else class="fa-solid fa-chevron-up ml-2 w-3 h-3" :class="[!$user.picture ? 'mt-3' : '']"></i>
               </button>
               <!-- Dropdown menu -->
               <div id="dropdownNavbar"
@@ -48,12 +51,12 @@
           </li>
           <button id="theme-toggle" data-tooltip-target="tooltip-toggle" type="button" @click="changeTheme"
             class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5">
-            <svg v-if="!darkTheme" aria-hidden="true" id="theme-toggle-dark-icon" class="w-5 h-5"
-              fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <svg v-if="!darkTheme" aria-hidden="true" id="theme-toggle-dark-icon" class="w-5 h-5" fill="currentColor"
+              viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
               <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
             </svg>
-            <svg v-else aria-hidden="true" id="theme-toggle-light-icon" class="w-5 h-5"
-              fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <svg v-else aria-hidden="true" id="theme-toggle-light-icon" class="w-5 h-5" fill="currentColor"
+              viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
                 fill-rule="evenodd" clip-rule="evenodd"></path>
