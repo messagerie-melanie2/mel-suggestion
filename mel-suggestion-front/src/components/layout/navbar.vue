@@ -2,7 +2,7 @@
   <nav class="px-2 pt-4 md:pt-0 bg-white border-gray-200 dark:bg-dark-blue dark:border-gray-700">
     <div class="container flex flex-wrap justify-between items-center mx-auto">
       <a href="#" class="flex items-center">
-        <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Suggestions</span>
+        <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">{{title ? title : 'Suggestion'}}</span>
       </a>
       <button data-collapse-toggle="mobile-menu" type="button" @click="isMobile = !isMobile"
         class="inline-flex justify-center items-center ml-3 text-gray-400 rounded-lg md:hidden hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-300 dark:text-gray-400 dark:hover:text-white dark:focus:ring-gray-500"
@@ -80,6 +80,12 @@ export default {
       isMobile: false,
       darkTheme: this.$darkTheme,
     }
+  },
+  props: {
+    title: String,
+  },
+  mounted() {
+      document.title = this.title;
   },
   methods: {
     disconnect() {

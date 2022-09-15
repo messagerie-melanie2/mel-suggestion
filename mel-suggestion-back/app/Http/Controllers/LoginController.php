@@ -26,105 +26,34 @@ class LoginController extends Controller
     return response()->json("Disconnected");
   }
 
-
-
-  public function googleConnection(Request $request)
+  public function externalConnection(Request $request)
   {
+    $connector = config('external_connector')[$request->connector];
+
     $oidc = new OpenIDConnectClient(
-      'https://accounts.google.com',
-      '449551978468-mdo27ossqcjotaf0e8hqndtsgq7ont26.apps.googleusercontent.com',
-      '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'
+      $connector['client_url'],
+      $connector['client_id'],
+      $connector['client_secret']
     );
+
     $oidc->addScope('email');
     $oidc->addScope('profile');
     $oidc->setCertPath(__DIR__ . '/cacert.pem');
-    $oidc->setHttpProxy("pfrie-std.proxy.e2.rie.gouv.fr:8080");
+    if (config('external_connector')['external_proxy']) {
+      $oidc->setHttpProxy(config('external_connector')['external_proxy']);
+    }
     $oidc->authenticate();
 
     $user = new User([
-      'origin' => 'google',
-      'name' => $oidc->requestUserInfo('name'),
-      'email' => $oidc->requestUserInfo('email'),
-      'picture' => $oidc->requestUserInfo('picture'),
+      'origin' => $request->connector,
     ]);
-    $request->session()->put('utilisateur', $user);
-    $request->session()->put('no_auth', false);
+    foreach ($connector['client_fields'] as $field) {
+      $user->$field = $oidc->requestUserInfo($field);
+    }
 
-    return Redirect::to('https://roundcube.ida.melanie2.com/suggestiondev/');
-  }
+    Session::put('utilisateur', $user);
+    Session::put('no_auth', false);
 
-  public function microsoftConnection(Request $request)
-  {
-    $oidc = new OpenIDConnectClient(
-      'https://login.microsoftonline.com/consumers/v2.0',
-      '5721ba86-68d5-4643-bcd8-9f74466f1cb6',
-      'zXp8Q~JyWrJPeKeYQ0S1ftasm8ictYymCrWzYckr'
-    );
-    $oidc->addScope('email');
-    $oidc->addScope('profile');
-    $oidc->setCertPath(__DIR__ . '/cacert.pem');
-    $oidc->setHttpProxy("pfrie-std.proxy.e2.rie.gouv.fr:8080");
-    $oidc->authenticate();
-    
-    $user = new User([
-      'origin' => 'microsoft',
-      'name' => $oidc->requestUserInfo('name'),
-      'email' => $oidc->requestUserInfo('email'),
-    ]);
-    $request->session()->put('utilisateur', $user);
-    $request->session()->put('no_auth', false);
-
-    return Redirect::to('https://roundcube.ida.melanie2.com/suggestiondev/');
-  }
-
-  public function facebookConnection(Request $request)
-  {
-    $oidc = new OpenIDConnectClient(
-      'https://facebook.com/dialog/oauth/',
-      '753697032563539',
-      'db0e29aace57bfb33eaaf7533737de73',
-      'https://www.facebook.com'
-    );
-    // $oidc->addScope('email');
-    // $oidc->addScope('profile');
-    $oidc->setCertPath(__DIR__ . '/cacert.pem');
-    $oidc->setHttpProxy("pfrie-std.proxy.e2.rie.gouv.fr:8080");
-    $oidc->authenticate();
-
-    $user = new User([
-      'origin' => 'google',
-      'name' => $oidc->requestUserInfo('name'),
-      'email' => $oidc->requestUserInfo('email'),
-      'picture' => $oidc->requestUserInfo('picture'),
-    ]);
-    $request->session()->put('utilisateur', $user);
-    $request->session()->put('no_auth', false);
-
-    return Redirect::to('https://roundcube.ida.melanie2.com/suggestiondev/');
-  }
-
-  public function appleConnection(Request $request)
-  {
-    $oidc = new OpenIDConnectClient(
-      '',
-      '',
-      ''
-    );
-    $oidc->addScope('email');
-    $oidc->addScope('profile');
-    $oidc->setCertPath(__DIR__ . '/cacert.pem');
-    $oidc->setHttpProxy("pfrie-std.proxy.e2.rie.gouv.fr:8080");
-    $oidc->authenticate();
-
-    $user = new User([
-      'origin' => 'google',
-      'name' => $oidc->requestUserInfo('name'),
-      'email' => $oidc->requestUserInfo('email'),
-      'picture' => $oidc->requestUserInfo('picture'),
-    ]);
-    $request->session()->put('utilisateur', $user);
-    $request->session()->put('no_auth', false);
-
-    return Redirect::to('https://roundcube.ida.melanie2.com/suggestiondev/');
+    return Redirect::to(env('APPLICATION_URL'));
   }
 }

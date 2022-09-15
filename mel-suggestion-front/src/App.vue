@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="!loadingStatus && $user.origin != 'mel'">
-      <Navbar />
+      <Navbar :title="allText.application_name" />
     </div>
 
     <body class="flex items-center justify-center">
@@ -51,7 +51,7 @@ export default {
       this.fetchText()
   },
   methods: {
-    ...mapActions(['fetchSuggestions', 'fetchText']),
+    ...mapActions(['fetchSuggestions', 'fetchText'])
   },
   components: {
     Header,
@@ -63,6 +63,7 @@ export default {
   },
   computed: mapGetters(['allSuggestions', 'allIndexes', 'loadingStatus', 'allText']),
 };
+
 </script>
 
 
