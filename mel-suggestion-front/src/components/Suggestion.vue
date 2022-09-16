@@ -195,7 +195,7 @@ export default {
 </script>
 <style scoped>
 *>>>.ql-editor {
-  padding: 5px 20px 12px 15px;
+  padding: 0px 0px 12px 0px;
   min-height: 100px;
 }
 

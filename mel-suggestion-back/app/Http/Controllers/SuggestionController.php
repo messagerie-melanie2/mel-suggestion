@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Suggestion;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 
 class SuggestionController extends Controller
 {
