@@ -15,7 +15,7 @@ class SuggestionController extends Controller
    */
   public function index()
   {
-    $suggestions = Suggestion::getAllSuggestionsByInstance(Session::get('is_moderator'));
+    $suggestions = Suggestion::getAllSuggestionsByInstance();
 
     return response()->json($suggestions);
   }

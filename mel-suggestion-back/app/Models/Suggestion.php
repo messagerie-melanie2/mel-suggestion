@@ -20,7 +20,7 @@ class Suggestion extends Model
     'state',
   ];
 
-  public static function getAllSuggestionsByInstance($moderator = false)
+  public static function getAllSuggestionsByInstance()
   {
     $suggestions = Suggestion::where('instance', env('INSTANCE'))->get();
 
@@ -29,7 +29,7 @@ class Suggestion extends Model
     $suggestions_ids = [];
 
     foreach ($suggestions as $key => $suggestion) {
-      if (!$moderator) {
+      if (!$session_user['moderator']) {
         if ($suggestion->state == 'moderate' && $suggestion->user_email != $session_user->email) {
           unset($suggestions[$key]);
           continue;
