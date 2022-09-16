@@ -1,7 +1,13 @@
 <template>
-  <div id="moderator_commands" v-if="$moderator">
+  <div id="moderator_commands" v-if="$user.moderator">
     <!-- <hr class="mt-2"> -->
     <div class="flex justify-between mt-5" v-if="suggestion.state == 'moderate'">
+      <button @click.stop="removeSuggestion"
+        class=" border border-black hover:bg-black hover:text-white active:bg-red-600 font-bold uppercase text-xs px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+        type="button">
+        <i class="fa-solid fa-trash mr-1"></i>
+        Supprimer
+      </button>
       <button @click.stop="refuseSuggestion"
         class="text-red-500 border border-red-500 hover:bg-red-500 hover:text-white active:bg-red-600 font-bold uppercase text-xs px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
         type="button">
@@ -33,15 +39,25 @@
         class="text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white active:bg-blue-600 font-bold uppercase text-xs px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
         type="button">
         <i class="fa-solid fa-lock mr-1"></i>
-        Verrouiller
+        Accepter
       </button>
     </div>
+
     <div class="flex justify-between mt-3" v-if="suggestion.state == 'validate'">
       <button @click.stop="refuseSuggestion"
         class="text-red-500 border border-red-500 hover:bg-red-500 hover:text-white active:bg-red-600 font-bold uppercase text-xs px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
         type="button">
         <i class="fa-solid fa-times mr-1"></i>
         Supprimer
+      </button>
+    </div>
+
+    <div class="flex justify-between mt-3" v-if="suggestion.state == 'refused'">
+      <button @click.stop="restoreSuggestion"
+        class="text-green-500 border border-green-500 hover:bg-green-500 hover:text-white active:bg-green-600 font-bold uppercase text-xs px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+        type="button">
+        <i class="fa-solid fa-trash-arrow-up mr-1"></i>
+        Restaurer
       </button>
     </div>
   </div>
@@ -57,12 +73,22 @@ export default {
   ],
   methods: {
     ...mapActions(['changeStateSuggestion', 'deleteSuggestion', 'fetchText']),
-    refuseSuggestion() {
-      if (confirm('Voulez-vous refuser cette suggestion ?')) {
+    removeSuggestion() {
+      if (confirm('Voulez-vous supprimer cette suggestion ?')) {
         this.deleteSuggestion(this.suggestion.id)
         if (confirm('Envoyer un mail de refus ?')) {
-          this.sendEmail(this.allText.mail_subject.replace('%%title%%',this.suggestion.title), this.allText.mail_body);
+          this.sendEmail(this.allText.mail_subject.replace('%%title%%', this.suggestion.title), this.allText.mail_body);
         }
+      }
+    },
+    refuseSuggestion() {
+      if (confirm('Voulez-vous marquer cette suggestion comme refusée ?')) {
+        this.changeStateSuggestion({ id: this.suggestion.id, state: 'refused' })
+      }
+    },
+    restoreSuggestion() {
+      if (confirm('Voulez-vous restaurer cette suggestion ?')) {
+        this.changeStateSuggestion({ id: this.suggestion.id, state: 'moderate' })
       }
     },
     validateSuggestion() {
@@ -71,12 +97,12 @@ export default {
       }
     },
     lockSuggestion() {
-      if (confirm('Voulez-vous verrouiller cette suggestion ?')) {
+      if (confirm('Voulez-vous accepter cette suggestion ?')) {
         this.changeStateSuggestion({ id: this.suggestion.id, state: 'validate' })
       }
     },
     modifySuggestion() {
-      this.sendEmail(this.allText.mail_subject.replace('%%title%%',this.suggestion.title));
+      this.sendEmail(this.allText.mail_subject.replace('%%title%%', this.suggestion.title));
     },
     sendEmail(subject = '', body = '') {
       const windowRef = window.open(`mailto:${this.suggestion.user_email}?subject=${subject}&body=${body}`);

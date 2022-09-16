@@ -1,8 +1,11 @@
 <template>
   <div>
+    <div v-if="!loadingStatus && $user.origin != 'mel'">
+      <Navbar :title="allText.application_name" />
+    </div>
 
     <body class="flex items-center justify-center">
-      <div class="w-full max-w-4xl px-4">
+      <div class="w-full max-w-4xl px-4 mt-14">
         <Header :title="allText.title" />
         <div class="rounded-lg pb-6 border border-gray-300 dark:border-gray-800 bg-white dark:bg-light-blue">
           <div
@@ -16,7 +19,7 @@
                 <Preloader color="gray" />
               </div>
               <div v-else>
-                <Suggestions :suggestions="allSuggestions" :index="allIndexes"/>
+                <Suggestions :suggestions="allSuggestions" :index="allIndexes" />
               </div>
             </section>
           </div>
@@ -34,6 +37,7 @@ import SortingButton from "./components/SortingButton";
 import Search from "./components/Search";
 import Suggestions from "./components/Suggestions";
 import Preloader from './components/Preloader.vue'
+import Navbar from './components/layout/navbar.vue'
 
 export default {
   name: "App",
@@ -47,17 +51,19 @@ export default {
       this.fetchText()
   },
   methods: {
-    ...mapActions(['fetchSuggestions', 'fetchText']),
+    ...mapActions(['fetchSuggestions', 'fetchText'])
   },
   components: {
     Header,
     SortingButton,
     Search,
     Suggestions,
-    Preloader
+    Preloader,
+    Navbar
   },
   computed: mapGetters(['allSuggestions', 'allIndexes', 'loadingStatus', 'allText']),
 };
+
 </script>
 
 
@@ -88,6 +94,6 @@ export default {
 }
 
 .dark svg {
-  filter: invert(69%) sepia(75%) saturate(408%) hue-rotate(184deg) brightness(100%) contrast(82%)
+  filter: invert(69%) sepia(75%) saturate(408%) hue-rotate(184deg) brightness(100%) contrast(82%);
 }
 </style>

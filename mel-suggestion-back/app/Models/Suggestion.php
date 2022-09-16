@@ -20,15 +20,17 @@ class Suggestion extends Model
     'state',
   ];
 
-  public static function getAllSuggestionsByInstance($moderator = false)
+  public static function getAllSuggestionsByInstance()
   {
     $suggestions = Suggestion::where('instance', env('INSTANCE'))->get();
+
+    $session_user = Session::get('utilisateur') != null ? Session::get('utilisateur') : new User();
 
     $suggestions_ids = [];
 
     foreach ($suggestions as $key => $suggestion) {
-      if (!$moderator) {
-        if ($suggestion->state == 'moderate' && $suggestion->user_email != Session::get('email')) {
+      if (!$session_user['moderator']) {
+        if ($suggestion->state == 'moderate' && $suggestion->user_email != $session_user->email) {
           unset($suggestions[$key]);
           continue;
         }
@@ -36,7 +38,7 @@ class Suggestion extends Model
       if ($suggestion->state == 'moderate') {
         $suggestion->updated_at = now();
       }
-      if ($suggestion->user_email == Session::get('email')) {
+      if ($suggestion->user_email == $session_user->email) {
         $suggestion->my_suggestion = true;
       }
       array_push($suggestions_ids, $suggestion->id);
@@ -48,7 +50,7 @@ class Suggestion extends Model
       foreach ($votes as $vote) {
         if ($vote->suggestion_id == $suggestion->id) {
           $nb_votes++;
-          if ($vote->user_email == Session::get('email')) {
+          if ($vote->user_email == $session_user->email) {
             $suggestion->voted = true;
             $suggestion->vote_id = $vote->id;
           }
@@ -69,7 +71,7 @@ class Suggestion extends Model
 
   public static function isMySuggestion($suggestion)
   {
-    if ($suggestion->user_email == Session::get('email')) {
+    if ($suggestion->user_email == Session::get('utilisateur')->email) {
       $suggestion->my_suggestion = true;
     }
     return $suggestion;

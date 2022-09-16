@@ -9,12 +9,12 @@
       <button class="text-slate-600 font-semibold py-2 px-3  border border-gray-300 dark:border-light-yellow "
         @click="sort('updated_at', false)" title="Trier par date"
         v-bind:class="[sortBy === 'updated_at' && validateOnly === false && !searching ? 'bg-gray-200 dark:bg-light-yellow dark:text-slate-800' : ' dark:text-light-yellow hover:bg-gray-100 dark:hover:bg-dark-blue']">
-        <i class="far fa-clock text-slate-400"></i> Nouveau
+        <i class="far fa-clock text-slate-400"></i> Récentes
       </button>
       <button class="text-slate-600 font-semibold py-2 px-3  border border-gray-300 dark:border-light-yellow rounded-r "
         title="Suggestions à venir" @click="sort('updated_at', true)"
         v-bind:class="[validateOnly === true && !searching ? 'bg-gray-200 dark:bg-light-yellow dark:text-slate-800' : ' dark:text-light-yellow hover:bg-gray-100 dark:hover:bg-dark-blue']">
-        <i class="fas fa-list-check text-slate-400 mr-1"></i> A venir
+        <i class="fas fa-list-check text-slate-400 mr-1"></i> Retenues
       </button>
     </div>
   </div>
