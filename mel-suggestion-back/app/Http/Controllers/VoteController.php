@@ -28,6 +28,7 @@ class VoteController extends Controller
    */
   public function store(Request $request)
   {
+
     $request->validate([
       'suggestion_id' => 'required'
     ]);

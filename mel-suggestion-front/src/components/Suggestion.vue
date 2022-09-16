@@ -1,6 +1,6 @@
 <template>
   <tr class="inline-block w-full px-6 pt-3 cursor-pointer "
-    :class="[!showSuggestion ? 'hover:bg-gray-100 dark:hover:bg-dark-blue' : '', suggestion.state == 'moderate' ? 'border-l-2 border-yellow-500' : '', suggestion.state == 'validate' ? 'border-l-2 border-green-400' : '',suggestion.state == 'refused' ? 'border-l-2 border-red-400' : '']"
+    :class="[!showSuggestion ? 'hover:bg-gray-100 dark:hover:bg-dark-blue' : '', suggestion.state == 'moderate' ? 'border-l-2 border-yellow-500' : '', suggestion.state == 'validate' ? 'border-l-2 border-green-400' : '', suggestion.state == 'refused' ? 'border-l-2 border-red-400' : '']"
     @click.prevent="description = !description">
     <td class="inline-block w-full">
       <div class="flex justify-between" v-show="!showSuggestion">
@@ -25,7 +25,7 @@
           </div>
           <div class="pl-3">
             <div class="flex items-center text-sm leading-none">
-              <p class="font-semibold overflow-hidden truncate custom_width text-slate-800 dark:text-title-blue h-4">
+              <p class="font-semibold overflow-hidden truncate custom_width text-slate-800 dark:text-title-blue h-5">
                 {{ suggestion.title | strippedContent }}
               </p>
             </div>
@@ -35,18 +35,18 @@
             </div>
           </div>
         </div>
-          <div v-if="suggestion.state == 'validate'">
-            <span
-              class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-green-600 bg-green-200 -ml-12 whitespace-nowrap">
-              A venir
-            </span>
-          </div>
-          <div v-if="suggestion.state == 'refused'">
-            <span
-              class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-red-600 bg-red-200 -ml-12 whitespace-nowrap">
-              Refusée
-            </span>
-          </div>
+        <div v-if="suggestion.state == 'validate'">
+          <span
+            class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-green-600 bg-green-200 -ml-12 whitespace-nowrap">
+            A venir
+          </span>
+        </div>
+        <div v-if="suggestion.state == 'refused'">
+          <span
+            class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-red-600 bg-red-200 -ml-12 whitespace-nowrap">
+            Refusée
+          </span>
+        </div>
         <div id="user-actions"
           v-show="(suggestion.my_suggestion || $user.moderator) && suggestion.state == 'moderate' && !this.$no_auth">
           <i class="fa-solid fa-edit mb-4 dark:text-title-blue dark:hover:text-blue-500 hover:text-blue-500 cursor-pointer"
@@ -124,25 +124,32 @@ export default {
       if (!this.suggestion.my_suggestion && this.suggestion.state != 'validate' && !this.$no_auth) {
         this.suggestion.voted = !this.suggestion.voted
         if (this.suggestion.voted) {
-          this.suggestion.nb_votes++
           axiosClient.post("votes", {
             suggestion_id: this.suggestion.id
           }).then((res) => {
             this.voteId = res.data.id
+            this.suggestion.nb_votes++
           })
             .catch((error) => {
+              this.$toast.error("Une erreur est survenue");
+              this.suggestion.voted = !this.suggestion.voted
               console.log(error);
             })
         }
         else {
-          this.suggestion.nb_votes--
           if (this.suggestion.vote_id) {
             this.voteId = this.suggestion.vote_id;
             delete this.suggestion.vote_id;
           }
-          axiosClient.delete(`votes/${this.voteId}`).catch((error) => {
-            console.log(error);
-          })
+          axiosClient.delete(`votes/${this.voteId}`)
+            .then(() => {
+              this.suggestion.nb_votes--
+            })
+            .catch((error) => {
+              this.$toast.error("Une erreur est survenue");
+              this.suggestion.voted = !this.suggestion.voted
+              console.log(error);
+            })
         }
       }
       this.resetVoteText();

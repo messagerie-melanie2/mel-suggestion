@@ -36,15 +36,6 @@ class Session extends Model
             'moderator' => in_array($_SESSION['email'], config('moderator')['moderator']) ? true : false,
           ]);
         }
-        //DEV ONLY
-        else {
-          $user = new User([
-            'origin' => 'mel',
-            'name' => "Arnaud Goubier",
-            'email' => "arnaud.goubier@i-carre.net",
-            'moderator' => in_array("arnaud.goubier@i-carre.net", config('moderator')['moderator']) ? true : false,
-          ]);
-        }
         FacadesSession::put('utilisateur', $user);
       } else {
         FacadesSession::put('no_auth', true);
