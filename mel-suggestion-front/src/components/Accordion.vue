@@ -12,12 +12,15 @@
           <div v-html="suggestion.description"></div>
         </div>
       </div>
-      <hr class="mb-2">
-      <div id="moderator_commands" v-if="$moderator">
+      <span class="text-yellow-500" v-if="suggestion.state == 'moderate' && !$user.moderator">
+        Votre suggestion est en attente de modération
+      </span>
+      <hr class="mb-2 mt-2">
+      <div id="moderator_commands" v-if="$user.moderator">
         <div class="flex justify-between mt-3">
           <div>
             Suggestion ajoutée par : <a href="#" class="font-bold" @click.stop="sendEmail">{{
-                displayName
+            displayName
             }}</a>
           </div>
           <div>
@@ -76,4 +79,5 @@ export default {
 </script>
 
 <style>
+
 </style>

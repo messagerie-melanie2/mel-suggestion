@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\ModeratorController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SuggestionController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\VoteController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,8 +17,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::apiResource('moderator', ModeratorController::class);
-Route::apiResource('suggestions', SuggestionController::class);
-Route::put('suggestions/state/{id}', [SuggestionController::class, 'updateState']);
-Route::get('text', [SuggestionController::class, 'getText']);
-Route::apiResource('votes', VoteController::class);
+Route::group(['middleware' => ['web']], function () {
+  Route::apiResource('user', UserController::class);
+  Route::apiResource('suggestions', SuggestionController::class);
+  Route::put('suggestions/state/{id}', [SuggestionController::class, 'updateState']);
+  Route::get('text', [SuggestionController::class, 'getText']);
+  Route::get('disconnect', [LoginController::class, 'disconnect']);
+  Route::apiResource('votes', VoteController::class);
+});

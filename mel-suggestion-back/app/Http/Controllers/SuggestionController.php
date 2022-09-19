@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Suggestion;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 
 class SuggestionController extends Controller
 {
@@ -15,7 +14,7 @@ class SuggestionController extends Controller
    */
   public function index()
   {
-    $suggestions = Suggestion::getAllSuggestionsByInstance(Session::get('is_moderator'));
+    $suggestions = Suggestion::getAllSuggestionsByInstance();
 
     return response()->json($suggestions);
   }
@@ -36,27 +35,17 @@ class SuggestionController extends Controller
       'user_email' => '',
     ]);
 
-    if ($request->get('user_firstname')) {
-      $newSuggestion = new Suggestion([
-        'title' => $request->get('title'),
-        'description' => $request->get('description'),
-        'user_email' => $request->get('user_email'),
-        'user_firstname' => $request->get('user_firstname'),
-        'user_lastname' => $request->get('user_lastname'),
-        'state' => 'moderate',
-        'instance' => env('INSTANCE'),
-      ]);
-    } else {
-      $newSuggestion = new Suggestion([
-        'title' => $request->get('title'),
-        'description' => $request->get('description'),
-        'user_email' => Session::get('email'),
-        'user_firstname' =>  Session::get('firstname'),
-        'user_lastname' =>  Session::get('lastname'),
-        'state' => 'moderate',
-        'instance' => env('INSTANCE'),
-      ]);
-    }
+    $session_user = $request->session()->get('utilisateur');
+
+    $newSuggestion = new Suggestion([
+      'title' => $request->get('title'),
+      'description' => $request->get('description'),
+      'user_email' => $session_user->email,
+      'user_firstname' => explode(' ', $session_user->name)[0],
+      'user_lastname' => explode(' ', $session_user->name)[1],
+      'state' => 'moderate',
+      'instance' => env('INSTANCE'),
+    ]);
 
     $newSuggestion->save();
     $newSuggestion->nb_votes = 0;
@@ -115,9 +104,12 @@ class SuggestionController extends Controller
 
     $request->validate([
       'state' => 'required',
+      'comment' => '',
     ]);
 
     $suggestion->state = $request->get('state');
+    
+    $suggestion->comment = $request->get('comment');
 
     $suggestion->save();
 

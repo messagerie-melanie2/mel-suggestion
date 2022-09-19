@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import axiosClient from '../../axios';
 
-Vue.prototype.$moderator = false;
+Vue.prototype.$user = {};
 Vue.prototype.$no_auth = false;
 
 const state = {
@@ -20,15 +20,19 @@ const actions = {
   fetchSuggestions({ commit }) {
     commit('loadingStatus', true)
     axiosClient
-      .get("moderator")
+      .get("user")
       .catch((error) => {
         console.log(error);
         commit('loadingStatus', false)
         this._vm.$toast.error("Erreur lors du chargement des données");
       })
       .then((response) => {
-        Vue.prototype.$moderator = response.data.moderator;
-        Vue.prototype.$no_auth = response.data.no_auth;
+        Vue.prototype.$user = response.data;
+
+        //Si l'utilisateur n'est pas connecté
+        if (Object.keys(response.data).length === 0) {
+          Vue.prototype.$no_auth = true;
+        }
         axiosClient
           .get("suggestions")
           .then((response) => {
@@ -80,11 +84,11 @@ const actions = {
     })
   },
 
-  changeStateSuggestion({ commit }, { id, state }) {
+  changeStateSuggestion({ commit }, { id, state, comment }) {
     axiosClient.put(`suggestions/state/${id}`, {
-      state
+      state,
+      comment
     }).then((response) => {
-      console.log(response.data);
       commit('updateSuggestion', response.data)
       this._vm.$toast.success("Suggestion modifiée avec succès !");
     }).catch((error) => {
@@ -171,6 +175,5 @@ function createIndex(suggestions) {
       }
     });
   }
-  console.log(index);
   return index;
 }
