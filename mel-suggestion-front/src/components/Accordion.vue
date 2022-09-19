@@ -12,7 +12,10 @@
           <div v-html="suggestion.description"></div>
         </div>
       </div>
-      <hr class="mb-2">
+      <span class="text-yellow-500" v-if="suggestion.state == 'moderate' && !$user.moderator">
+        Votre suggestion est en attente de modération
+      </span>
+      <hr class="mb-2 mt-2">
       <div id="moderator_commands" v-if="$user.moderator">
         <div class="flex justify-between mt-3">
           <div>
