@@ -4,6 +4,7 @@
       <Navbar :title="allText.application_name" />
     </div>
     <ChangeStateModal v-show="showStateModal" :modalInfo="this.modalInfo" @close-modal="showStateModal = false" />
+    <ChangeCommentModal v-show="showCommentModal" :modalInfo="this.modalInfo" @close-modal="showCommentModal = false" />
 
     <body class="flex items-center justify-center">
       <div class="w-full max-w-4xl px-4 mt-14">
@@ -40,6 +41,7 @@ import Suggestions from "./components/Suggestions";
 import Preloader from './components/Preloader.vue'
 import Navbar from './components/layout/navbar.vue'
 import ChangeStateModal from './components/Modals/ChangeStateModal.vue';
+import ChangeCommentModal from "./components/Modals/ChangeCommentModal.vue";
 
 export default {
   name: "App",
@@ -47,6 +49,7 @@ export default {
     return {
       title: "Module de suggestion",
       showStateModal: false,
+      showCommentModal: false,
       modalInfo: {},
     };
   },
@@ -58,6 +61,10 @@ export default {
     this.$root.$on('showStateModal', (e) => {
       this.showStateModal = true;
       this.modalInfo = { state: e.state, suggestion: e.suggestion }
+    }),
+    this.$root.$on('showCommentModal', (e) => {
+      this.showCommentModal = true;
+      this.modalInfo = e.suggestion;
     })
   },
   methods: {
@@ -70,8 +77,9 @@ export default {
     Suggestions,
     Preloader,
     Navbar,
-    ChangeStateModal
-  },
+    ChangeStateModal,
+    ChangeCommentModal
+},
   computed: mapGetters(['allSuggestions', 'allIndexes', 'loadingStatus', 'allText']),
 };
 

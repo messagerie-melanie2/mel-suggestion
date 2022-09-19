@@ -15,13 +15,13 @@ class CreateSuggestionsTable extends Migration
     {
         Schema::create('suggestions', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->longText('title');
             $table->longText('description');
             $table->string('user_email');
             $table->string('user_lastname')->nullable();
             $table->string('user_firstname')->nullable();
             $table->string('state');
-            $table->string('comment')->nullable();
+            $table->longText('comment')->nullable();
             $table->string('instance');
             $table->index('instance');
             $table->timestamps();

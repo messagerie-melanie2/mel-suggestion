@@ -18,7 +18,7 @@
             </div>
             <div v-else>
               <p class="text-center text-lg font-bold">{{
-                  suggestion.nb_votes
+              suggestion.nb_votes
               }}</p>
             </div>
             <p>Votes</p>
@@ -66,6 +66,20 @@
         </div>
 
         <UpdateSuggestion @update-suggestion="updateSuggestions" :suggestion="suggestion" />
+      </div>
+      <div @clic.stop
+        class="inline-block w-full my-4 p-4 rounded-md border bg-white dark:bg-dark-blue border-gray-100 shadow-md dark:border-gray-500"
+        v-if="suggestion.comment">
+        <div class="flex justify-between">
+          <div>
+            <h5 class="mb-2 text-md font-semibold tracking-tight dark:text-white">Modérateur<i
+                class="fa-solid fa-circle-check text-blue-700 ml-2"></i></h5>
+            <p class="font-normal text-gray-700 dark:text-gray-400">{{suggestion.comment}}</p>
+          </div>
+          <i v-if="$user.moderator" class="fa-solid fa-edit dark:text-title-blue dark:hover:text-blue-500 hover:text-blue-500 cursor-pointer"
+            @click="changeComment" title="Éditer le commentaire"></i>
+        </div>
+
       </div>
     </td>
     <Accordion :suggestion="suggestion" :active="description" v-show="!showSuggestion" />
@@ -118,7 +132,9 @@ export default {
     resetVoteText() {
       if (!this.suggestion.my_suggestion && this.suggestion.state != 'validate' && !this.$no_auth)
         this.voteHover = false
-
+    },
+    changeComment() {
+      this.$root.$emit('showCommentModal', { suggestion: this.suggestion });
     },
     toggleVote() {
       if (!this.suggestion.my_suggestion && this.suggestion.state != 'validate' && !this.$no_auth) {
