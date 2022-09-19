@@ -17,8 +17,20 @@
               <span class="sr-only">Fermer</span>
             </button>
             <div class="p-6 text-center">
+              <div v-if="modalInfo.state == 'vote'">
+                <i class="far fa-circle-check text-5xl mx-auto mb-4 text-green-400"></i>
+                <h3 class="mb-9 mt-3 text-lg font-normal text-gray-500 dark:text-gray-400">Etes-vous sûr de vouloir valider
+                  cette suggestion ?</h3>
+              </div>
+
+              <div v-if="modalInfo.state == 'moderate'">
+                <i class="far fa-circle-check text-5xl mx-auto mb-4 text-green-400"></i>
+                <h3 class="mb-9 mt-3 text-lg font-normal text-gray-500 dark:text-gray-400">Etes-vous sûr de vouloir restaurer
+                  cette suggestion ?</h3>
+              </div>
+
               <div v-if="modalInfo.state == 'validate'">
-                <i class="far fa-circle-check text-5xl mx-auto mb-4 text-gray-400 svg"></i>
+                <i class="far fa-circle-check text-5xl mx-auto mb-4 text-blue-500"></i>
                 <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Etes-vous sûr de vouloir accepter
                   cette suggestion ?</h3>
                 <textarea id="message" rows="2" v-model="comment"
@@ -27,7 +39,7 @@
               </div>
 
               <div v-if="modalInfo.state == 'refused'">
-                <svg aria-hidden="true" class="mx-auto mb-4 w-14 h-14 text-gray-400" fill="none" stroke="currentColor"
+                <svg aria-hidden="true" class="mx-auto mb-4 w-14 h-14" fill="none" stroke="currentColor"
                   viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -40,7 +52,7 @@
               </div>
 
               <div v-if="modalInfo.state == 'delete'">
-                <i class="far fa-circle-xmark text-5xl mx-auto mb-4 text-gray-400 svg"></i>
+                <i class="far fa-circle-xmark text-5xl mx-auto mb-4 text-gray-900"></i>
                 <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Etes-vous sûr de vouloir supprimer
                   cette suggestion ?</h3>
                 <div class="flex items-center mb-7 select-none">
@@ -53,7 +65,9 @@
 
               <button type="button" @click="$emit('close-modal')"
                 class="mr-3 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Annuler</button>
-              <button type="submit" :class="[modalInfo.state == 'validate' ? 'text-white bg-blue-500 hover:bg-blue-700' : '',
+              <button type="submit" :class="[
+                modalInfo.state == 'vote' || modalInfo.state == 'moderate' ? 'text-white bg-green-500 hover:bg-green-700' : '',
+                modalInfo.state == 'validate' ? 'text-white bg-blue-500 hover:bg-blue-700' : '',
               modalInfo.state == 'refused' ? 'text-white bg-red-600 hover:bg-red-800' : '',
               modalInfo.state == 'delete' ? 'text-white bg-gray-900' : '']"
                 class=" focus:ring-4 focus:outline-none font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center ">

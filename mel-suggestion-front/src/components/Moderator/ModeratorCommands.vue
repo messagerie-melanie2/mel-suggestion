@@ -72,28 +72,18 @@ export default {
     'suggestion'
   ],
   methods: {
-    ...mapActions(['changeStateSuggestion', 'deleteSuggestion', 'fetchText']),
+    ...mapActions(['changeStateSuggestion', 'fetchText']),
     removeSuggestion() {
       this.$root.$emit('showStateModal', { state: 'delete', suggestion: this.suggestion });
-      // if (confirm('Voulez-vous supprimer cette suggestion ?')) {
-      //   this.deleteSuggestion(this.suggestion.id)
-      //   if (confirm('Envoyer un mail de refus ?')) {
-      //     this.sendEmail(this.allText.mail_subject.replace('%%title%%', this.suggestion.title), this.allText.mail_body);
-      //   }
-      // }
     },
     refuseSuggestion() {
       this.$root.$emit('showStateModal', { state: 'refused', suggestion: this.suggestion });
     },
     restoreSuggestion() {
-      if (confirm('Voulez-vous restaurer cette suggestion ?')) {
-        this.changeStateSuggestion({ id: this.suggestion.id, state: 'moderate' })
-      }
+      this.$root.$emit('showStateModal', { state: 'moderate', suggestion: this.suggestion });
     },
     validateSuggestion() {
-      if (confirm('Voulez-vous valider cette suggestion ?')) {
-        this.changeStateSuggestion({ id: this.suggestion.id, state: 'vote' })
-      }
+      this.$root.$emit('showStateModal', { state: 'vote', suggestion: this.suggestion });
     },
     lockSuggestion() {
       this.$root.$emit('showStateModal', { state: 'validate', suggestion: this.suggestion });
