@@ -85,7 +85,9 @@ export default {
     title: String,
   },
   mounted() {
-      document.title = this.title;
+     if (this.title) {
+       document.title = this.title;
+     }
   },
   methods: {
     disconnect() {

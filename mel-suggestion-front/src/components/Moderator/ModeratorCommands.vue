@@ -82,9 +82,7 @@ export default {
       }
     },
     refuseSuggestion() {
-      if (confirm('Voulez-vous marquer cette suggestion comme refusée ?')) {
-        this.changeStateSuggestion({ id: this.suggestion.id, state: 'refused' })
-      }
+      this.$root.$emit('showStateModal', { state: 'refused', suggestionId: this.suggestion.id });
     },
     restoreSuggestion() {
       if (confirm('Voulez-vous restaurer cette suggestion ?')) {
@@ -97,9 +95,7 @@ export default {
       }
     },
     lockSuggestion() {
-      if (confirm('Voulez-vous accepter cette suggestion ?')) {
-        this.changeStateSuggestion({ id: this.suggestion.id, state: 'validate' })
-      }
+      this.$root.$emit('showStateModal', { state: 'validate', suggestionId: this.suggestion.id });
     },
     modifySuggestion() {
       this.sendEmail(this.allText.mail_subject.replace('%%title%%', this.suggestion.title));
@@ -117,6 +113,3 @@ export default {
   computed: mapGetters(['allText']),
 }
 </script>
-
-<style>
-</style>

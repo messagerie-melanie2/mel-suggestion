@@ -3,6 +3,7 @@
     <div v-if="!loadingStatus && $user.origin != 'mel'">
       <Navbar :title="allText.application_name" />
     </div>
+    <ChangeStateModal v-show="showStateModal" :modalInfo="this.modalInfo" @close-modal="showStateModal = false" />
 
     <body class="flex items-center justify-center">
       <div class="w-full max-w-4xl px-4 mt-14">
@@ -38,17 +39,26 @@ import Search from "./components/Search";
 import Suggestions from "./components/Suggestions";
 import Preloader from './components/Preloader.vue'
 import Navbar from './components/layout/navbar.vue'
+import ChangeStateModal from './components/Modals/ChangeStateModal.vue';
 
 export default {
   name: "App",
   data() {
     return {
-      title: "Module de suggestion"
+      title: "Module de suggestion",
+      showStateModal: false,
+      modalInfo: {},
     };
   },
   created() {
     this.fetchSuggestions(),
       this.fetchText()
+  },
+  mounted() {
+    this.$root.$on('showStateModal', (e) => {
+      this.showStateModal = true;
+      this.modalInfo = { state: e.state, suggestionId: e.suggestionId }
+    })
   },
   methods: {
     ...mapActions(['fetchSuggestions', 'fetchText'])
@@ -59,7 +69,8 @@ export default {
     Search,
     Suggestions,
     Preloader,
-    Navbar
+    Navbar,
+    ChangeStateModal
   },
   computed: mapGetters(['allSuggestions', 'allIndexes', 'loadingStatus', 'allText']),
 };
@@ -93,7 +104,8 @@ export default {
   border-color: #E1C58F;
 }
 
-.dark svg {
+.dark svg,
+.dark .svg {
   filter: invert(69%) sepia(75%) saturate(408%) hue-rotate(184deg) brightness(100%) contrast(82%);
 }
 </style>

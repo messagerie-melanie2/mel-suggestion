@@ -21,6 +21,7 @@ class CreateSuggestionsTable extends Migration
             $table->string('user_lastname')->nullable();
             $table->string('user_firstname')->nullable();
             $table->string('state');
+            $table->string('comment')->nullable();
             $table->string('instance');
             $table->index('instance');
             $table->timestamps();
