@@ -48,7 +48,7 @@
         class="text-red-500 border border-red-500 hover:bg-red-500 hover:text-white active:bg-red-600 font-bold uppercase text-xs px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
         type="button">
         <i class="fa-solid fa-times mr-1"></i>
-        Supprimer
+        Refuser
       </button>
     </div>
 
@@ -74,15 +74,16 @@ export default {
   methods: {
     ...mapActions(['changeStateSuggestion', 'deleteSuggestion', 'fetchText']),
     removeSuggestion() {
-      if (confirm('Voulez-vous supprimer cette suggestion ?')) {
-        this.deleteSuggestion(this.suggestion.id)
-        if (confirm('Envoyer un mail de refus ?')) {
-          this.sendEmail(this.allText.mail_subject.replace('%%title%%', this.suggestion.title), this.allText.mail_body);
-        }
-      }
+      this.$root.$emit('showStateModal', { state: 'delete', suggestion: this.suggestion });
+      // if (confirm('Voulez-vous supprimer cette suggestion ?')) {
+      //   this.deleteSuggestion(this.suggestion.id)
+      //   if (confirm('Envoyer un mail de refus ?')) {
+      //     this.sendEmail(this.allText.mail_subject.replace('%%title%%', this.suggestion.title), this.allText.mail_body);
+      //   }
+      // }
     },
     refuseSuggestion() {
-      this.$root.$emit('showStateModal', { state: 'refused', suggestionId: this.suggestion.id });
+      this.$root.$emit('showStateModal', { state: 'refused', suggestion: this.suggestion });
     },
     restoreSuggestion() {
       if (confirm('Voulez-vous restaurer cette suggestion ?')) {
@@ -95,7 +96,7 @@ export default {
       }
     },
     lockSuggestion() {
-      this.$root.$emit('showStateModal', { state: 'validate', suggestionId: this.suggestion.id });
+      this.$root.$emit('showStateModal', { state: 'validate', suggestion: this.suggestion });
     },
     modifySuggestion() {
       this.sendEmail(this.allText.mail_subject.replace('%%title%%', this.suggestion.title));

@@ -57,7 +57,7 @@ export default {
   mounted() {
     this.$root.$on('showStateModal', (e) => {
       this.showStateModal = true;
-      this.modalInfo = { state: e.state, suggestionId: e.suggestionId }
+      this.modalInfo = { state: e.state, suggestion: e.suggestion }
     })
   },
   methods: {

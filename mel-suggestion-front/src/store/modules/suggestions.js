@@ -84,11 +84,11 @@ const actions = {
     })
   },
 
-  changeStateSuggestion({ commit }, { id, state }) {
+  changeStateSuggestion({ commit }, { id, state, comment }) {
     axiosClient.put(`suggestions/state/${id}`, {
-      state
+      state,
+      comment
     }).then((response) => {
-      console.log(response.data);
       commit('updateSuggestion', response.data)
       this._vm.$toast.success("Suggestion modifiée avec succès !");
     }).catch((error) => {

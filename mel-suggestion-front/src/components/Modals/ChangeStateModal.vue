@@ -21,7 +21,11 @@
                 <i class="far fa-circle-check text-5xl mx-auto mb-4 text-gray-400 svg"></i>
                 <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Etes-vous sûr de vouloir accepter
                   cette suggestion ?</h3>
+                <textarea id="message" rows="2" v-model="comment"
+                  class="block p-2.5 mb-5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="(Facultatif) commentaire..."></textarea>
               </div>
+
               <div v-if="modalInfo.state == 'refused'">
                 <svg aria-hidden="true" class="mx-auto mb-4 w-14 h-14 text-gray-400" fill="none" stroke="currentColor"
                   viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -30,14 +34,28 @@
                 </svg>
                 <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Etes-vous sûr de vouloir refuser
                   cette suggestion ?</h3>
+                <textarea id="message" rows="2" v-model="comment"
+                  class="block p-2.5 mb-5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="(Facultatif) commentaire..."></textarea>
               </div>
-              <textarea id="message" rows="2" v-model="comment"
-                class="block p-2.5 mb-5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="(Facultatif) commentaire..."></textarea>
+
+              <div v-if="modalInfo.state == 'delete'">
+                <i class="far fa-circle-xmark text-5xl mx-auto mb-4 text-gray-400 svg"></i>
+                <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Etes-vous sûr de vouloir supprimer
+                  cette suggestion ?</h3>
+                <div class="flex items-center mb-7 select-none">
+                  <input id="default-checkbox" type="checkbox" v-model="sendMail"
+                    class="w-4 h-4 text-blue-600 bg-gray-700 rounded border-gray-700 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                  <label for="default-checkbox" class="ml-2 font-normal text-gray-500 dark:text-gray-400">Envoyer un
+                    mail</label>
+                </div>
+              </div>
+
               <button type="button" @click="$emit('close-modal')"
                 class="mr-3 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Annuler</button>
               <button type="submit" :class="[modalInfo.state == 'validate' ? 'text-white bg-blue-500 hover:bg-blue-700' : '',
-              modalInfo.state == 'refused' ? 'text-white bg-red-600 hover:bg-red-800' : '']"
+              modalInfo.state == 'refused' ? 'text-white bg-red-600 hover:bg-red-800' : '',
+              modalInfo.state == 'delete' ? 'text-white bg-gray-900' : '']"
                 class=" focus:ring-4 focus:outline-none font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center ">
                 Accepter
               </button>
@@ -50,27 +68,47 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
-  name: 'AcceptedModal',
+  name: 'ChangeStateModal',
   data() {
     return {
       comment: '',
+      sendMail: false,
     };
   },
   props: {
     modalInfo: Object,
   },
   methods: {
-    ...mapActions(['changeStateSuggestion']),
+    ...mapActions(['changeStateSuggestion', 'deleteSuggestion', 'fetchText']),
     onSubmit() {
-      console.log(this.modalInfo);
-      // console.log(this.suggestionId);
-      this.changeStateSuggestion({ id: this.suggestionId, state: this.modalInfo.state })
-      // this.$emit('close-modal');
-    }
+      if (this.modalInfo.state == 'delete') {
+        this.deleteSuggestion(this.modalInfo.suggestion.id)
+        if (this.sendMail) {
+          this.sendEmail(this.allText.mail_subject.replace('%%title%%', this.modalInfo.suggestion.title), this.allText.mail_body);
+        }
+        this.$emit('close-modal');
+
+      }
+      else {
+        this.changeStateSuggestion({ id: this.modalInfo.suggestion.id, state: this.modalInfo.state, comment: this.comment });
+        this.comment = '';
+        this.$emit('close-modal');
+      }
+    },
+    sendEmail(subject = '', body = '') {
+      const windowRef = window.open(`mailto:${this.modalInfo.suggestion.user_email}?subject=${subject}&body=${body}`);
+      windowRef.focus();
+      setTimeout(function () {
+        if (!windowRef.document.hasFocus()) {
+          windowRef.close();
+        }
+      }, 500);
+    },
   },
+  computed: mapGetters(['allText']),
 }
 </script>
 

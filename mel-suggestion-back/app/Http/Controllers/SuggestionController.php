@@ -104,9 +104,12 @@ class SuggestionController extends Controller
 
     $request->validate([
       'state' => 'required',
+      'comment' => '',
     ]);
 
     $suggestion->state = $request->get('state');
+    
+    $suggestion->comment = $request->get('comment');
 
     $suggestion->save();
 

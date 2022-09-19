@@ -18,6 +18,7 @@ class Suggestion extends Model
     'user_email',
     'instance',
     'state',
+    'comment'
   ];
 
   public static function getAllSuggestionsByInstance()
