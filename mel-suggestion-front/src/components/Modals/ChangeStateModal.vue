@@ -136,6 +136,6 @@ export default {
   display: flex;
   justify-content: center;
   background-color: #000000b2;
-  z-index: 1;
+  z-index: 11;
 }
 </style>

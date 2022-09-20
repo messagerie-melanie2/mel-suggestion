@@ -35,17 +35,26 @@
             </div>
           </div>
         </div>
+
         <div v-if="suggestion.state == 'validate'">
           <span
             class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-green-600 bg-green-200 -ml-12 whitespace-nowrap">
             A venir
           </span>
+          <div v-if="!suggestion.comment && $user.moderator">
+            <i class="far fa-comment-dots mt-4 dark:text-title-blue dark:hover:text-green-500 hover:text-green-500 cursor-pointer"
+              title="Ajouter un commentaire" @click.stop="changeComment"></i>
+          </div>
         </div>
         <div v-if="suggestion.state == 'refused'">
           <span
             class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-red-600 bg-red-200 -ml-12 whitespace-nowrap">
             Refusée
           </span>
+          <div v-if="!suggestion.comment && $user.moderator">
+            <i class="far fa-comment-dots mt-4 dark:text-title-blue dark:hover:text-green-500 hover:text-green-500 cursor-pointer"
+              title="Ajouter un commentaire" @click.stop="changeComment"></i>
+          </div>
         </div>
         <div id="user-actions"
           v-show="(suggestion.my_suggestion || $user.moderator) && suggestion.state == 'moderate' && !this.$no_auth">
@@ -56,6 +65,7 @@
             class="fa-solid fa-trash mt-4 dark:text-title-blue dark:hover:text-red-500 hover:text-red-500 cursor-pointer"
             title="Supprimer la suggestion" @click.stop="onDelete"></i>
         </div>
+
       </div>
 
       <ModeratorCommands :suggestion="suggestion" />
@@ -67,20 +77,21 @@
 
         <UpdateSuggestion @update-suggestion="updateSuggestions" :suggestion="suggestion" />
       </div>
-      <div @clic.stop
+      <div
         class="inline-block w-full my-4 p-4 rounded-md border bg-white dark:bg-dark-blue border-gray-100 shadow-md dark:border-gray-500"
         v-if="suggestion.comment">
         <div class="flex justify-between">
           <div>
-            <h5 class="mb-2 text-md font-semibold tracking-tight dark:text-white">Modérateur<i
+            <h5 class="mb-2 text-md font-semibold tracking-tight dark:text-white">{{this.allText.comment_from}}<i
                 class="fa-solid fa-circle-check text-blue-700 ml-2"></i></h5>
             <p class="font-normal text-gray-700 dark:text-gray-400">{{suggestion.comment}}</p>
           </div>
-          <i v-if="$user.moderator" class="fa-solid fa-edit dark:text-title-blue dark:hover:text-blue-500 hover:text-blue-500 cursor-pointer"
-            @click="changeComment" title="Éditer le commentaire"></i>
+          <i v-if="$user.moderator"
+            class="fa-solid fa-edit dark:text-title-blue dark:hover:text-blue-500 hover:text-blue-500 cursor-pointer"
+            @click.stop="changeComment" title="Éditer le commentaire"></i>
         </div>
-
       </div>
+
     </td>
     <Accordion :suggestion="suggestion" :active="description" v-show="!showSuggestion" />
   </tr>
@@ -90,7 +101,7 @@
 import axiosClient from '../axios';
 
 import moment from 'moment';
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import ModeratorCommands from "./Moderator/ModeratorCommands";
 
 import UpdateSuggestion from "./UpdateSuggestion";
@@ -198,14 +209,11 @@ export default {
       return '';
     }
   },
-  computed: {
-
-  },
+  computed: mapGetters(['allText']),
   components: {
     UpdateSuggestion,
     Accordion,
     ModeratorCommands
-
   },
 };
 </script>

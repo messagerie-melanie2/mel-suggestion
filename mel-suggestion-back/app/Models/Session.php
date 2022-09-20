@@ -13,14 +13,6 @@ class Session extends Model
 
   public static function sessionConnect()
   {
-    // $user = new User([
-    //   'origin' => 'mel',
-    //   'name' => "Arnaud Goubier",
-    //   'email' => "arnaud.goubier@i-carre.net",
-    //   'moderator' => in_array("arnaud.goubier@i-carre.net", config('moderator')['moderator']) ? true : false,
-    // ]);
-
-    // FacadesSession::put('utilisateur', $user);
     if (!FacadesSession::exists('utilisateur')) {
       if (isset($_COOKIE['roundcube_sessid'])) {
         session_id($_COOKIE['roundcube_sessid']);

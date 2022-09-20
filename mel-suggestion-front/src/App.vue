@@ -4,7 +4,7 @@
       <Navbar :title="allText.application_name" />
     </div>
     <ChangeStateModal v-show="showStateModal" :modalInfo="this.modalInfo" @close-modal="showStateModal = false" />
-    <ChangeCommentModal v-show="showCommentModal" :modalInfo="this.modalInfo" @close-modal="showCommentModal = false" />
+    <ChangeCommentModal v-show="showCommentModal" :modalInfo="this.modalInfo" :comment="this.modalComment" @close-modal="showCommentModal = false" />
 
     <body class="flex items-center justify-center">
       <div class="w-full max-w-4xl px-4 mt-14">
@@ -51,6 +51,7 @@ export default {
       showStateModal: false,
       showCommentModal: false,
       modalInfo: {},
+      modalComment : '',
     };
   },
   created() {
@@ -65,6 +66,7 @@ export default {
     this.$root.$on('showCommentModal', (e) => {
       this.showCommentModal = true;
       this.modalInfo = e.suggestion;
+      this.modalComment = e.suggestion.comment;
     })
   },
   methods: {
