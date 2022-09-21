@@ -24,13 +24,13 @@
             }}</a>
           </div>
           <div>
-            Le : <span class="font-bold"> {{ suggestion.updated_at | formatDate }} </span>
+            Le : <span class="font-bold"> {{ suggestion.created_at | formatDate }} </span>
           </div>
         </div>
       </div>
       <div v-else>
         <p>
-          Suggestion ajoutée le : <span class="font-bold"> {{ suggestion.updated_at | formatDate }} </span>
+          Suggestion ajoutée le : <span class="font-bold"> {{ suggestion.created_at | formatDate }} </span>
         </p>
       </div>
     </div>

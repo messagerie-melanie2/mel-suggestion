@@ -28,11 +28,11 @@ const actions = {
       })
       .then((response) => {
         Vue.prototype.$user = response.data;
-
+        
         //Si l'utilisateur n'est pas connecté
         if (Object.keys(response.data).length === 0) {
           Vue.prototype.$no_auth = true;
-        }
+        }  
         axiosClient
           .get("suggestions")
           .then((response) => {
