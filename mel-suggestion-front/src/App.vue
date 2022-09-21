@@ -1,34 +1,36 @@
 <template>
-  <div>
-    <div v-if="!loadingStatus && $user.origin != 'mel'">
-      <Navbar :title="allText.application_name" />
-    </div>
-    <ChangeStateModal v-show="showStateModal" :modalInfo="this.modalInfo" @close-modal="showStateModal = false" />
-    <ChangeCommentModal v-show="showCommentModal" :modalInfo="this.modalInfo" :comment="this.modalComment" @close-modal="showCommentModal = false" />
+  <section>
+    <div v-if="!loadingStatus">
+      <div v-if="$user.origin != 'mel'">
+        <Navbar :title="allText.application_name" />
+      </div>
+      <ChangeStateModal v-show="showStateModal" :modalInfo="this.modalInfo" @close-modal="showStateModal = false" />
+      <ChangeCommentModal v-show="showCommentModal" :modalInfo="this.modalInfo" :comment="this.modalComment"
+        @close-modal="showCommentModal = false" />
 
-    <body class="flex items-center justify-center">
-      <div class="w-full max-w-4xl px-4 mt-14">
-        <Header :title="allText.title" />
-        <div class="rounded-lg pb-6 border border-gray-300 dark:border-gray-800 bg-white dark:bg-light-blue">
-          <div
-            class="flex flex-wrap items-center justify-between px-6 py-3 border-b border-gray-300 dark:border-light-blue">
-            <SortingButton />
-            <Search />
-          </div>
-          <div>
-            <section>
-              <div v-if="loadingStatus">
-                <Preloader color="gray" />
-              </div>
-              <div v-else>
+      <body class="flex items-center justify-center">
+        <div class="w-full max-w-4xl px-4 mt-14">
+          <Header :title="allText.title" />
+          <div class="rounded-lg pb-6 border border-gray-300 dark:border-gray-800 bg-white dark:bg-light-blue">
+            <div
+              class="flex flex-wrap items-center justify-between px-6 py-3 border-b border-gray-300 dark:border-light-blue">
+              <SortingButton />
+              <Search />
+            </div>
+            <div>
+              <section>
                 <Suggestions :suggestions="allSuggestions" :index="allIndexes" />
-              </div>
-            </section>
+              </section>
+            </div>
           </div>
         </div>
-      </div>
-    </body>
-  </div>
+      </body>
+    </div>
+    <div v-else>
+      <Preloader color="gray" />
+    </div>
+  </section>
+
 </template>
 
 <script>
@@ -51,7 +53,7 @@ export default {
       showStateModal: false,
       showCommentModal: false,
       modalInfo: {},
-      modalComment : '',
+      modalComment: '',
     };
   },
   created() {
@@ -63,11 +65,11 @@ export default {
       this.showStateModal = true;
       this.modalInfo = { state: e.state, suggestion: e.suggestion }
     }),
-    this.$root.$on('showCommentModal', (e) => {
-      this.showCommentModal = true;
-      this.modalInfo = e.suggestion;
-      this.modalComment = e.suggestion.comment;
-    })
+      this.$root.$on('showCommentModal', (e) => {
+        this.showCommentModal = true;
+        this.modalInfo = e.suggestion;
+        this.modalComment = e.suggestion.comment;
+      })
   },
   methods: {
     ...mapActions(['fetchSuggestions', 'fetchText'])
@@ -81,7 +83,7 @@ export default {
     Navbar,
     ChangeStateModal,
     ChangeCommentModal
-},
+  },
   computed: mapGetters(['allSuggestions', 'allIndexes', 'loadingStatus', 'allText']),
 };
 

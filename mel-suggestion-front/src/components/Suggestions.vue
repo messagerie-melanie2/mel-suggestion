@@ -54,11 +54,12 @@ export default {
       sortDirection: 'desc',
       localSuggestions: this.suggestions,
       validateOnly: false,
+      refusedSuggestion: false,
     }
   },
   mounted() {
-    this.$root.$on('sort-suggestion', (sortBy, validateOnly) => {
-      this.sort(sortBy, validateOnly)
+    this.$root.$on('sort-suggestion', (sortBy, validateOnly, refusedSuggestion) => {
+      this.sort(sortBy, validateOnly, refusedSuggestion)
       this.resetSearch();
     }),
       this.$root.$on('search', (e) => {
@@ -77,9 +78,10 @@ export default {
     }
   },
   methods: {
-    sort(s, v) {
+    sort(s, v, r) {
       this.sortBy = s;
       this.validateOnly = v;
+      this.refusedSuggestion = r;
     },
     searchValue(s) {
       this.search = s;
@@ -98,6 +100,9 @@ export default {
       const acceptedState = ['vote', 'moderate'];
 
       let filteredlocalSuggestions = this.localSuggestions.slice(0).filter(suggestion => {
+        if (this.refusedSuggestion) {
+          return suggestion.state.toLowerCase().includes("refused");
+        }
         if (this.validateOnly) {
           return suggestion.state.toLowerCase().includes("validate");
         }
