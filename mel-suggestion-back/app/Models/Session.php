@@ -15,6 +15,12 @@ class Session extends Model
     if (isset($_COOKIE['roundcube_sessid'])) {
       session_id($_COOKIE['roundcube_sessid']);
       session_start();
+      //On réinitialise les variables session
+      if (isset($_SESSION['firstname']) && isset($_SESSION['lastname']) && isset($_SESSION['email'])) {
+        $_SESSION['firstname'] = null;
+        $_SESSION['lastname'] = null;
+        $_SESSION['email'] = null;
+      }
       if (env('CACHE_TYPE') == "memcached") {
         $m = new \Memcache();
         $memcached_hosts = explode(',', env('MEMCACHED_HOSTS'));
@@ -34,10 +40,8 @@ class Session extends Model
           'email' => $_SESSION['email'],
           'moderator' => in_array(strtolower($_SESSION['email']), $moderator) ? true : false,
         ]);
+        FacadesSession::put('utilisateur', $user);
       }
-      FacadesSession::put('utilisateur', $user);
-    } else {
-      FacadesSession::flush('utilisateur');
-    }
+    } 
   }
 }
