@@ -11,8 +11,8 @@ class Notification extends Model
 
   public static function sendCreateSuggestionNotification($user, $session_user)
   {
-    
-    $notification = new \LibMelanie\Api\Mel\Notification($user);
+    $class = env("ORM_PATH") . "\Notification";
+    $notification = new $class($user);
 
     $notification->category = "suggestion";
     $notification->title = " $session_user->name vient d'ajouter une nouvelle suggestion";
@@ -31,11 +31,13 @@ class Notification extends Model
 
   public static function sendUpdateSuggestionNotification($suggestion_owner)
   {
-    $user = new \LibMelanie\Api\Mel\User;
+    $class = env("ORM_PATH") . "\User";
+    $user = new $class();
     $user->email = $suggestion_owner->user_email;
     $user->load();
 
-    $notification = new \LibMelanie\Api\Mel\Notification($user);
+    $class = env("ORM_PATH") . "\Notification";
+    $notification = new $class($user);
 
 
     switch ($suggestion_owner->state) {
