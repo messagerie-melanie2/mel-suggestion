@@ -9,7 +9,7 @@
         @close-modal="showCommentModal = false" />
 
       <body class="flex items-center justify-center">
-        <div class="w-full max-w-4xl px-4 mt-14">
+        <div class="w-full max-w-4xl px-4" :class="[$user.origin != 'mel' ? 'mt-14' : '']">
           <Header :title="allText.title" />
           <div class="rounded-lg pb-6 border border-gray-300 dark:border-gray-800 bg-white dark:bg-light-blue">
             <div
