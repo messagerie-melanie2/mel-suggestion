@@ -111,12 +111,41 @@ export default {
         }
       });
 
-      return filteredlocalSuggestions.slice(0).sort((p1, p2) => {
-        let modifier = 1;
-        if (this.sortDirection === 'desc') modifier = -1;
-        if (p1[this.sortBy] < p2[this.sortBy]) return -1 * modifier; if (p1[this.sortBy] > p2[this.sortBy]) return 1 * modifier;
-        return 0;
-      });
+      if (!this.refusedSuggestion && !this.refusedSuggestion) {
+        //On tri d'abord les moderates et ensuites les autres
+        let moderateSuggestions = filteredlocalSuggestions.slice(0).filter(suggestion => {
+          return suggestion.state.toLowerCase().includes("moderate");
+        });
+
+        let sortedModerate = moderateSuggestions.slice(0).sort((p1, p2) => {
+          let modifier = 1;
+          if (this.sortDirection === 'desc') modifier = -1;
+          if (p1[this.sortBy] < p2[this.sortBy]) return -1 * modifier; if (p1[this.sortBy] > p2[this.sortBy]) return 1 * modifier;
+          return 0;
+        });
+
+        let otherSuggestions = filteredlocalSuggestions.slice(0).filter(suggestion => {
+          return !suggestion.state.toLowerCase().includes("moderate");
+        });
+
+        let sortedOther = otherSuggestions.slice(0).sort((p1, p2) => {
+          let modifier = 1;
+          if (this.sortDirection === 'desc') modifier = -1;
+          if (p1[this.sortBy] < p2[this.sortBy]) return -1 * modifier; if (p1[this.sortBy] > p2[this.sortBy]) return 1 * modifier;
+          return 0;
+        });
+
+        return sortedModerate.concat(sortedOther);
+      }
+      else {
+        return filteredlocalSuggestions.slice(0).sort((p1, p2) => {
+          let modifier = 1;
+          if (this.sortDirection === 'desc') modifier = -1;
+          if (p1[this.sortBy] < p2[this.sortBy]) return -1 * modifier; if (p1[this.sortBy] > p2[this.sortBy]) return 1 * modifier;
+          return 0;
+        });
+      }
+
     },
     filteredSuggestions() {
       let results = {};
