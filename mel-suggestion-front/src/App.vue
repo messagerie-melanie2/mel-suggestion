@@ -91,6 +91,10 @@ export default {
 
 
 <style>
+.Vue-Toastification__toast.bottom-right{
+  margin-bottom: 60px !important;
+}
+
 .dark body {
   background-color: rgba(31, 41, 51, 100);
 }

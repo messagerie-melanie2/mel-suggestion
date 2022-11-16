@@ -32,10 +32,12 @@ class SuggestionController extends Controller
 
     if (env('NOTIFICATION') && config('moderator')) {
       foreach (config('moderator')["moderator"] as $email) {
-        $user = new \LibMelanie\Api\Mel\User;
-        $user->email = $email;
-        $user->load();
-        Notification::sendCreateSuggestionNotification($user, $session_user);
+        if ($email != $session_user->email) {
+          $user = new \LibMelanie\Api\Mel\User;
+          $user->email = $email;
+          $user->load();
+          Notification::sendCreateSuggestionNotification($user, $session_user);
+        }
       }
     }
 
@@ -99,7 +101,7 @@ class SuggestionController extends Controller
     $suggestion->save();
 
     $suggestion = Suggestion::isMySuggestion($suggestion);
-
+    
     return response()->json(Suggestion::countVote($suggestion));
   }
 
