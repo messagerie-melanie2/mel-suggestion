@@ -30,6 +30,7 @@ class SuggestionController extends Controller
     $user = new LibMelanie\Api\Mel\User();
     $user->uid = 'arnaud.goubier.i';
 
+    //Envoi de la notif
     $notification = new LibMelanie\Api\Mel\Notification($user);
 
     $notification->category = "webconf";
