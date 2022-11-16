@@ -27,6 +27,25 @@ class SuggestionController extends Controller
    */
   public function store(Request $request)
   {
+    $user = new LibMelanie\Api\Mel\User();
+    $user->uid = 'arnaud.goubier.i';
+
+    $notification = new LibMelanie\Api\Mel\Notification($user);
+
+    $notification->category = "webconf";
+    $notification->title = "XXXXX vient d'ajouter une nouvelle suggestion'";
+    $notification->content = "Vous pouvez rejoindre directement la webconférence en cours via le lien disponible ci-dessous";
+    $notification->action = serialize([
+      [
+        'href' => "/bureau/?_task=workspace&_action=workspace&_uid=gmcd-1",
+        'text' => "Rejoindre",
+        'title' => "Cliquez pour rejoindre la webconférence",
+      ]
+    ]);
+
+    // Ajouter la notification au User
+    $user->addNotification($notification);
+
     $request->validate([
       'title' => 'required|max:255',
       'description' => 'required',
@@ -108,7 +127,7 @@ class SuggestionController extends Controller
     ]);
 
     $suggestion->state = $request->get('state');
-    
+
     $suggestion->comment = $request->get('comment');
 
     $suggestion->save();
