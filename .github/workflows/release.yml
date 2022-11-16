@@ -49,3 +49,4 @@ jobs:
           prerelease: false
           title: "Suggestion"
           files: suggestion.tar.gz
+
