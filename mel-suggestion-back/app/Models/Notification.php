@@ -11,6 +11,7 @@ class Notification extends Model
 
   public static function sendCreateSuggestionNotification($user, $session_user)
   {
+    
     $notification = new \LibMelanie\Api\Mel\Notification($user);
 
     $notification->category = "suggestion";
@@ -20,7 +21,7 @@ class Notification extends Model
       [
         'href' => "/bureau/?_task=settings&_action=plugin.mel_suggestion_box",
         'text' => "Aller aux suggestions",
-        'title' => "Cliquez pour voir la suggestion",
+        'title' => "Cliquez pour aller aux suggestions",
       ]
     ]);
 
@@ -33,16 +34,32 @@ class Notification extends Model
     $user = new \LibMelanie\Api\Mel\User;
     $user->email = $suggestion_owner->user_email;
     $user->load();
+
     $notification = new \LibMelanie\Api\Mel\Notification($user);
 
+
+    switch ($suggestion_owner->state) {
+      case 'validate':
+        $notification->title = "Un modérateur vient de valider votre suggestion";
+        break;
+      case 'refused':
+        $notification->title = "Un modérateur vient de refuser votre suggestion";
+        break;
+      case 'vote':
+        $notification->title = "Un modérateur vient d'accepter votre suggestion";
+        break;
+      default:
+        $notification->title = "Un modérateur vient de mettre à jour votre suggestion";
+        break;
+    }
+
     $notification->category = "suggestion";
-    $notification->title = "Un modérateur vient de mettre à jour votre suggestion";
-    $notification->content = "Vous pouvez voir votre suggestion via le lien disponible ci-dessous";
+    $notification->content = 'Votre suggestion "' . $suggestion_owner->title . '" à été modifiée.';
     $notification->action = serialize([
       [
         'href' => "/bureau/?_task=settings&_action=plugin.mel_suggestion_box",
         'text' => "Aller aux suggestions",
-        'title' => "Cliquez pour voir la suggestion",
+        'title' => "Cliquez pour aller aux suggestions",
       ]
     ]);
 
