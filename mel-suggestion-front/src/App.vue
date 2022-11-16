@@ -69,7 +69,10 @@ export default {
         this.showCommentModal = true;
         this.modalInfo = e.suggestion;
         this.modalComment = e.suggestion.comment;
-      })
+      }),
+      this.$root.$on('refresh', () => {
+      this.fetchSuggestions()
+    })
   },
   methods: {
     ...mapActions(['fetchSuggestions', 'fetchText'])
