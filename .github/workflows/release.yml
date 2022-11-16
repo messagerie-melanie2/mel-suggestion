@@ -22,13 +22,12 @@ jobs:
 
       - name: Copy .env
         run: cd mel-suggestion-back && php -r "copy('.env.example', '.env');"
-
-      - name: Zip folder
-        uses: papeloto/action-zip@v1
-        with:
-          files: "./mel-suggestion-back"
-          dest: suggestion.zip
-
+        
+      #- name: Composer Autoload
+      #  run: cd mel-suggestion-back && composer dumpautoload
+        
+      - name: Tar folder
+        run: tar -zcvf suggestion.tar.gz mel-suggestion-back
 
       - name: 'Get Previous tag'
         id: previoustag
@@ -49,4 +48,4 @@ jobs:
           automatic_release_tag: "${{ steps.bump_version.outputs.next-version }}"
           prerelease: false
           title: "Suggestion"
-          files: suggestion.zip
+          files: suggestion.tar.gz

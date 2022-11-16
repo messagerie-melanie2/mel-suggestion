@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Notification;
 use App\Models\Suggestion;
 use Illuminate\Http\Request;
 
@@ -27,24 +28,16 @@ class SuggestionController extends Controller
    */
   public function store(Request $request)
   {
-    $user = new LibMelanie\Api\Mel\User();
-    $user->uid = 'arnaud.goubier.i';
+    $session_user = $request->session()->get('utilisateur');
 
-    $notification = new LibMelanie\Api\Mel\Notification($user);
-
-    $notification->category = "webconf";
-    $notification->title = "XXXXX vient d'ajouter une nouvelle suggestion'";
-    $notification->content = "Vous pouvez rejoindre directement la webconférence en cours via le lien disponible ci-dessous";
-    $notification->action = serialize([
-      [
-        'href' => "/bureau/?_task=workspace&_action=workspace&_uid=gmcd-1",
-        'text' => "Rejoindre",
-        'title' => "Cliquez pour rejoindre la webconférence",
-      ]
-    ]);
-
-    // Ajouter la notification au User
-    $user->addNotification($notification);
+    if (env('NOTIFICATION') && config('moderator')) {
+      foreach (config('moderator')["moderator"] as $email) {
+        $user = new \LibMelanie\Api\Mel\User();
+        $user->email = $email;
+        $user->load();
+        Notification::sendCreateSuggestionNotification($user, $session_user);
+      }
+    }
 
     $request->validate([
       'title' => 'required|max:255',
@@ -54,7 +47,6 @@ class SuggestionController extends Controller
       'user_email' => '',
     ]);
 
-    $session_user = $request->session()->get('utilisateur');
 
     $newSuggestion = new Suggestion([
       'title' => $request->get('title'),
@@ -71,6 +63,7 @@ class SuggestionController extends Controller
 
     return response()->json($newSuggestion);
   }
+
 
   /**
    * Display the specified suggestion.
