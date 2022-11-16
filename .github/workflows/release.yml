@@ -23,8 +23,8 @@ jobs:
       - name: Copy .env
         run: cd mel-suggestion-back && php -r "copy('.env.example', '.env');"
         
-      - name: Composer Autoload
-        run: cd mel-suggestion-back && composer dumpautoload
+      #- name: Composer Autoload
+      #  run: cd mel-suggestion-back && composer dumpautoload
         
       - name: Tar folder
         run: tar -zcvf suggestion.tar.gz mel-suggestion-back
