@@ -6,6 +6,10 @@
 /public/index.html
 /public/favicon.ico
 /storage/*.key
+/storage/*
+!/storage/app
+!/storage/framework
+!/storage/logs
 .env
 .env.backup
 .phpunit.result.cache

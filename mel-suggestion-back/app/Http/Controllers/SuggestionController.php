@@ -33,7 +33,8 @@ class SuggestionController extends Controller
     if (env('NOTIFICATION') && config('moderator')) {
       foreach (config('moderator')["moderator"] as $email) {
         if ($email != $session_user->email) {
-          $user = new \LibMelanie\Api\Mel\User;
+          $class = env("ORM_PATH") . "\User";
+          $user = new $class();
           $user->email = $email;
           $user->load();
           Notification::sendCreateSuggestionNotification($user, $session_user);

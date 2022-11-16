@@ -5,9 +5,13 @@
       <i class="fas fa-magnifying-glass"></i>
     </span>
     <input type="text" placeholder="Rechercher ou créer une suggestion"
-      class="px-3 py-2 placeholder-slate-300 text-slate-600 dark:text-light-yellow relative bg-white dark:bg-light-blue rounded text-sm border border-gray-300 dark:border-light-yellow outline-none focus:outline-none pl-10 w-72 sm:w-96"
+      class="px-3 py-2 placeholder-slate-300 text-slate-600 dark:text-light-yellow relative bg-white dark:bg-light-blue rounded text-sm border border-gray-300 dark:border-light-yellow outline-none focus:outline-none pl-10 w-72 sm:w-80"
       v-model="search" @input="handleSearch" />
-    <i class="fas fa-times text-red-500 hover:text-red-700 cursor-pointer relative" style="margin-left:-25px" title="Réinitialiser la recherche" @click="resetSearch"></i>
+    <i class="fas fa-times text-red-500 hover:text-red-700 cursor-pointer relative" style="margin-left:-25px"
+      title="Réinitialiser la recherche" @click="resetSearch"></i>
+    <button class="text-slate-600 font-semibold px-3 ml-6 border border-gray-300 dark:border-light-yellow rounded" style="padding-top: 0.30rem; padding-bottom: 0.45rem;" @click="refresh()" title="Actualiser">
+      <i class="fas fa-sync text-slate-400"></i>
+    </button>
   </div>
 </template>
 
@@ -26,6 +30,9 @@ export default {
     resetSearch() {
       this.$root.$emit('reset-search')
       this.search = ""
+    },
+    refresh() {
+      this.$root.$emit('refresh')
     }
   },
   mounted() {
