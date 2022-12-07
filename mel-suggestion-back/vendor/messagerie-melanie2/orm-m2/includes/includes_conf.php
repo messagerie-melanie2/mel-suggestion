@@ -48,14 +48,14 @@ if (CONFIGURATION_TYPE_LIBM2 == TYPE_EXTERNAL) {
     // Type de configuration externe, a aller chercher dans /etc
     if (CONFIGURATION_MODE_LIBM2 == MODE_SIMPLE) {
         // Chargement de la configuration dans le répertoire de conf de l'ORM
-        include_once(CONFIGURATION_PATH_LIBM2.'/includes.php');
+        require_once(CONFIGURATION_PATH_LIBM2.'/includes.php');
     }
     else if (CONFIGURATION_MODE_LIBM2 == MODE_MULTIPLE) {
-        include_once(CONFIGURATION_PATH_LIBM2.'/'.CONFIGURATION_APP_LIBM2.'/includes.php');
+        require_once(CONFIGURATION_PATH_LIBM2.'/'.CONFIGURATION_APP_LIBM2.'/includes.php');
     }
 }
 else if (CONFIGURATION_TYPE_LIBM2 == TYPE_INTERNAL) {
     // Type de configuration interne à l'ORM
     /* Chargement de la configuration de l'application en fonction de l'environnement */
-    include_once(__DIR__ . '/../config/'.ENVIRONNEMENT_LIBM2.'/includes.php');
+    require_once(__DIR__ . '/../config/'.ENVIRONNEMENT_LIBM2.'/includes.php');
 }
