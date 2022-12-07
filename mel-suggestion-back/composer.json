@@ -18,13 +18,13 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "messagerie-melanie2/orm-m2" : "~0.6.4.0",
-        "facade/ignition": "^2.5"
+        "facade/ignition": "^2.5",
+        "nunomaduro/collision": "^5.10"
     },
     "require-dev": {        
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^5.10",
         "phpunit/phpunit": "^9.5.10"
     },
     "autoload": {
