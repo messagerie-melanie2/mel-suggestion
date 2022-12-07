@@ -20,9 +20,9 @@ jobs:
       - name: "Copy Folder"
         run: cd mel-suggestion-front && cp -r dist/index.html ../mel-suggestion-back/public && cp -r dist/css ../mel-suggestion-back/public && cp -r dist/js ../mel-suggestion-back/public
 
-      - name: Copy .env
-        run: cd mel-suggestion-back && php -r "copy('.env.example', '.env');"
-        
+      - name: Copy env & gitignore
+        run: cd mel-suggestion-back && php -r "copy('.env.example', '.env');"  && php -r "copy('.gitignore-release', '.gitignore');"
+  
       #- name: Composer Autoload
       #  run: cd mel-suggestion-back && composer dumpautoload
         
