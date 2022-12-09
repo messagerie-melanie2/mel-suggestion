@@ -19,9 +19,9 @@ class Notification extends Model
     $notification->content = "Vous pouvez voir la suggestion via le lien disponible ci-dessous";
     $notification->action = serialize([
       [
-        'href' => "/bureau/?_task=settings&_action=plugin.mel_suggestion_box",
         'text' => "Aller aux suggestions",
         'title' => "Cliquez pour aller aux suggestions",
+        'command' => 'open_suggestion'
       ]
     ]);
 
@@ -59,9 +59,9 @@ class Notification extends Model
     $notification->content = 'Votre suggestion "' . $suggestion_owner->title . '" à été modifiée.';
     $notification->action = serialize([
       [
-        'href' => "/bureau/?_task=settings&_action=plugin.mel_suggestion_box",
         'text' => "Aller aux suggestions",
         'title' => "Cliquez pour aller aux suggestions",
+        'command' => 'open_suggestion'
       ]
     ]);
 
