@@ -9,7 +9,7 @@
       v-model="search" @input="handleSearch" />
     <i class="fas fa-times text-red-500 hover:text-red-700 cursor-pointer relative" style="margin-left:-25px"
       title="Réinitialiser la recherche" @click="resetSearch"></i>
-    <button class="text-slate-600 font-semibold px-3 ml-6 border border-gray-300 dark:border-light-yellow rounded" style="padding-top: 0.30rem; padding-bottom: 0.45rem;" @click="refresh()" title="Actualiser">
+    <button class="text-slate-600 dark:text-light-yellow font-semibold px-3 ml-6 border border-gray-300 dark:border-light-yellow rounded" style="padding-top: 0.30rem; padding-bottom: 0.45rem;" @click="refresh()" title="Actualiser">
       <i class="fas fa-sync text-slate-400"></i>
     </button>
   </div>
