@@ -166,7 +166,7 @@ function createIndex(suggestions) {
     });
 
     array.forEach(word => {
-      if (index[word]) {
+      if (Array.isArray(index[word])) {
         if (index[word] != k) {
           index[word].push(k);
         }
