@@ -11,7 +11,7 @@ class Session extends Model
   use HasFactory;
 
   public static function sessionConnect()
-  {
+  {    
     if (isset($_COOKIE['roundcube_sessid'])) {
       session_id($_COOKIE['roundcube_sessid']);
       session_start();

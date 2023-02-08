@@ -60,8 +60,6 @@ return [
     */
 
     'files' => env('SESSION_STORAGE_PATH', storage_path('framework/sessions')),
-    // 'files' => storage_path(env('SESSIO:N_STORAGE_PATH', 'framework/sessions')),
-
 
     /*
     |--------------------------------------------------------------------------
