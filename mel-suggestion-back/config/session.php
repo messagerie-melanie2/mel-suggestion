@@ -61,6 +61,9 @@ return [
 
     'files' => env('SESSION_STORAGE_PATH', storage_path('framework/sessions')),
 
+    // For dev only
+    // 'files' => storage_path('framework/sessions'),
+
     /*
     |--------------------------------------------------------------------------
     | Session Database Connection

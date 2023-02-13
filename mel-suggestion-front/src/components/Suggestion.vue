@@ -5,23 +5,25 @@
     <td class="inline-block w-full">
       <div class="flex justify-between" v-show="!showSuggestion">
         <div id="suggestion" class="flex items-center w-full">
-          <div class="rounded-sm p-2.5 cursor-pointer dark:bg-light-blue " :class="[
-            suggestion.voted ? 'bg-green-200 border dark:border-voted-green dark:text-voted-green' : 'bg-gray-300  border dark:border-title-blue text-slate-800 dark:text-title-blue',
-          ]" @mouseenter="changeVoteText" @mouseleave="resetVoteText" @click.stop="toggleVote" :title="title()">
-            <div v-if="voteHover" class="text-center mb-2">
-              <div v-if="suggestion.voted">
-                <i class="fa-solid fa-xl fa-times"></i>
-              </div>
-              <div v-else>
-                <i class="fa-solid fa-xl fa-circle-up"></i>
+          <div class="flex justify-between">
+            <div class="mr-4">
+              <i class="fa-solid fa-check text-xl"
+                :class="[suggestion.voted_type == 'up' ? 'text-green-500 hover:text-gray-500' : 'text-gray-500 hover:text-green-500']"
+                @click.stop="toggleVote('up')"></i>
+              <br>
+              <div class="text-center text-gray-700">
+                {{ suggestion.votes_up }}
               </div>
             </div>
-            <div v-else>
-              <p class="text-center text-lg font-bold">{{
-              suggestion.nb_votes
-              }}</p>
+            <div class="mr-2">
+              <i class="fa-solid fa-times text-xl "
+                :class="[suggestion.voted_type == 'down' ? 'text-red-400 hover:text-gray-500' : 'text-gray-500 hover:text-red-400']"
+                @click.stop="toggleVote('down')"></i>
+              <br>
+              <div class="text-center text-gray-700">
+                {{ suggestion.votes_down }}
+              </div>
             </div>
-            <p>Votes</p>
           </div>
           <div class="pl-3">
             <div class="flex items-center text-sm leading-none">
@@ -82,9 +84,9 @@
         v-if="suggestion.comment">
         <div class="flex justify-between">
           <div>
-            <h5 class="mb-2 text-md font-semibold tracking-tight dark:text-white">{{this.allText.comment_from}}<i
+            <h5 class="mb-2 text-md font-semibold tracking-tight dark:text-white">{{ this.allText.comment_from }}<i
                 class="fa-solid fa-circle-check text-blue-700 ml-2"></i></h5>
-            <p class="font-normal text-gray-700 dark:text-gray-400">{{suggestion.comment}}</p>
+            <p class="font-normal text-gray-700 dark:text-gray-400">{{ suggestion.comment }}</p>
           </div>
           <i v-if="$user.moderator"
             class="fa-solid fa-edit dark:text-title-blue dark:hover:text-blue-500 hover:text-blue-500 cursor-pointer"
@@ -147,15 +149,68 @@ export default {
     changeComment() {
       this.$root.$emit('showCommentModal', { suggestion: this.suggestion });
     },
-    toggleVote() {
+    toggleVote(new_type) {
       if (!this.suggestion.my_suggestion && this.suggestion.state != 'validate' && !this.$no_auth) {
-        this.suggestion.voted = !this.suggestion.voted
-        if (this.suggestion.voted) {
+        // on annule le vote
+        if (this.suggestion.voted_type && this.suggestion.voted_type == new_type) {
+          if (this.suggestion.vote_id) {
+            this.voteId = this.suggestion.vote_id;
+            delete this.suggestion.vote_id;
+          }
+          axiosClient.delete(`votes/${this.voteId}`)
+            .then(() => {
+              if (new_type == "up") {
+                this.suggestion.votes_up--
+              }
+              else if (new_type == "down") {
+                this.suggestion.votes_down--
+              }
+              this.suggestion.voted_type = null;
+            })
+            .catch((error) => {
+              this.$toast.error("Une erreur est survenue");
+              this.suggestion.voted = !this.suggestion.voted
+              console.log(error);
+            })
+        }
+        // on change le type du vote
+        else if (this.suggestion.voted_type && this.suggestion.voted_type != new_type) {
+          if (this.suggestion.vote_id) {
+            this.voteId = this.suggestion.vote_id;
+            delete this.suggestion.vote_id;
+          }
+          let type = new_type == "up" ? "down" : "up";
+          axiosClient.put(`votes/${this.voteId}`, {
+            type,
+          }).then(() => {
+            if (new_type == "up") {
+              this.suggestion.votes_down--
+              this.suggestion.votes_up++
+              this.suggestion.voted_type = "up";
+            }
+            else if (new_type == "down") {
+              this.suggestion.votes_up--
+              this.suggestion.votes_down++
+              this.suggestion.voted_type = "down";
+            }
+
+          })
+        }
+        // on ajoute un vote "up"
+        else {
           axiosClient.post("votes", {
-            suggestion_id: this.suggestion.id
+            suggestion_id: this.suggestion.id,
+            type: new_type,
           }).then((res) => {
             this.voteId = res.data.id
-            this.suggestion.nb_votes++
+            if (new_type == "up") {
+              this.suggestion.votes_up++
+              this.suggestion.voted_type = "up";
+            }
+            else if (new_type == "down") {
+              this.suggestion.votes_down++
+              this.suggestion.voted_type = "down";
+            }
           })
             .catch((error) => {
               this.$toast.error("Une erreur est survenue");
@@ -163,23 +218,7 @@ export default {
               console.log(error);
             })
         }
-        else {
-          if (this.suggestion.vote_id) {
-            this.voteId = this.suggestion.vote_id;
-            delete this.suggestion.vote_id;
-          }
-          axiosClient.delete(`votes/${this.voteId}`)
-            .then(() => {
-              this.suggestion.nb_votes--
-            })
-            .catch((error) => {
-              this.$toast.error("Une erreur est survenue");
-              this.suggestion.voted = !this.suggestion.voted
-              console.log(error);
-            })
-        }
       }
-      this.resetVoteText();
     },
     onDelete() {
       if (confirm('Voulez-vous supprimer cette suggestion ?')) {

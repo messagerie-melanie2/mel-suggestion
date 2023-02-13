@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//Comment group for dev
 Route::group(['middleware' => ['web']], function () {
   Route::apiResource('user', UserController::class);
   Route::apiResource('suggestions', SuggestionController::class);
