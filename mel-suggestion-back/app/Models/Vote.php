@@ -11,5 +11,6 @@ class Vote extends Model
     protected $fillable = [
       'user_email',
       'suggestion_id',
+      'type',
   ];
 }

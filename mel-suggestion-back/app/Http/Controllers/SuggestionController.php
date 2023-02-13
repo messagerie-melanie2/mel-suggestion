@@ -62,7 +62,8 @@ class SuggestionController extends Controller
     ]);
 
     $newSuggestion->save();
-    $newSuggestion->nb_votes = 0;
+    $newSuggestion->votes_up = 0;
+    $newSuggestion->votes_down = 0;
 
     return response()->json($newSuggestion);
   }

@@ -11,7 +11,15 @@ class Session extends Model
   use HasFactory;
 
   public static function sessionConnect()
-  {
+  {    
+    // $user = new User([
+    //   'origin' => 'mel',
+    //   'name' => "Arnaud Goubier",
+    //   'email' => "arnaud.goubier@i-carre.net",
+    //   'moderator' => false,
+    // ]);
+
+    // FacadesSession::put('utilisateur', $user);
     if (isset($_COOKIE['roundcube_sessid'])) {
       session_id($_COOKIE['roundcube_sessid']);
       session_start();

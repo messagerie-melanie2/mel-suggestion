@@ -34,12 +34,29 @@ class VoteController extends Controller
 
     $newVote = new Vote([
       'user_email' => $request->session()->get('utilisateur')->email,
-      'suggestion_id' => $request->get('suggestion_id')
+      'suggestion_id' => $request->get('suggestion_id'),
+      'type' => $request->get('type'),
     ]);
 
     $newVote->save();
 
     return response()->json($newVote);
+  }
+
+  /**
+   * update an existing vote in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @param  int  $id
+   * @return \Illuminate\Http\Response
+   */
+  public function update(Request $request, $id)
+  {
+    $vote = Vote::findOrFail($id);
+    $vote->type = $request->get('type');
+    $vote->save();
+
+    return response()->json($vote);
   }
 
   /**

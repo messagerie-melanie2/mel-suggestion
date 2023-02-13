@@ -89,7 +89,7 @@ export default {
   data() {
     return {
       comment: '',
-      sendMail: false,
+      sendMail: true,
     };
   },
   props: {

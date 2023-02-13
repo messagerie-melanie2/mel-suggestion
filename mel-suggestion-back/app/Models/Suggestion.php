@@ -47,17 +47,24 @@ class Suggestion extends Model
 
     $votes = Vote::whereIn('suggestion_id', $suggestions_ids)->get();
     foreach ($suggestions as $key => $suggestion) {
-      $nb_votes = 0;
+      $votes_up = 0;
+      $votes_down = 0;
       foreach ($votes as $vote) {
         if ($vote->suggestion_id == $suggestion->id) {
-          $nb_votes++;
+          if ($vote->type == "down") {
+            $votes_down++;
+          } else {
+            $votes_up++;
+          }
           if ($vote->user_email == $session_user->email) {
             $suggestion->voted = true;
+            $suggestion->voted_type = $vote->type;
             $suggestion->vote_id = $vote->id;
           }
         }
       }
-      $suggestion->nb_votes = $nb_votes;
+      $suggestion->votes_up = $votes_up;
+      $suggestion->votes_down = $votes_down;
     }
 
     return $suggestions;
@@ -65,8 +72,14 @@ class Suggestion extends Model
 
   public static function countVote($suggestion)
   {
-    $votes = Vote::where('suggestion_id', $suggestion->id)->count();
-    $suggestion->nb_votes = $votes;
+    $suggestion->votes_up = Vote::where([
+      ['suggestion_id', '=', $suggestion->id],
+      ['type', '=', 'up']
+    ])->count();
+    $suggestion->votes_down = Vote::where([
+      ['suggestion_id', '=', $suggestion->id],
+      ['type', '=', 'down']
+    ])->count();
     return $suggestion;
   }
 
