@@ -1,5 +1,5 @@
 <template>
-  <tr class="inline-block w-full px-6 pt-3 cursor-pointer "
+  <tr :id="this.suggestion.id" class="inline-block w-full px-6 pt-3 cursor-pointer "
     :class="[!showSuggestion ? 'hover:bg-gray-100 dark:hover:bg-dark-blue' : '', suggestion.state == 'moderate' ? 'border-l-2 border-yellow-500' : '', suggestion.state == 'validate' ? 'border-l-2 border-green-400' : '', suggestion.state == 'refused' ? 'border-l-2 border-red-400' : '']"
     @click.prevent="description = !description">
     <td class="inline-block w-full">
@@ -8,19 +8,19 @@
           <div class="flex justify-between">
             <div class="mr-4">
               <i class="fa-solid fa-check text-xl"
-                :class="[suggestion.voted_type == 'up' ? 'text-green-500 hover:text-gray-500' : 'text-gray-500 hover:text-green-500']"
+                :class="[suggestion.voted_type == 'up' ? 'text-green-500 hover:text-gray-500' : 'text-gray-500 hover:text-green-500 dark:text-gray-400 dark:hover:text-green-500']"
                 @click.stop="toggleVote('up')"></i>
               <br>
-              <div class="text-center text-gray-700">
+              <div class="text-center" :class="[suggestion.voted_type == 'up' ? 'text-green-500' : 'text-gray-700 dark:text-gray-300']">
                 {{ suggestion.votes_up }}
               </div>
             </div>
             <div class="mr-2">
               <i class="fa-solid fa-times text-xl "
-                :class="[suggestion.voted_type == 'down' ? 'text-red-400 hover:text-gray-500' : 'text-gray-500 hover:text-red-400']"
+                :class="[suggestion.voted_type == 'down' ? 'text-red-400 hover:text-gray-500' : 'text-gray-500 hover:text-red-400 dark:text-gray-400 dark:hover:text-red-400']"
                 @click.stop="toggleVote('down')"></i>
               <br>
-              <div class="text-center text-gray-700">
+              <div class="text-center" :class="[suggestion.voted_type == 'down' ? 'text-red-400' : 'text-gray-700 dark:text-gray-300']">
                 {{ suggestion.votes_down }}
               </div>
             </div>
@@ -101,6 +101,7 @@
 
 <script>
 import axiosClient from '../axios';
+import Vue from 'vue'
 
 import moment from 'moment';
 import { mapGetters, mapActions } from "vuex";
@@ -121,6 +122,13 @@ export default {
       showSuggestion: false,
       modifiedSuggestion: false,
       description: false,
+    }
+  },
+  mounted() {
+    if ((this.$searchId == this.suggestion.id) && !this.$hasScrolled) {
+      this.description = true;
+      Vue.prototype.$hasScrolled = true;
+      document.getElementById(this.suggestion.id).scrollIntoView();        
     }
   },
   filters: {

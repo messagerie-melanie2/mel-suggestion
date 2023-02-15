@@ -100,6 +100,11 @@ export default {
       const acceptedState = ['vote', 'moderate'];
 
       let filteredlocalSuggestions = this.localSuggestions.slice(0).filter(suggestion => {
+        if (suggestion.id == this.$searchId && suggestion.state == 'validate' && !this.$hasScrolled) {
+           setTimeout(() => {
+            this.$root.$emit('sort-suggestion-validate');
+           }, 50);
+        }
         if (this.refusedSuggestion) {
           return suggestion.state.toLowerCase().includes("refused");
         }
