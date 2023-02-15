@@ -1,0 +1,1 @@
+alter table "votes" add 'type' TEXT;
