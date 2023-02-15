@@ -20,18 +20,30 @@
         <div class="flex justify-between mt-3">
           <div>
             Suggestion ajoutée par : <a href="#" class="font-bold" @click.stop="sendEmail">{{
-            displayName
+              displayName
             }}</a>
-          </div>
-          <div>
+            <br>
             Le : <span class="font-bold"> {{ suggestion.created_at | formatDate }} </span>
+          </div>
+          <div v-if="suggestion.state != 'refused' && suggestion.state != 'moderate'">
+            <button @click.stop="copyLink"
+              class="text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white active:bg-blue-600 font-bold uppercase text-xs px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150">
+              <i class="fa-solid fa-link mr-1"></i> {{ copyLinkText }}</button>
+          
           </div>
         </div>
       </div>
       <div v-else>
-        <p>
-          Suggestion ajoutée le : <span class="font-bold"> {{ suggestion.created_at | formatDate }} </span>
-        </p>
+        <div class="flex justify-between">
+          <div>
+            Suggestion ajoutée le : <span class="font-bold"> {{ suggestion.created_at | formatDate }} </span>
+          </div>
+          <div v-if="suggestion.state != 'refused' && suggestion.state != 'moderate'">
+            <button @click.stop="copyLink"
+              class="text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white active:bg-blue-600 font-bold uppercase text-xs px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150">
+              <i class="fa-solid fa-link mr-1"></i> {{ copyLinkText }}</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -47,6 +59,11 @@ export default {
   props: [
     'suggestion', 'active'
   ],
+  data() {
+    return {
+      copyLinkText: "Copier le lien",
+    }
+  },
   filters: {
     formatDate: function (value) {
       if (value) {
@@ -63,7 +80,15 @@ export default {
           windowRef.close();
         }
       }, 500);
-    }
+    },
+    copyLink() {
+      this.copyLinkText = "Lien copié !"
+      navigator.clipboard.writeText(this.$suggestionUrl.replace('suggestionId', this.suggestion.id));
+
+      setTimeout(() => {
+        this.copyLinkText = "Copier le lien"
+      }, 2000);
+    },
   },
   computed: {
     ...mapGetters(['allText']),

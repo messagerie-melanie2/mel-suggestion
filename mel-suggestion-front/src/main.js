@@ -6,12 +6,9 @@ import store from './store'
 import "vue-toastification/dist/index.css";
 import './index.css'
 
-
-
 Vue.config.productionTip = false
 Vue.use(Toast, { position: "bottom-right" });
 Vue.prototype.$axios = axios;
-
 
 new Vue({
   store,
@@ -22,6 +19,18 @@ new Vue({
       }
     })
     getTheme();
+    Vue.prototype.$suggestionUrl = window.location.origin + window.location.pathname + '#suggestionId';
+    Vue.prototype.$hasScrolled = false;
+    Vue.prototype.$searchId = location.hash.replace('#','');
+    if (window !== top) {
+      top.postMessage('suggestion.app.url', '*');
+      window.addEventListener('message', (arg) => {
+        if (arg.data.type == "suggestionUrl") {
+          Vue.prototype.$suggestionUrl = arg.data.value;
+        }
+      })
+    }
+
   },
   render: h => h(App),
 }).$mount('#app')
