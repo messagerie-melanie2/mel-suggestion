@@ -27,7 +27,7 @@
           </div>
           <div class="pl-3">
             <div class="flex items-center text-sm leading-none">
-              <p class="font-semibold overflow-hidden truncate custom_width text-slate-800 dark:text-title-blue h-5">
+              <p class="font-semibold overflow-hidden custom_width text-slate-800 dark:text-title-blue pb-2" :class="[description ? '' : 'truncate']">
                 {{ suggestion.title | strippedContent }}
               </p>
             </div>
@@ -268,6 +268,7 @@ export default {
 *>>>.ql-editor {
   padding: 0px 0px 12px 0px;
   min-height: 100px;
+  font-size: 13px;
 }
 
 @media (max-width: 576px) {
