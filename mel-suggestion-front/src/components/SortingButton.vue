@@ -14,10 +14,10 @@ padding-bottom: 0.45rem;" @click="sort('updated_at', false)" title="Trier par da
       </button>
       <button class="text-slate-600 font-semibold px-3  border border-gray-300 dark:border-light-yellow" style="padding-top: 0.30rem;
 padding-bottom: 0.45rem;" title="Suggestions à venir" @click="sort('updated_at', true)"
-        :class="[validateOnly === true && !searching ? 'bg-gray-200 dark:bg-light-yellow dark:text-slate-800' : ' dark:text-light-yellow hover:bg-gray-100 dark:hover:bg-dark-blue', !$user.moderator ? 'rounded-r' : '']">
+        :class="[validateOnly === true && !searching ? 'bg-gray-200 dark:bg-light-yellow dark:text-slate-800' : ' dark:text-light-yellow hover:bg-gray-100 dark:hover:bg-dark-blue']">
         <i class="fas fa-list-check text-slate-400 mr-1"></i> Retenues
       </button>
-      <div v-if="$user.moderator">
+      <div>
         <button class="text-slate-600 font-semibold px-3  border border-gray-300 dark:border-light-yellow rounded-r "
           style="padding-top: 0.30rem;
 padding-bottom: 0.45rem;" title="Suggestions refusées" @click="sort('updated_at', false, true)"
