@@ -1,1 +1,2 @@
-alter table "votes" add 'type' TEXT;
+ALTER TABLE "votes" ADD COLUMN "type" TEXT DEFAULT 'up';
+

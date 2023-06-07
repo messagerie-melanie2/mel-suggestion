@@ -101,7 +101,7 @@ export default {
       if (this.modalInfo.state == 'delete') {
         this.deleteSuggestion(this.modalInfo.suggestion.id)
         if (this.sendMail) {
-          this.sendEmail(this.allText.mail_subject.replace('%%title%%', this.modalInfo.suggestion.title), this.allText.mail_body);
+          this.sendEmail(this.allText.mail_subject.replace('%%title%%', this.modalInfo.suggestion.title), this.modalInfo.suggestion.description);
         }
         this.$emit('close-modal');
 

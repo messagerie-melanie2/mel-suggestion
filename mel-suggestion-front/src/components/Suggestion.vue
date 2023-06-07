@@ -41,13 +41,14 @@
         <div v-if="suggestion.state == 'validate'">
           <span
             class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-green-600 bg-green-200 -ml-12 whitespace-nowrap">
-            A venir
+            Retenue
           </span>
           <div v-if="!suggestion.comment && $user.moderator">
             <i class="far fa-comment-dots mt-4 dark:text-title-blue dark:hover:text-green-500 hover:text-green-500 cursor-pointer"
               title="Ajouter un commentaire" @click.stop="changeComment"></i>
           </div>
         </div>
+
         <div v-if="suggestion.state == 'refused'">
           <span
             class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-red-600 bg-red-200 -ml-12 whitespace-nowrap">
