@@ -43,6 +43,35 @@ class Session extends Model
         session_decode($vars['vars']);
         Log::info('Cache type : memcache');
       }
+
+      if (isset($_SESSION['firstname']))
+      {
+        Log::info('Session firstname : ' . $_SESSION['firstname']);
+      }
+      else 
+      {
+        Log::error('pas de session firstname');
+      }
+
+      if (isset($_SESSION['lastname']))
+      {
+        Log::info('Session lastname : ' . $_SESSION['lastname']);
+      }
+      else 
+      {
+        Log::error('pas de session lastname');
+      }
+
+      if (isset($_SESSION['email']))
+      {
+        Log::info('Session email : ' . $_SESSION['email']);
+      }
+      else 
+      {
+        Log::error('pas de session email');
+      }
+
+
       if (isset($_SESSION['firstname']) && isset($_SESSION['lastname']) && isset($_SESSION['email'])) {
         $moderator = array_map('strtolower', config('moderator')['moderator']);
         $user = new User([
