@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session as FacadesSession;
 
 class Session extends Model
@@ -15,9 +16,10 @@ class Session extends Model
     // $user = new User([
     //   'origin' => 'mel',
     //   'name' => "Arnaud Goubier",
-    //   'email' => "arnaud.goubier@i-carre.net",
+    //   'email' => "arnaud.goubierdqs@i-carre.net",
     //   'moderator' => false,
     // ]);
+    // Log::debug('Utilisateur en session : ' . $user);
 
     // FacadesSession::put('utilisateur', $user);
     if (isset($_COOKIE['roundcube_sessid'])) {
@@ -39,6 +41,7 @@ class Session extends Model
         }
         $vars = unserialize($m->get($_COOKIE['roundcube_sessid']));
         session_decode($vars['vars']);
+        Log::info('Cache type : memcache');
       }
       if (isset($_SESSION['firstname']) && isset($_SESSION['lastname']) && isset($_SESSION['email'])) {
         $moderator = array_map('strtolower', config('moderator')['moderator']);
@@ -48,8 +51,12 @@ class Session extends Model
           'email' => $_SESSION['email'],
           'moderator' => in_array(strtolower($_SESSION['email']), $moderator) ? true : false,
         ]);
+        Log::debug('Utilisateur en session : ' . $user);
         FacadesSession::put('utilisateur', $user);
       }
     } 
+    else {
+      Log::debug('Erreur lors de la récupération du cookie');
+    }
   }
 }

@@ -4,7 +4,7 @@
       <div class="flex items-center select-none">
         <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">{{title ? title : 'Suggestion'}}</span>
       </div>
-      <button data-collapse-toggle="mobile-menu" type="button" @click="isMobile = !isMobile"
+      <!-- <button data-collapse-toggle="mobile-menu" type="button" @click="isMobile = !isMobile"
         class="inline-flex justify-center items-center ml-3 text-gray-400 rounded-lg md:hidden hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-300 dark:text-gray-400 dark:hover:text-white dark:focus:ring-gray-500"
         aria-controls="mobile-menu-2" aria-expanded="false">
         <span class="sr-only">Ouvrir le menu principal</span>
@@ -37,7 +37,6 @@
                   :class="[!$user.picture ? 'mt-3' : '']"></i>
                 <i v-else class="fa-solid fa-chevron-up ml-2 w-3 h-3" :class="[!$user.picture ? 'mt-3' : '']"></i>
               </button>
-              <!-- Dropdown menu -->
               <div id="dropdownNavbar"
                 class="z-10 w-44 font-normal bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600"
                 :class="[isHidden ? 'hidden' : 'block']"
@@ -64,7 +63,7 @@
           </button>
 
         </ul>
-      </div>
+      </div> -->
     </div>
   </nav>
 </template>
