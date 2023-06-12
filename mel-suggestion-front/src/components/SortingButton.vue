@@ -3,8 +3,8 @@
     <div class="inline-flex pb-0">
       <button class="text-slate-600 font-semibold px-3 rounded-l border border-gray-300 dark:border-light-yellow "
         style="padding-top: 0.30rem;
-padding-bottom: 0.45rem;" @click="sort('nb_votes', false)" title="Trier par nombre de votes"
-        :class="[sortBy === 'nb_votes' && validateOnly === false && !searching ? 'bg-gray-200 dark:bg-light-yellow dark:text-slate-800' : ' dark:text-light-yellow hover:bg-gray-100 dark:hover:bg-dark-blue']">
+padding-bottom: 0.45rem;" @click="sort('votes_up', false)" title="Trier par nombre de votes"
+        :class="[sortBy === 'votes_up' && validateOnly === false && !searching ? 'bg-gray-200 dark:bg-light-yellow dark:text-slate-800' : ' dark:text-light-yellow hover:bg-gray-100 dark:hover:bg-dark-blue']">
         <i class="far fa-star text-slate-400"></i> Top
       </button>
       <button class="text-slate-600 font-semibold px-3  border border-gray-300 dark:border-light-yellow " style="padding-top: 0.30rem;
@@ -34,7 +34,7 @@ export default {
   name: "SortingButton",
   data() {
     return {
-      sortBy: 'nb_votes',
+      sortBy: 'votes_up',
       sortDirection: 'desc',
       searching: false,
       validateOnly: false,

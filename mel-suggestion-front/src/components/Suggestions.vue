@@ -50,7 +50,7 @@ export default {
     return {
       create: '',
       search: '',
-      sortBy: 'nb_votes',
+      sortBy: 'votes_up',
       sortDirection: 'desc',
       localSuggestions: this.suggestions,
       validateOnly: false,
