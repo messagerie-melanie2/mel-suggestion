@@ -5,7 +5,7 @@
     <td class="inline-block w-full">
       <div class="flex justify-between" v-show="!showSuggestion">
         <div id="suggestion" class="flex items-center w-full">
-          <div class="flex justify-between">
+          <div class="flex justify-between" v-show="suggestion.state == 'vote'">
             <div class="mr-4">
               <i class="fa-solid fa-check text-xl"
                 :class="[suggestion.voted_type == 'up' ? 'text-green-500 hover:text-gray-500' : 'text-gray-500 hover:text-green-500 dark:text-gray-400 dark:hover:text-green-500']"
