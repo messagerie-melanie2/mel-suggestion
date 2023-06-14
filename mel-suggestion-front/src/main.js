@@ -37,6 +37,38 @@ new Vue({
 
 
 function getTheme() {
-  Vue.prototype.$darkTheme = JSON.parse(localStorage.getItem('colorMode')) == 'dark' ? true : false;
-  document.getElementsByTagName("html")[0].setAttribute('class', JSON.parse(localStorage.getItem('colorMode')));
+  let colorName;
+  let color = getCookie('colorMode'); 
+  if (color === null) {
+    color = window.matchMedia('(prefers-color-scheme: dark)')
+  }
+  else {
+    color = color === 'dark';
+  }
+  colorName = color ? 'dark' : 'light';
+
+  Vue.prototype.$darkTheme = color;
+  document.getElementsByTagName("html")[0].setAttribute('class', colorName);
 } 
+
+function getCookie(name)
+{
+  var dc = document.cookie,
+    prefix = name + "=",
+    begin = dc.indexOf("; " + prefix);
+
+  if (begin == -1) {
+    begin = dc.indexOf(prefix);
+    if (begin != 0)
+      return null;
+  }
+  else {
+    begin += 2;
+  }
+
+  var end = dc.indexOf(";", begin);
+  if (end == -1)
+    end = dc.length;
+
+  return unescape(dc.substring(begin + prefix.length, end));
+}
