@@ -16,12 +16,12 @@ class Session extends Model
     // $user = new User([
     //   'origin' => 'mel',
     //   'name' => "Arnaud Goubier",
-    //   'email' => "arnaud.goubierdqs@i-carre.net",
-    //   'moderator' => false,
+    //   'email' => "arnaud.goubier@i-carre.net",
+    //   'moderator' => true,
     // ]);
     // Log::debug('Utilisateur en session : ' . $user);
-
     // FacadesSession::put('utilisateur', $user);
+
     if (isset($_COOKIE['roundcube_sessid'])) {
       session_id($_COOKIE['roundcube_sessid']);
       session_start();
@@ -42,33 +42,6 @@ class Session extends Model
         $vars = unserialize($m->get($_COOKIE['roundcube_sessid']));
         session_decode($vars['vars']);
         Log::info('Cache type : memcache');
-      }
-
-      if (isset($_SESSION['firstname']))
-      {
-        Log::info('Session firstname : ' . $_SESSION['firstname']);
-      }
-      else 
-      {
-        Log::error('pas de session firstname');
-      }
-
-      if (isset($_SESSION['lastname']))
-      {
-        Log::info('Session lastname : ' . $_SESSION['lastname']);
-      }
-      else 
-      {
-        Log::error('pas de session lastname');
-      }
-
-      if (isset($_SESSION['email']))
-      {
-        Log::info('Session email : ' . $_SESSION['email']);
-      }
-      else 
-      {
-        Log::error('pas de session email');
       }
 
 
