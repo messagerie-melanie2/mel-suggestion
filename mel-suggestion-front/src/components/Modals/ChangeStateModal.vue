@@ -68,8 +68,8 @@
               <button type="submit" :class="[
                 modalInfo.state == 'vote' || modalInfo.state == 'moderate' ? 'text-white bg-green-500 hover:bg-green-700' : '',
                 modalInfo.state == 'validate' ? 'text-white bg-blue-500 hover:bg-blue-700' : '',
-              modalInfo.state == 'refused' ? 'text-white bg-red-600 hover:bg-red-800' : '',
-              modalInfo.state == 'delete' ? 'text-white bg-gray-900' : '']"
+                modalInfo.state == 'refused' ? 'text-white bg-red-600 hover:bg-red-800' : '',
+                modalInfo.state == 'delete' ? 'text-white bg-gray-900' : '']"
                 class=" focus:ring-4 focus:outline-none font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center ">
                 Accepter
               </button>
@@ -113,7 +113,7 @@ export default {
       }
     },
     sendEmail(subject = '', body = '') {
-      const windowRef = window.open(`mailto:${this.modalInfo.suggestion.user_email}?subject=${subject}&body=${body}`);
+      const windowRef = window.open(`mailto:${this.modalInfo.suggestion.user_email}?subject=${subject}&body=${this.removeImage(body)}`);
       windowRef.focus();
       setTimeout(function () {
         if (!windowRef.document.hasFocus()) {
@@ -121,6 +121,9 @@ export default {
         }
       }, 500);
     },
+    removeImage(body) {
+      return body.replace(/<img[^>]*>/g, '');
+    }
   },
   computed: mapGetters(['allText']),
 }
