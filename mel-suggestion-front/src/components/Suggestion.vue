@@ -166,7 +166,7 @@ export default {
             this.voteId = this.suggestion.vote_id;
             delete this.suggestion.vote_id;
           }
-          axiosClient.delete(`votes/${this.voteId}`)
+          axiosClient.delete(`/votes/${this.voteId}`)
             .then(() => {
               if (new_type == "up") {
                 this.suggestion.votes_up--
@@ -189,7 +189,7 @@ export default {
             delete this.suggestion.vote_id;
           }
           let type = new_type == "up" ? "down" : "up";
-          axiosClient.put(`votes/${this.voteId}`, {
+          axiosClient.put(`/votes/${this.voteId}`, {
             type,
           }).then(() => {
             if (new_type == "up") {
@@ -207,7 +207,7 @@ export default {
         }
         // on ajoute un vote "up"
         else {
-          axiosClient.post("votes", {
+          axiosClient.post("/votes", {
             suggestion_id: this.suggestion.id,
             type: new_type,
           }).then((res) => {
