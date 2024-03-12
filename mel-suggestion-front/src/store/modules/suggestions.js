@@ -20,7 +20,7 @@ const actions = {
   fetchSuggestions({ commit }) {
     commit('loadingStatus', true)
     axiosClient
-      .get("user")
+      .get("/user")
       .catch((error) => {
         console.log(error);
         commit('loadingStatus', false)
@@ -34,7 +34,7 @@ const actions = {
           Vue.prototype.$no_auth = true;
         }  
         axiosClient
-          .get("suggestions")
+          .get("/suggestions")
           .then((response) => {
             if (typeof response.data === 'object') {
               response.data = Object.keys(response.data)
@@ -57,7 +57,7 @@ const actions = {
 
   addSuggestion({ commit }, suggestion) {
     axiosClient
-      .post("suggestions", {
+      .post("/suggestions", {
         title: suggestion.title,
         description: suggestion.description,
         user_firstname: suggestion.user_firstname,
@@ -75,7 +75,7 @@ const actions = {
   },
 
   deleteSuggestion({ commit }, id) {
-    axiosClient.delete(`suggestions/${id}`).then(() => {
+    axiosClient.delete(`/suggestions/${id}`).then(() => {
       commit('deleteSuggestion', id)
       this._vm.$toast.success("Suggestion supprimée avec succès !");
     }).catch((error) => {
@@ -85,7 +85,7 @@ const actions = {
   },
 
   changeStateSuggestion({ commit }, { id, state, comment }) {
-    axiosClient.put(`suggestions/state/${id}`, {
+    axiosClient.put(`/suggestions/state/${id}`, {
       state,
       comment
     }).then((response) => {
@@ -99,7 +99,7 @@ const actions = {
 
   updateSuggestion({ commit }, suggestion) {
     axiosClient
-      .put(`suggestions/${suggestion.id}`, {
+      .put(`/suggestions/${suggestion.id}`, {
         title: suggestion.title,
         description: suggestion.description,
       }).then((response) => {
