@@ -12,7 +12,7 @@ const actions = {
   fetchText({ commit }) {
     commit('loadingStatus', true)
     axiosClient
-      .get("text")
+      .get("/text")
       .then((response) => {
         commit('setText', response.data);
       })
