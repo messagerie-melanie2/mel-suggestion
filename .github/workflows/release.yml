@@ -52,6 +52,6 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "${{ steps.bump_version.outputs.next-version }}"
           prerelease: false
-          title: "Suggestion"
+          title: "Suggestion ${{ steps.bump_version.outputs.next-version }}"
           files: suggestion.tar.gz
 
