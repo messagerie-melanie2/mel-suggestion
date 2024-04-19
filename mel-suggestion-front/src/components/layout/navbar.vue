@@ -1,9 +1,12 @@
 <template>
+  <!-- Navigation Bar Component -->
   <nav class="px-2 pt-4 md:pt-0 bg-white border-gray-200 dark:bg-dark-blue dark:border-gray-700">
     <div class="container flex flex-wrap justify-between items-center mx-auto">
       <div class="flex items-center select-none">
+        <!-- Title Display -->
         <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">{{title ? title : 'Suggestion'}}</span>
       </div>
+      <!-- Mobile Menu Button -->
       <!-- <button data-collapse-toggle="mobile-menu" type="button" @click="isMobile = !isMobile"
         class="inline-flex justify-center items-center ml-3 text-gray-400 rounded-lg md:hidden hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-300 dark:text-gray-400 dark:hover:text-white dark:focus:ring-gray-500"
         aria-controls="mobile-menu-2" aria-expanded="false">
@@ -16,7 +19,8 @@
             clip-rule="evenodd"></path>
         </svg>
       </button>
-      <div :class="[isMobile ? 'block' : 'hidden']" class="w-full md:block md:w-auto" id="mobile-menu">
+      <!-- Mobile Menu Content -->
+      <!-- <div :class="[isMobile ? 'block' : 'hidden']" class="w-full md:block md:w-auto" id="mobile-menu">
         <ul
           class="flex p-4 mt-4 bg-gray-50 rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-dark-blue dark:border-gray-700">
           <li>
@@ -75,20 +79,24 @@ export default {
   name: "Navbar",
   data() {
     return {
+      // Initial state for mobile menu and dark theme
       isHidden: true,
       isMobile: false,
       darkTheme: this.$darkTheme,
     }
   },
   props: {
+    // Title displayed in the navbar
     title: String,
   },
   mounted() {
      if (this.title) {
+      // Set document title if title prop is provided
        document.title = this.title;
      }
   },
   methods: {
+    // Method to disconnect user
     disconnect() {
       axiosClient.get(`disconnect`)
         .then(() => {
@@ -98,10 +106,13 @@ export default {
           console.log(error);
         })
     },
+    // Method to toggle between light and dark theme
     changeTheme() {
+       // Determine current color mode and switch to the opposite
       let color = JSON.parse(localStorage.getItem('colorMode')) == "dark" ? '"light"' : '"dark"'
       this.darkTheme = !this.darkTheme;
       localStorage.setItem('colorMode', color);
+      // Inform other components about the theme change
       window.postMessage('colorMode', '*');
     }
   }

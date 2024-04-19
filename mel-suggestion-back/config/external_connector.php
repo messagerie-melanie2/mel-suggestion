@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Configuration file for external authentication connectors.
+ *
+ * This file contains configuration settings for external authentication connectors such as Google and Microsoft.
+ * Each connector has its own configuration parameters including client URL, client ID, client secret, and client fields.
+ *
+ * @return array
+ */
 return [
   'external_connector' => explode(',', env('EXTERNAL_CONNECTOR')),
   'external_proxy' => env('EXTERNAL_PROXY'),
