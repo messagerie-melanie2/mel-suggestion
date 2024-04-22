@@ -11,7 +11,7 @@ mel-Suggestion est une application web simple qui permet aux utilisateurs de pro
 - **Proposer des Suggestions** : Les utilisateurs peuvent soumettre leurs idées de nouvelles fonctionnalités ou améliorations.
 - **Voter pour des Suggestions** : Les utilisateurs peuvent voter pour les suggestions existantes pour indiquer leur intérêt ou leur priorité.
 - **Consulter les Suggestions** : Tous les utilisateurs peuvent consulter la liste des suggestions ainsi que leur nombre de votes.
-- **Trier les Suggestions** : Les suggestions peuvent être triées selon divers critères comme les plus votées, les plus récentes, celles qui ont été retenues, ou celle qui ont été refusées.
+- **Trier les Suggestions** : Les suggestions peuvent être triées selon divers critères comme les plus votées, les plus récentes, celles qui ont été retenues, ou celles qui ont été refusées.
 
 ## Technologies Utilisées
 
