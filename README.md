@@ -47,8 +47,10 @@ Pour exécuter l'application en local, suivez ces étapes :
 
 4. Soumettez votre propre suggestion.
 <p align="center">
-  <img src="https://github.com/messagerie-melanie2/mel-suggestion/assets/144009217/e1a28c51-f220-41f4-9ee8-22fd446e03a9" alt="Formulaire de suggestion">
+  <img src="https://github.com/messagerie-melanie2/mel-suggestion/assets/144009217/259384e9-feb5-4571-8625-4d13e0d9f3f4" alt="Formulaire de suggestion">
 </p>
+
+
 
 5. Votez pour les suggestions existantes en cliquant sur les boutons de vote.
 
