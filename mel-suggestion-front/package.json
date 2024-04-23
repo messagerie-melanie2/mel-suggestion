@@ -13,6 +13,7 @@
     "core-js": "^3.6.5",
     "flowbite": "^1.4.5",
     "moment": "^2.29.3",
+    "oidc-client": "^1.11.5",
     "vue": "^2.6.11",
     "vue-cookies": "^1.8.1",
     "vue-router": "^3.5.3",
