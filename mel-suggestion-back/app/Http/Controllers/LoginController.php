@@ -36,6 +36,7 @@ class LoginController extends Controller
       $connector['client_secret']
     );
 
+    $oidc->addScope('openid');
     $oidc->addScope('email');
     $oidc->addScope('profile');
     $oidc->setCertPath(__DIR__ . '/cacert.pem');
