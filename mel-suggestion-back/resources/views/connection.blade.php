@@ -22,10 +22,10 @@
   </div>
   <div class="grid place-items-center h-screen pb-20">
     <div class="p-4 max-w-sm bg-white rounded-lg border shadow-md sm:p-6 ">
-      <h5 class="mb-3 text-base font-semibold text-gray-900 lg:text-xl">
+      <h5 class="mb-3 text-base font-semibold text-gray-900 lg:text-xl text-center">
         Se connecter à Suggestion
       </h5>
-      <p class="text-sm font-normal text-gray-500 ">Choisir un moyen pour se connecter aux modules de suggestion </p>
+      <p class="text-sm font-normal text-gray-500 ">Choisissez un moyen pour vous connecter au module de suggestions </p>
       <ul class="my-4 space-y-3">
         <li>
           <a href="{{url('connexion', ['connector' => 'google'])}}" class="flex items-center p-3 text-base font-bold text-gray-900 bg-gray-50 rounded-lg hover:bg-gray-100 group hover:shadow">
@@ -35,7 +35,7 @@
               <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z" />
               <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z" />
             </svg>
-            <span class="flex-1 ml-3 whitespace-nowrap">Google</span>
+            <span class="flex-1 ml-3 whitespace-nowrap">avec Google</span>
             <span class="inline-flex items-center justify-center px-2 py-0.5 ml-3 text-xs font-medium text-gray-500 bg-gray-200 rounded ">Populaire</span>
           </a>
         </li>
@@ -47,7 +47,7 @@
               <path fill="#ffc107" d="M26 26H42V42H26z" transform="rotate(-180 34 34)" />
               <path fill="#03a9f4" d="M6 26H22V42H6z" transform="rotate(-180 14 34)" />
             </svg>
-            <span class="flex-1 ml-3 whitespace-nowrap">Microsoft</span>
+            <span class="flex-1 ml-3 whitespace-nowrap">avec Microsoft</span>
           </a>
         </li>
       </ul>
