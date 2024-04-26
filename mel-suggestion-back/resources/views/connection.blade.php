@@ -28,7 +28,6 @@
       <p class="text-sm font-normal text-gray-500 ">Choisir un moyen pour se connecter aux modules de suggestion </p>
       <ul class="my-4 space-y-3">
         <li>
-          @if(in_array('google', config('external_connector')['external_connector']))
           <a href="{{url('connexion', ['connector' => 'google'])}}" class="flex items-center p-3 text-base font-bold text-gray-900 bg-gray-50 rounded-lg hover:bg-gray-100 group hover:shadow">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px">
               <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z" />
@@ -39,10 +38,8 @@
             <span class="flex-1 ml-3 whitespace-nowrap">Google</span>
             <span class="inline-flex items-center justify-center px-2 py-0.5 ml-3 text-xs font-medium text-gray-500 bg-gray-200 rounded ">Populaire</span>
           </a>
-          @endif
         </li>
         <li>
-          @if(in_array('microsoft', config('external_connector')['external_connector']))
           <a href="{{url('connexion', ['connector' => 'microsoft'])}}" class="flex items-center p-3 text-base font-bold text-gray-900 bg-gray-50 rounded-lg hover:bg-gray-100 group hover:shadow ">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px">
               <path fill="#ff5722" d="M6 6H22V22H6z" transform="rotate(-180 14 14)" />
@@ -52,10 +49,10 @@
             </svg>
             <span class="flex-1 ml-3 whitespace-nowrap">Microsoft</span>
           </a>
-          @endif
         </li>
       </ul>
     </div>
+  </div>  
 </body>
 
 </html>
