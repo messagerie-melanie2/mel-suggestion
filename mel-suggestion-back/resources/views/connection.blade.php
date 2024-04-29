@@ -25,7 +25,7 @@
       <h5 class="mb-3 text-base font-semibold text-gray-900 lg:text-xl text-center">
         Se connecter à Suggestion
       </h5>
-      <p class="text-sm font-normal text-gray-500 ">Choisissez un moyen pour vous connecter au module de suggestions </p>
+      <p class="text-sm font-normal text-gray-500 ">Choisissez un moyen pour vous connecter au module de suggestions : </p>
       <ul class="my-4 space-y-3">
         <li>
           <a href="{{url('connexion', ['connector' => 'google'])}}" class="flex items-center p-3 text-base font-bold text-gray-900 bg-gray-50 rounded-lg hover:bg-gray-100 group hover:shadow">
@@ -36,7 +36,7 @@
               <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z" />
             </svg>
             <span class="flex-1 ml-3 whitespace-nowrap">avec Google</span>
-            <span class="inline-flex items-center justify-center px-2 py-0.5 ml-3 text-xs font-medium text-gray-500 bg-gray-200 rounded ">Populaire</span>
+            <!-- <span class="inline-flex items-center justify-center px-2 py-0.5 ml-3 text-xs font-medium text-gray-500 bg-gray-200 rounded ">Populaire</span> -->
           </a>
         </li>
         <li>
