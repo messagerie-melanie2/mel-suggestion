@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Jumbojett\OpenIDConnectClient;
+use App\Models\SvgListOperators;
 
 class LoginController extends Controller
 {
@@ -54,5 +55,11 @@ class LoginController extends Controller
     Session::put('no_auth', false);
 
     return Redirect::to(env('APPLICATION_URL'));
+  }
+
+  public function showOpenIdConnectOperators() 
+  { 
+    $operator = SvgListOperators::getAllOperators(); 
+     return view('list_operators', ['operator' => $operator]); 
   }
 }
