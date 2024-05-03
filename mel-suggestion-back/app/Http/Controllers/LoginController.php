@@ -58,8 +58,8 @@ class LoginController extends Controller
   }
 
   public function showOpenIdConnectOperators() 
-  { 
-    $operator = SvgListOperators::getAllOperators(); 
-     return view('list_operators', ['operator' => $operator]); 
-  }
+    { 
+        $operators = explode(',', env('LIST_OPERATORS_OPENIDCONNECT'));
+        return view('list_operators', ['operators' => $operators]); 
+    }
 }

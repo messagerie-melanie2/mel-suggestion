@@ -1,15 +1,12 @@
 <!DOCTYPE html> 
 <html lang="en"> 
- 
- 
 <head> 
     <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <script src="https://cdn.tailwindcss.com"></script> 
     <title>Liste des opérateurs disponibles</title> 
 </head> 
-
- <body> 
+<body> 
     <div class="flex items-center justify-center w-full py-3 bg-white border-b border-gray-200"> 
         <a href="#" onclick="history.back()" class="relative flex items-center pl-5 font-medium text-gray-700 group lg:w-auto lg:items-center lg:justify-center"> 
             <span class="w-4 h-4 overflow-hidden transform translate-x-0 group-hover:-translate-x-0.5 absolute left-0 group-hover:w-4 ease-out duration-150 transition"> 
@@ -26,7 +23,10 @@
             <p class="text-sm font-normal text-gray-500 ">Choisissez l'un des opérateurs ci-dessous pour vous connecter au module de suggestions : </p> 
             <ul class="my-4 space-y-3"> 
             {{-- Boucler sur tous les opérateurs disponibles --}} 
-                @foreach(\App\Models\SvgListOperators::getAllOperators() as $operator) 
+                @php
+                    $operators = explode(',', env('LIST_OPERATORS_OPENIDCONNECT'));
+                @endphp
+                @foreach($operators as $operator) 
                 <li> 
                     <a href="{{ url('connexion', ['connector' => $operator]) }}" class="flex items-center p-3 text-base font-bold text-gray-900 bg-gray-50 rounded-lg hover:bg-gray-100 group hover:shadow"> 
                         {!! \App\Models\SvgListOperators::getSVGForOperator($operator) !!} 
@@ -38,5 +38,6 @@
         </div> 
     </div> 
 </body> 
-
 </html>
+
+

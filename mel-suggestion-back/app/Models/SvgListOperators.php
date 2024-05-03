@@ -40,15 +40,10 @@ class SvgListOperators
                     </svg>"; 
  
 
-        // Ajoutez ici d'autres opérateurs OpenID Connect au besoin. 
+        // Ajoutez ici a la suite le code SVG d'autres opérateurs OpenID Connect au besoin. 
 
         default: 
             return ""; 
     } 
-  } 
- 
-  // Fonction pour récupérer tous les opérateurs disponibles 
-  public static function getAllOperators() { 
-    return ['google', 'microsoft', 'linkedIn', 'apple', 'facebook']; // Penser à ajouter à cette liste les nouveaux opérateurs ajoutés précédemment. 
-  } 
+  }  
 }
