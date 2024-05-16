@@ -28,7 +28,7 @@
             une suggestion</button>
         </div>
         <div v-show="create">
-          <CreateSuggestion :titleprops=search />
+          <CreateSuggestion :titleprops="search" />
         </div>
       </div>
     </div>
@@ -38,7 +38,56 @@
 <script>
 import Suggestion from "./Suggestion";
 import CreateSuggestion from "./CreateSuggestion";
+import unaccent from "unaccent";
 import { mapGetters } from "vuex";
+import dictionary from "@/dictionary"; // Importer le dictionnaire
+
+function normalizeString(str) {
+  return unaccent(str.toLowerCase()).replace(/s\b|x\b/g, '');
+}
+
+function levenshteinDistance(a, b) {
+  const matrix = Array.from({ length: b.length + 1 }, () => []);
+
+  for (let i = 0; i <= b.length; i++) {
+    matrix[i][0] = i;
+  }
+  for (let j = 0; j <= a.length; j++) {
+    matrix[0][j] = j;
+  }
+
+  for (let i = 1; i <= b.length; i++) {
+    for (let j = 1; j <= a.length; j++) {
+      const cost = b.charAt(i - 1) === a.charAt(j - 1) ? 0 : 1;
+      matrix[i][j] = Math.min(
+        matrix[i - 1][j] + 1,
+        matrix[i][j - 1] + 1,
+        matrix[i - 1][j - 1] + cost
+      );
+    }
+  }
+
+  return matrix[b.length][a.length];
+}
+
+function splitWords(input) {
+  let result = '';
+  let temp = '';
+
+  for (let i = 0; i < input.length; i++) {
+    temp += input[i];
+    if (dictionary.includes(temp.toLowerCase())) {
+      result += temp + ' ';
+      temp = '';
+    }
+  }
+
+  if (temp) {
+    result += temp;  // Ajouter le reste de la chaîne qui n'a pas été matché
+  }
+
+  return result.trim();
+}
 
 export default {
   name: "Suggestions",
@@ -55,19 +104,19 @@ export default {
       localSuggestions: this.suggestions,
       validateOnly: false,
       refusedSuggestion: false,
-    }
+    };
   },
   mounted() {
     this.$root.$on('sort-suggestion', (sortBy, validateOnly, refusedSuggestion) => {
-      this.sort(sortBy, validateOnly, refusedSuggestion)
+      this.sort(sortBy, validateOnly, refusedSuggestion);
       this.resetSearch();
-    }),
-      this.$root.$on('search', (e) => {
-        this.searchValue(e)
-      }),
-      this.$root.$on('reset-search', () => {
-        this.resetSearch()
-      })
+    });
+    this.$root.$on('search', (e) => {
+      this.searchValue(e);
+    });
+    this.$root.$on('reset-search', () => {
+      this.resetSearch();
+    });
   },
   watch: {
     suggestions: {
@@ -87,113 +136,104 @@ export default {
       this.search = s;
     },
     showCreateSuggestion() {
-      this.create = !this.create
+      this.create = !this.create;
     },
     resetSearch() {
       this.search = "";
       this.$root.$emit('reset-search-text');
-    }
+    },
+    calculateDistance(text, searchWords) {
+      const suggestionText = normalizeString(text);
+      return searchWords.reduce((totalDistance, searchWord) => {
+        return totalDistance + levenshteinDistance(searchWord, suggestionText);
+      }, 0);
+    },
   },
   computed: {
     ...mapGetters(['allIndexes']),
     sortedSuggestions() {
       const acceptedState = ['vote', 'moderate'];
-
-      let filteredlocalSuggestions = this.localSuggestions.slice(0).filter(suggestion => {
-        if (suggestion.id == this.$searchId && suggestion.state == 'validate' && !this.$hasScrolled) {
-           setTimeout(() => {
-            this.$root.$emit('sort-suggestion-validate');
-           }, 50);
-        }
+      let filteredlocalSuggestions = this.localSuggestions.filter(suggestion => {
         if (this.refusedSuggestion) {
           return suggestion.state.toLowerCase().includes("refused");
         }
         if (this.validateOnly) {
           return suggestion.state.toLowerCase().includes("validate");
         }
-        else {
-          return acceptedState.includes(suggestion.state.toLowerCase())
-        }
+        return acceptedState.includes(suggestion.state.toLowerCase());
       });
 
       if (!this.refusedSuggestion && !this.refusedSuggestion) {
-        //On tri d'abord les moderates et ensuites les autres
-        let moderateSuggestions = filteredlocalSuggestions.slice(0).filter(suggestion => {
+        let moderateSuggestions = filteredlocalSuggestions.filter(suggestion => {
           return suggestion.state.toLowerCase().includes("moderate");
         });
 
-        let sortedModerate = moderateSuggestions.slice(0).sort((p1, p2) => {
-          let modifier = 1;
-          if (this.sortDirection === 'desc') modifier = -1;
-          if (p1[this.sortBy] < p2[this.sortBy]) return -1 * modifier; if (p1[this.sortBy] > p2[this.sortBy]) return 1 * modifier;
+        let sortedModerate = moderateSuggestions.sort((p1, p2) => {
+          let modifier = this.sortDirection === 'desc' ? -1 : 1;
+          if (p1[this.sortBy] < p2[this.sortBy]) return -1 * modifier;
+          if (p1[this.sortBy] > p2[this.sortBy]) return 1 * modifier;
           return 0;
         });
 
-        let otherSuggestions = filteredlocalSuggestions.slice(0).filter(suggestion => {
+        let otherSuggestions = filteredlocalSuggestions.filter(suggestion => {
           return !suggestion.state.toLowerCase().includes("moderate");
         });
 
-        let sortedOther = otherSuggestions.slice(0).sort((p1, p2) => {
-          let modifier = 1;
-          if (this.sortDirection === 'desc') modifier = -1;
-          if (p1[this.sortBy] < p2[this.sortBy]) return -1 * modifier; if (p1[this.sortBy] > p2[this.sortBy]) return 1 * modifier;
+        let sortedOther = otherSuggestions.sort((p1, p2) => {
+          let modifier = this.sortDirection === 'desc' ? -1 : 1;
+          if (p1[this.sortBy] < p2[this.sortBy]) return -1 * modifier;
+          if (p1[this.sortBy] > p2[this.sortBy]) return 1 * modifier;
           return 0;
         });
 
         return sortedModerate.concat(sortedOther);
-      }
-      else {
-        return filteredlocalSuggestions.slice(0).sort((p1, p2) => {
-          let modifier = 1;
-          if (this.sortDirection === 'desc') modifier = -1;
-          if (p1[this.sortBy] < p2[this.sortBy]) return -1 * modifier; if (p1[this.sortBy] > p2[this.sortBy]) return 1 * modifier;
+      } else {
+        return filteredlocalSuggestions.sort((p1, p2) => {
+          let modifier = this.sortDirection === 'desc' ? -1 : 1;
+          if (p1[this.sortBy] < p2[this.sortBy]) return -1 * modifier;
+          if (p1[this.sortBy] > p2[this.sortBy]) return 1 * modifier;
           return 0;
         });
       }
-
     },
     filteredSuggestions() {
-      let results = {};
-      let searchResults = [];
+      if (this.search.length >= 3) {
+        // Utiliser une expression régulière pour diviser les mots tout en tenant compte des mots accolés sans espace
+        const searchWords = splitWords(this.search).split(' ').map(word => normalizeString(word));
 
-      if (this.search.length > 2) {
-        let values = this.search.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().split(' ');
-        for (const word in this.allIndexes) {
-          for (const value of values) {
-            if (value.length > 2) {
-              if (word.indexOf(value) !== -1) {
-                for (const key of this.allIndexes[word]) {
-                  if (results[key]) {
-                    results[key]++;
-                  } else {
-                    results[key] = 1;
-                  }
-                }
-              }
-            }
-          }
-        }
-        if (Object.keys(results).length) {
-          var _res = [];
-          for (const key in results) {
-            _res.push({ key: key, value: results[key] });
-          }
-          _res.sort((a, b) => (a.value < b.value) ? 1 : -1)
+        // Filtrer les suggestions contenant exactement les mots de recherche
+        const suggestionsContainingSearchWords = this.localSuggestions.filter(suggestion => {
+          let suggestionText = normalizeString(suggestion.title + " " + suggestion.description);
 
-          var i = 0;
+          return searchWords.every(word => suggestionText.includes(word));
+        });
 
-          for (const r of _res) {
-            if (i++ > 4) {
-              break;
-            }
-            searchResults.push(this.localSuggestions[r.key])
-          }
-        }
-      }
-      if (this.search.length <= 2 && searchResults.length == 0) {
+        // Filtrer les suggestions contenant au moins un des mots de recherche, mais pas tous
+        const suggestionsContainingSomeSearchWords = this.localSuggestions.filter(suggestion => {
+          let suggestionText = normalizeString(suggestion.title + " " + suggestion.description);
+
+          return searchWords.some(word => suggestionText.includes(word)) && !suggestionsContainingSearchWords.includes(suggestion);
+        });
+
+        // Trier les suggestions contenant exactement les mots de recherche en premier
+        suggestionsContainingSearchWords.sort((a, b) => {
+          const aDistance = this.calculateDistance(a.title + " " + a.description, searchWords);
+          const bDistance = this.calculateDistance(b.title + " " + b.description, searchWords);
+          return aDistance - bDistance;
+        });
+
+        // Trier les autres suggestions par distance de Levenshtein
+        const remainingSuggestions = suggestionsContainingSomeSearchWords.sort((a, b) => {
+          const aDistance = this.calculateDistance(a.title + " " + a.description, searchWords);
+          const bDistance = this.calculateDistance(b.title + " " + b.description, searchWords);
+          return aDistance - bDistance;
+        });
+
+        // Concaténer les deux ensembles triés
+        return [...suggestionsContainingSearchWords, ...remainingSuggestions];
+      } else {
         return this.localSuggestions;
       }
-      return searchResults;
     }
   },
   components: {
