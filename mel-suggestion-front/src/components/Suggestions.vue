@@ -133,7 +133,14 @@ export default {
       this.refusedSuggestion = r;
     },
     searchValue(s) {
-      this.search = s;
+      // Supprimer les accents de la chaîne de recherche
+      const searchNormalized = normalizeString(s);
+
+      // Supprimer les espaces de la chaîne de recherche normalisée
+      const searchWithoutSpaces = searchNormalized.replace(/\s+/g, '');
+
+      // Mettre à jour la valeur de recherche sans espaces et sans accents
+      this.search = searchWithoutSpaces;
     },
     showCreateSuggestion() {
       this.create = !this.create;
