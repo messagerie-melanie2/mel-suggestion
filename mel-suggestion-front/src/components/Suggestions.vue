@@ -40,7 +40,7 @@ import Suggestion from "./Suggestion";
 import CreateSuggestion from "./CreateSuggestion";
 import unaccent from "unaccent";
 import { mapGetters } from "vuex";
-import dictionary from "@/dictionary"; // Importer le dictionnaire
+import { dictionary, synonyms } from "@/dictionary"; // Importer le dictionnaire
 
 function normalizeString(str) {
   return unaccent(str.toLowerCase()).replace(/s\b|x\b/g, '');
@@ -76,9 +76,23 @@ function splitWords(input) {
 
   for (let i = 0; i < input.length; i++) {
     temp += input[i];
+    let found = false;
+    // Vérifiez si le mot actuel est dans le dictionnaire ou s'il a des synonymes dans le dictionnaire
     if (dictionary.includes(temp.toLowerCase())) {
+      found = true;
+    } else {
+      // Vérifiez si le mot a des synonymes dans le dictionnaire
+      for (const word in synonyms) {
+        if (synonyms[word].includes(temp.toLowerCase())) {
+          found = true;
+          break;
+        }
+      }
+    }
+    // Si le mot est dans le dictionnaire ou a des synonymes, ajoutez-le à la chaîne de résultat
+    if (found) {
       result += temp + ' ';
-      temp = '';
+      temp = ''; // Réinitialiser temp pour le prochain mot
     }
   }
 
@@ -221,6 +235,7 @@ export default {
 
           return searchWords.some(word => suggestionText.includes(word)) && !suggestionsContainingSearchWords.includes(suggestion);
         });
+        
 
         // Trier les suggestions contenant exactement les mots de recherche en premier
         suggestionsContainingSearchWords.sort((a, b) => {
