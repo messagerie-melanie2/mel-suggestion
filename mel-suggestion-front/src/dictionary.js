@@ -174,9 +174,9 @@ const dictionary = [
 ];
 
 // Dictionnaire des synonymes
-const synonyms = {
-  'agriculture': ['élevage', 'culture'],
+const synonyms = new Map([
+  ["agriculture", ["élevage", "culture"]],
   // Ajoutez d'autres mots et leurs synonymes au besoin
-};
+]);
 
 export { dictionary, synonyms };

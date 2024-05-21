@@ -40,7 +40,7 @@ import Suggestion from "./Suggestion";
 import CreateSuggestion from "./CreateSuggestion";
 import unaccent from "unaccent";
 import { mapGetters } from "vuex";
-import { dictionary, synonyms } from "@/dictionary"; // Importer le dictionnaire
+import { synonyms } from "@/dictionary"; // Importer le dictionnaire et les synonymes
 
 function normalizeString(str) {
   return unaccent(str.toLowerCase()).replace(/s\b|x\b/g, '');
@@ -71,36 +71,7 @@ function levenshteinDistance(a, b) {
 }
 
 function splitWords(input) {
-  let result = '';
-  let temp = '';
-
-  for (let i = 0; i < input.length; i++) {
-    temp += input[i];
-    let found = false;
-    // Vérifiez si le mot actuel est dans le dictionnaire ou s'il a des synonymes dans le dictionnaire
-    if (dictionary.includes(temp.toLowerCase())) {
-      found = true;
-    } else {
-      // Vérifiez si le mot a des synonymes dans le dictionnaire
-      for (const word in synonyms) {
-        if (synonyms[word].includes(temp.toLowerCase())) {
-          found = true;
-          break;
-        }
-      }
-    }
-    // Si le mot est dans le dictionnaire ou a des synonymes, ajoutez-le à la chaîne de résultat
-    if (found) {
-      result += temp + ' ';
-      temp = ''; // Réinitialiser temp pour le prochain mot
-    }
-  }
-
-  if (temp) {
-    result += temp;  // Ajouter le reste de la chaîne qui n'a pas été matché
-  }
-
-  return result.trim();
+  return input.split(/\s+/).map(word => word.trim()).filter(word => word.length > 0);
 }
 
 export default {
@@ -149,12 +120,7 @@ export default {
     searchValue(s) {
       // Supprimer les accents de la chaîne de recherche
       const searchNormalized = normalizeString(s);
-
-      // Supprimer les espaces de la chaîne de recherche normalisée
-      const searchWithoutSpaces = searchNormalized.replace(/\s+/g, '');
-
-      // Mettre à jour la valeur de recherche sans espaces et sans accents
-      this.search = searchWithoutSpaces;
+      this.search = searchNormalized;
     },
     showCreateSuggestion() {
       this.create = !this.create;
@@ -169,7 +135,41 @@ export default {
         return totalDistance + levenshteinDistance(searchWord, suggestionText);
       }, 0);
     },
+
+    searchWithSynonyms(searchWord) {
+      const synonymsFound = [];
+      
+      for (const [word, synonymList] of synonyms) {
+        if (word === searchWord || synonymList.includes(searchWord)) {
+          synonymsFound.push(word, ...synonymList);
+        }
+      }
+      
+      return synonymsFound;
+    },
+    
+    getRelatedWords(searchWord) {
+      const synonymsFound = this.searchWithSynonyms(searchWord);
+      const relatedWords = new Set(synonymsFound);
+
+      // Ajouter le mot de recherche principal aux mots connexes
+      relatedWords.add(searchWord);
+
+      return Array.from(relatedWords);
+    },
+    searchSuggestions(searchInput) {
+      const relatedWords = this.getRelatedWords(searchInput);
+
+      // utilisation des mots connexes pour rechercher les suggestions
+      const suggestionsFound = this.localSuggestions.filter(suggestion => {
+        const suggestionText = normalizeString(suggestion.title + " " + suggestion.description);
+        return relatedWords.some(word => suggestionText.includes(word));
+      });
+
+      return suggestionsFound;
+    }
   },
+
   computed: {
     ...mapGetters(['allIndexes']),
     sortedSuggestions() {
@@ -220,34 +220,34 @@ export default {
     filteredSuggestions() {
       if (this.search.length >= 3) {
         // Utiliser une expression régulière pour diviser les mots tout en tenant compte des mots accolés sans espace
-        const searchWords = splitWords(this.search).split(' ').map(word => normalizeString(word));
+        const searchWords = splitWords(this.search).map(word => normalizeString(word));
 
-        // Filtrer les suggestions contenant exactement les mots de recherche
+        // Obtenir les mots connexes pour chaque mot de recherche, y compris les synonymes
+        const relatedWords = searchWords.flatMap(word => [...this.getRelatedWords(word), word]);
+
+        // Filtrer les suggestions contenant exactement les mots de recherche ou leurs synonymes
         const suggestionsContainingSearchWords = this.localSuggestions.filter(suggestion => {
           let suggestionText = normalizeString(suggestion.title + " " + suggestion.description);
-
-          return searchWords.every(word => suggestionText.includes(word));
+          return relatedWords.every(word => suggestionText.includes(word));
         });
 
         // Filtrer les suggestions contenant au moins un des mots de recherche, mais pas tous
         const suggestionsContainingSomeSearchWords = this.localSuggestions.filter(suggestion => {
           let suggestionText = normalizeString(suggestion.title + " " + suggestion.description);
-
-          return searchWords.some(word => suggestionText.includes(word)) && !suggestionsContainingSearchWords.includes(suggestion);
+          return relatedWords.some(word => suggestionText.includes(word)) && !suggestionsContainingSearchWords.includes(suggestion);
         });
-        
 
         // Trier les suggestions contenant exactement les mots de recherche en premier
         suggestionsContainingSearchWords.sort((a, b) => {
-          const aDistance = this.calculateDistance(a.title + " " + a.description, searchWords);
-          const bDistance = this.calculateDistance(b.title + " " + b.description, searchWords);
+          const aDistance = this.calculateDistance(a.title + " " + a.description, relatedWords);
+          const bDistance = this.calculateDistance(b.title + " " + b.description, relatedWords);
           return aDistance - bDistance;
         });
 
         // Trier les autres suggestions par distance de Levenshtein
         const remainingSuggestions = suggestionsContainingSomeSearchWords.sort((a, b) => {
-          const aDistance = this.calculateDistance(a.title + " " + a.description, searchWords);
-          const bDistance = this.calculateDistance(b.title + " " + b.description, searchWords);
+          const aDistance = this.calculateDistance(a.title + " " + a.description, relatedWords);
+          const bDistance = this.calculateDistance(b.title + " " + b.description, relatedWords);
           return aDistance - bDistance;
         });
 
