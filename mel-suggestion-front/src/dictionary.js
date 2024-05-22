@@ -174,9 +174,11 @@ const dictionary = [
 ];
 
 // Dictionnaire des synonymes
-const synonyms = new Map([
-  ["agriculture", ["élevage", "culture"]],
+const synonymsArray = [
+  {"elevage": ["agriculture", "culture"]},
+  {"5": ["cinq"]},
+  {"soleil": ["solaire", "rayon", "energie"]},
   // Ajoutez d'autres mots et leurs synonymes au besoin
-]);
+];
 
-export { dictionary, synonyms };
+export { dictionary, synonymsArray };

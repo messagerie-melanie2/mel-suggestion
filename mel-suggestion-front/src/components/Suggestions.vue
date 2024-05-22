@@ -40,7 +40,7 @@ import Suggestion from "./Suggestion";
 import CreateSuggestion from "./CreateSuggestion";
 import unaccent from "unaccent";
 import { mapGetters } from "vuex";
-import { synonyms } from "@/dictionary"; // Importer le dictionnaire et les synonymes
+import { synonymsArray } from "@/dictionary"; // Importer le dictionnaire et les synonymes
 
 function normalizeString(str) {
   return unaccent(str.toLowerCase()).replace(/s\b|x\b/g, '');
@@ -137,26 +137,20 @@ export default {
     },
 
     searchWithSynonyms(searchWord) {
-      const synonymsFound = [];
-      
-      for (const [word, synonymList] of synonyms) {
-        if (word === searchWord || synonymList.includes(searchWord)) {
-          synonymsFound.push(word, ...synonymList);
+      for (const synonymEntry of synonymsArray) {
+        const word = Object.keys(synonymEntry)[0]; // Récupère la clé (le mot)
+        const synonymList = synonymEntry[word]; // Récupère la liste de synonymes
+        if (word === searchWord || (Array.isArray(synonymList) && synonymList.includes(searchWord))) {
+          return [word, ...(Array.isArray(synonymList) ? synonymList : [])];
         }
       }
-      
-      return synonymsFound;
+      return [];
     },
-    
+        
     getRelatedWords(searchWord) {
-      const synonymsFound = this.searchWithSynonyms(searchWord);
-      const relatedWords = new Set(synonymsFound);
-
-      // Ajouter le mot de recherche principal aux mots connexes
-      relatedWords.add(searchWord);
-
-      return Array.from(relatedWords);
+      return new Set(this.searchWithSynonyms(searchWord).concat(searchWord));
     },
+
     searchSuggestions(searchInput) {
       const relatedWords = this.getRelatedWords(searchInput);
 
@@ -172,51 +166,6 @@ export default {
 
   computed: {
     ...mapGetters(['allIndexes']),
-    sortedSuggestions() {
-      const acceptedState = ['vote', 'moderate'];
-      let filteredlocalSuggestions = this.localSuggestions.filter(suggestion => {
-        if (this.refusedSuggestion) {
-          return suggestion.state.toLowerCase().includes("refused");
-        }
-        if (this.validateOnly) {
-          return suggestion.state.toLowerCase().includes("validate");
-        }
-        return acceptedState.includes(suggestion.state.toLowerCase());
-      });
-
-      if (!this.refusedSuggestion && !this.refusedSuggestion) {
-        let moderateSuggestions = filteredlocalSuggestions.filter(suggestion => {
-          return suggestion.state.toLowerCase().includes("moderate");
-        });
-
-        let sortedModerate = moderateSuggestions.sort((p1, p2) => {
-          let modifier = this.sortDirection === 'desc' ? -1 : 1;
-          if (p1[this.sortBy] < p2[this.sortBy]) return -1 * modifier;
-          if (p1[this.sortBy] > p2[this.sortBy]) return 1 * modifier;
-          return 0;
-        });
-
-        let otherSuggestions = filteredlocalSuggestions.filter(suggestion => {
-          return !suggestion.state.toLowerCase().includes("moderate");
-        });
-
-        let sortedOther = otherSuggestions.sort((p1, p2) => {
-          let modifier = this.sortDirection === 'desc' ? -1 : 1;
-          if (p1[this.sortBy] < p2[this.sortBy]) return -1 * modifier;
-          if (p1[this.sortBy] > p2[this.sortBy]) return 1 * modifier;
-          return 0;
-        });
-
-        return sortedModerate.concat(sortedOther);
-      } else {
-        return filteredlocalSuggestions.sort((p1, p2) => {
-          let modifier = this.sortDirection === 'desc' ? -1 : 1;
-          if (p1[this.sortBy] < p2[this.sortBy]) return -1 * modifier;
-          if (p1[this.sortBy] > p2[this.sortBy]) return 1 * modifier;
-          return 0;
-        });
-      }
-    },
     filteredSuggestions() {
       if (this.search.length >= 3) {
         // Utiliser une expression régulière pour diviser les mots tout en tenant compte des mots accolés sans espace
