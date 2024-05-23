@@ -128,10 +128,12 @@ export default {
       this.search = "";
       this.$root.$emit('reset-search-text');
     },
-    calculateDistance(text, searchWords) {
+    calculateDistance(text, searchWords, originalSearchWords) {
       const suggestionText = normalizeString(text);
       return searchWords.reduce((totalDistance, searchWord) => {
-        return totalDistance + levenshteinDistance(searchWord, suggestionText);
+        // Pondération des mots recherchés
+        const weight = originalSearchWords.includes(searchWord) ? 2 : 1; // Score plus élevé pour les mots recherchés
+        return totalDistance + weight * levenshteinDistance(searchWord, suggestionText);
       }, 0);
     },
 
@@ -160,6 +162,7 @@ export default {
 
       return suggestionsFound;
     }
+    
   },
 
   computed: {
@@ -169,29 +172,33 @@ export default {
         const searchWords = splitWords(this.search).map(word => normalizeString(word));
         const relatedWords = searchWords.flatMap(word => [...this.getRelatedWords(word), word]);
 
+        // Suggestions contenant tous les mots recherchés
         const suggestionsContainingSearchWords = this.localSuggestions.filter(suggestion => {
-          let suggestionText = normalizeString(suggestion.title + " " + suggestion.description);
-          return relatedWords.every(word => suggestionText.includes(word));
+          const suggestionText = normalizeString(suggestion.title + " " + suggestion.description);
+          return searchWords.every(word => suggestionText.includes(word));
         });
 
+        // Suggestions contenant au moins un des mots recherchés ou leurs synonymes
         const suggestionsContainingSomeSearchWords = this.localSuggestions.filter(suggestion => {
-          let suggestionText = normalizeString(suggestion.title + " " + suggestion.description);
+          const suggestionText = normalizeString(suggestion.title + " " + suggestion.description);
           return relatedWords.some(word => suggestionText.includes(word)) && !suggestionsContainingSearchWords.includes(suggestion);
         });
 
+        // Trier les suggestions contenant tous les mots recherchés
         suggestionsContainingSearchWords.sort((a, b) => {
-          const aDistance = this.calculateDistance(a.title + " " + a.description, relatedWords);
-          const bDistance = this.calculateDistance(b.title + " " + b.description, relatedWords);
+          const aDistance = this.calculateDistance(a.title + " " + a.description, relatedWords, searchWords);
+          const bDistance = this.calculateDistance(b.title + " " + b.description, relatedWords, searchWords);
           return aDistance - bDistance;
         });
 
-        const remainingSuggestions = suggestionsContainingSomeSearchWords.sort((a, b) => {
-          const aDistance = this.calculateDistance(a.title + " " + a.description, relatedWords);
-          const bDistance = this.calculateDistance(b.title + " " + b.description, relatedWords);
+        // Trier les suggestions contenant certains mots recherchés ou leurs synonymes
+        suggestionsContainingSomeSearchWords.sort((a, b) => {
+          const aDistance = this.calculateDistance(a.title + " " + a.description, relatedWords, searchWords);
+          const bDistance = this.calculateDistance(b.title + " " + b.description, relatedWords, searchWords);
           return aDistance - bDistance;
         });
 
-        return [...suggestionsContainingSearchWords, ...remainingSuggestions];
+        return [...suggestionsContainingSearchWords, ...suggestionsContainingSomeSearchWords];
       } else {
         return this.localSuggestions;
       }
