@@ -8,7 +8,7 @@
           </div>
         </div>
         <div v-else>
-          <div v-for="suggestion in sortedSuggestions" :key="suggestion.id">
+          <div v-for="suggestion in localSuggestions" :key="suggestion.id">
             <Suggestion :suggestion="suggestion" />
           </div>
         </div>
@@ -88,7 +88,7 @@ export default {
       sortDirection: 'desc',
       localSuggestions: this.suggestions,
       validateOnly: false,
-      refusedSuggestion: false,
+      refusedSuggestion: false
     };
   },
   mounted() {
@@ -118,7 +118,6 @@ export default {
       this.refusedSuggestion = r;
     },
     searchValue(s) {
-      // Supprimer les accents de la chaîne de recherche
       const searchNormalized = normalizeString(s);
       this.search = searchNormalized;
     },
@@ -138,8 +137,8 @@ export default {
 
     searchWithSynonyms(searchWord) {
       for (const synonymEntry of synonymsArray) {
-        const word = Object.keys(synonymEntry)[0]; // Récupère la clé (le mot)
-        const synonymList = synonymEntry[word]; // Récupère la liste de synonymes
+        const word = Object.keys(synonymEntry)[0];
+        const synonymList = synonymEntry[word];
         if (word === searchWord || (Array.isArray(synonymList) && synonymList.includes(searchWord))) {
           return [word, ...(Array.isArray(synonymList) ? synonymList : [])];
         }
@@ -154,7 +153,6 @@ export default {
     searchSuggestions(searchInput) {
       const relatedWords = this.getRelatedWords(searchInput);
 
-      // utilisation des mots connexes pour rechercher les suggestions
       const suggestionsFound = this.localSuggestions.filter(suggestion => {
         const suggestionText = normalizeString(suggestion.title + " " + suggestion.description);
         return relatedWords.some(word => suggestionText.includes(word));
@@ -168,39 +166,31 @@ export default {
     ...mapGetters(['allIndexes']),
     filteredSuggestions() {
       if (this.search.length >= 3) {
-        // Utiliser une expression régulière pour diviser les mots tout en tenant compte des mots accolés sans espace
         const searchWords = splitWords(this.search).map(word => normalizeString(word));
-
-        // Obtenir les mots connexes pour chaque mot de recherche, y compris les synonymes
         const relatedWords = searchWords.flatMap(word => [...this.getRelatedWords(word), word]);
 
-        // Filtrer les suggestions contenant exactement les mots de recherche ou leurs synonymes
         const suggestionsContainingSearchWords = this.localSuggestions.filter(suggestion => {
           let suggestionText = normalizeString(suggestion.title + " " + suggestion.description);
           return relatedWords.every(word => suggestionText.includes(word));
         });
 
-        // Filtrer les suggestions contenant au moins un des mots de recherche, mais pas tous
         const suggestionsContainingSomeSearchWords = this.localSuggestions.filter(suggestion => {
           let suggestionText = normalizeString(suggestion.title + " " + suggestion.description);
           return relatedWords.some(word => suggestionText.includes(word)) && !suggestionsContainingSearchWords.includes(suggestion);
         });
 
-        // Trier les suggestions contenant exactement les mots de recherche en premier
         suggestionsContainingSearchWords.sort((a, b) => {
           const aDistance = this.calculateDistance(a.title + " " + a.description, relatedWords);
           const bDistance = this.calculateDistance(b.title + " " + b.description, relatedWords);
           return aDistance - bDistance;
         });
 
-        // Trier les autres suggestions par distance de Levenshtein
         const remainingSuggestions = suggestionsContainingSomeSearchWords.sort((a, b) => {
           const aDistance = this.calculateDistance(a.title + " " + a.description, relatedWords);
           const bDistance = this.calculateDistance(b.title + " " + b.description, relatedWords);
           return aDistance - bDistance;
         });
 
-        // Concaténer les deux ensembles triés
         return [...suggestionsContainingSearchWords, ...remainingSuggestions];
       } else {
         return this.localSuggestions;
