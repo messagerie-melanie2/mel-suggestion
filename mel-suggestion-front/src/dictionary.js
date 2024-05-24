@@ -177,6 +177,8 @@ const dictionary = [
 const synonymsArray = [
   {"elevage": ["agriculture", "culture"]},
   {"5": ["cinq"]},
+  {"cinq": ["5"]},
+  {"7": ["sept"]},
   {"soleil": ["solaire", "rayon", "energie"]},
   // Ajoutez d'autres mots et leurs synonymes au besoin
 ];
