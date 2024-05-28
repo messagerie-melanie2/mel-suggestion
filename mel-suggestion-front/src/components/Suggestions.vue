@@ -40,7 +40,7 @@ import Suggestion from "./Suggestion";
 import CreateSuggestion from "./CreateSuggestion";
 import unaccent from "unaccent";
 import { mapGetters } from "vuex";
-import { synonymsArray } from "@/dictionary"; // Importer le dictionnaire et les synonymes
+// import { synonymsArray } from "@/dictionary"; // Importer le dictionnaire et les synonymes
 
 /**
  * Normalise une chaîne de caractères en la convertissant en minuscules,
@@ -128,10 +128,12 @@ export default {
       sortDirection: 'desc',
       localSuggestions: this.suggestions,
       validateOnly: false,
-      refusedSuggestion: false
+      refusedSuggestion: false,
+      synonymsArray: []
     };
   },
   mounted() {
+    this.loadSynonyms();
     this.$root.$on('sort-suggestion', (sortBy, validateOnly, refusedSuggestion) => {
       this.sort(sortBy, validateOnly, refusedSuggestion);
       this.resetSearch();
@@ -152,6 +154,15 @@ export default {
     }
   },
   methods: {
+    async loadSynonyms() {
+      try {
+        const response = await fetch('api-endpoint');
+        const data = await response.json();
+        this.synonymsArray = data;
+      } catch (error) {
+        console.error('Failed to load synonyms:', error);
+      }
+    },
     sort(s, v, r) {
       this.sortBy = s;
       this.validateOnly = v;
@@ -269,7 +280,7 @@ export default {
      * searchWithSynonyms(searchWord);
      */
     searchWithSynonyms(searchWord) {
-      for (const synonymEntry of synonymsArray) {
+      for (const synonymEntry of this.synonymsArray) {
         const word = Object.keys(synonymEntry)[0];
         const synonymList = synonymEntry[word];
         if (word === searchWord || (Array.isArray(synonymList) && synonymList.includes(searchWord))) {

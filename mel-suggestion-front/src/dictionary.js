@@ -180,6 +180,13 @@ const synonymsArray = [
   {"cinq": ["5"]},
   {"7": ["sept"]},
   {"soleil": ["solaire", "rayon", "energie"]},
+  {"19": ["dix neuf"]},
+  {"31": ["trente et un"]},
+  {"18": ["dix-huit"]},
+  {"42": ["quarante deux"]},
+  {"99": ["quatre vingt dix neuf"]},
+  {"98": ["quatre vingt dix huit"]},
+  {"quatre vingt dix huit": ["98"]},
   // Ajoutez d'autres mots et leurs synonymes au besoin
 ];
 
