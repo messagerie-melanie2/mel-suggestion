@@ -232,4 +232,6 @@ return [
 
     ],
 
+    'suggestion_anonymize' => env('SUGGESTION_ANONYMIZE', false),
+
 ];
