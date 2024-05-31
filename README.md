@@ -35,7 +35,7 @@ Pour exécuter l'application en local, suivez ces étapes :
 
 1. Accéder à la rubrique "Aide", puis cliquer sur "Proposer une amélioration".
 <p align="center">
-  <img src="https://github.com/messagerie-melanie2/mel-suggestion/assets/144009217/9acd9483-6379-48c9-8d5b-e74332f4b29d" alt="Proposer une amélioration">
+  <kbd><img src="https://github.com/messagerie-melanie2/mel-suggestion/assets/144009217/9acd9483-6379-48c9-8d5b-e74332f4b29d" alt="Proposer une amélioration"></kbd>
 </p>
 
 2. Parcourez les suggestions existantes sur la page d'accueil.
@@ -43,12 +43,12 @@ Pour exécuter l'application en local, suivez ces étapes :
   
 3. Avant de soumettre votre suggestion, veuillez vérifier préalablement si une proposition similaire n'existe pas déjà en utilisant le champ 'Rechercher ou créer une suggestion'. Pour cela entrer le mot-clé de votre suggestion pour procéder à cette vérification.
 <p align="center">
-  <img src="https://github.com/messagerie-melanie2/mel-suggestion/assets/144009217/c3b7967f-195d-43eb-a615-9c998c9d4b87" alt="Recherche de suggestion">
+  <kbd><img src="https://github.com/messagerie-melanie2/mel-suggestion/assets/144009217/c3b7967f-195d-43eb-a615-9c998c9d4b87" alt="Recherche de suggestion"></kbd>
 </p>
 
 4. Soumettez votre propre suggestion.
 <p align="center">
-  <img src="https://github.com/messagerie-melanie2/mel-suggestion/assets/144009217/259384e9-feb5-4571-8625-4d13e0d9f3f4" alt="Formulaire de suggestion">
+  <kbd><img src="https://github.com/messagerie-melanie2/mel-suggestion/assets/144009217/259384e9-feb5-4571-8625-4d13e0d9f3f4" alt="Formulaire de suggestion"></kbd>
 </p>
 
 
