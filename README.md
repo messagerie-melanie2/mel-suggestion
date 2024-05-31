@@ -13,12 +13,13 @@
 - **Consulter les Suggestions** : Tous les utilisateurs peuvent consulter la liste des suggestions ainsi que leur nombre de votes.
 - **Trier les Suggestions** : Les suggestions peuvent être triées selon divers critères comme les plus votées, les plus récentes, celles qui ont été retenues, ou celles qui ont été refusées.
 - **Rechercher des Suggestions** : Les utilisateurs peuvent rechercher si des suggestions similaires aux leurs, existent déjà, à l'aide de mots clés.
+
 ## Technologies Utilisées
 
 - **Frontend** : HTML, CSS, JavaScript (Vue.js)
 - **Backend** : PHP, Laravel
 - **Base de Données** : PostgreSQL
-- **Authentification** : ????
+- **Authentification** : Authentification en Session. En cas d'échec possibilité de se connecter via OpenID Connect (Google, Microsoft et Agent Connect)
 
 ## Pour Commencer
 
