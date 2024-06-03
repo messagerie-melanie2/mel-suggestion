@@ -57,7 +57,7 @@ class SuggestionController extends Controller
     // Si l'anonymisation est activée, ne pas inclure les informations personnelles de l'utilisateur
     $user_email = $anonymize ? 'Anonyme' : $session_user->email;
     $user_firstname = $anonymize ? 'Anonyme' : explode(' ', $session_user->name)[0];
-    $user_lastname = $anonymize ? 'anonyme@example.com' : explode(' ', $session_user->name)[1];
+    $user_lastname = $anonymize ? ' ' : explode(' ', $session_user->name)[1];
 
 
     $newSuggestion = new Suggestion([

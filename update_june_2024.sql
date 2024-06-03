@@ -1,0 +1,1 @@
+alter table "suggestions" alter column "user_email" drop not null;
