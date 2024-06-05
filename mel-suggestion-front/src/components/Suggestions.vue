@@ -50,6 +50,7 @@ import Suggestion from "./Suggestion";
 import CreateSuggestion from "./CreateSuggestion";
 import unaccent from "unaccent";
 import { mapGetters } from "vuex";
+import axiosClient from '../axios';
 
 /**
  * Normalise une chaîne de caractères en la convertissant en minuscules,
@@ -168,7 +169,9 @@ export default {
     async loadSynonyms() {
       this.isLoading = true;
       try {
-        const response = await fetch('https://rcube.preprod.m2.e2.rie.gouv.fr/bureau/Synonymes.json');
+        const getUrl = await axiosClient.get('/synonyms');
+        const url = getUrl.data.url;
+        const response = await fetch(url);
         this.synonymsArray = await response.json();
       } catch (error) {
         console.error('Erreur lors du chargement des synonymes:', error);
