@@ -347,61 +347,36 @@ export default {
     ...mapGetters(['allIndexes']),
 
     sortedSuggestions() {
-      const acceptedState = ['vote', 'moderate'];
+  const acceptedState = ['vote', 'moderate'];
 
-      let filteredlocalSuggestions = this.localSuggestions.slice(0).filter(suggestion => {
-        if (suggestion.id == this.$searchId && suggestion.state == 'validate' && !this.$hasScrolled) {
-           setTimeout(() => {
-            this.$root.$emit('sort-suggestion-validate');
-           }, 50);
-        }
-        if (this.refusedSuggestion) {
-          return suggestion.state.toLowerCase().includes("refused");
-        }
-        if (this.validateOnly) {
-          return suggestion.state.toLowerCase().includes("validate");
-        }
-        else {
-          return acceptedState.includes(suggestion.state.toLowerCase())
-        }
-      });
+  let filteredLocalSuggestions = this.localSuggestions.slice(0).filter(suggestion => {
+    if (suggestion.id == this.$searchId && suggestion.state == 'validate' && !this.$hasScrolled) {
+      setTimeout(() => {
+        this.$root.$emit('sort-suggestion-validate');
+      }, 50);
+    }
+    if (this.refusedSuggestion) {
+      return suggestion.state.toLowerCase().includes("refused");
+    }
+    if (this.validateOnly) {
+      return suggestion.state.toLowerCase().includes("validate");
+    } else {
+      return acceptedState.includes(suggestion.state.toLowerCase())
+    }
+  });
 
-      if (!this.refusedSuggestion && !this.refusedSuggestion) {
-        //On tri d'abord les moderates et ensuites les autres
-        let moderateSuggestions = filteredlocalSuggestions.slice(0).filter(suggestion => {
-          return suggestion.state.toLowerCase().includes("moderate");
-        });
+  // Trie en fonction du nombre de votes (vote-up)
+  let sortedSuggestions = filteredLocalSuggestions.slice(0).sort((suggestion1, suggestion2) => {
+    if (this.sortDirection === 'desc') {
+      return suggestion2.votes_up - suggestion1.votes_up;
+    } else {
+      return suggestion1.votes_up - suggestion2.votes_up;
+    }
+  });
 
-        let sortedModerate = moderateSuggestions.slice(0).sort((p1, p2) => {
-          let modifier = 1;
-          if (this.sortDirection === 'desc') modifier = -1;
-          if (p1[this.sortBy] < p2[this.sortBy]) return -1 * modifier; if (p1[this.sortBy] > p2[this.sortBy]) return 1 * modifier;
-          return 0;
-        });
+  return sortedSuggestions;
+},
 
-        let otherSuggestions = filteredlocalSuggestions.slice(0).filter(suggestion => {
-          return !suggestion.state.toLowerCase().includes("moderate");
-        });
-
-        let sortedOther = otherSuggestions.slice(0).sort((p1, p2) => {
-          let modifier = 1;
-          if (this.sortDirection === 'desc') modifier = -1;
-          if (p1[this.sortBy] < p2[this.sortBy]) return -1 * modifier; if (p1[this.sortBy] > p2[this.sortBy]) return 1 * modifier;
-          return 0;
-        });
-
-        return sortedModerate.concat(sortedOther);
-      }
-      else {
-        return filteredlocalSuggestions.slice(0).sort((p1, p2) => {
-          let modifier = 1;
-          if (this.sortDirection === 'desc') modifier = -1;
-          if (p1[this.sortBy] < p2[this.sortBy]) return -1 * modifier; if (p1[this.sortBy] > p2[this.sortBy]) return 1 * modifier;
-          return 0;
-        });
-      }
-
-    },
 
     /**
      * Filtre et trie les suggestions locales en fonction de l'entrée de recherche actuelle.
