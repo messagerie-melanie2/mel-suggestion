@@ -32,7 +32,7 @@ import { mapActions } from "vuex";
 export default {
   name: "CreateSuggestion",
   props: {
-    titleprops: String
+    titleprops: String,
   },
   data() {
     return {
