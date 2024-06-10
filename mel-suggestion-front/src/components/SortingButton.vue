@@ -61,14 +61,22 @@ export default {
       })
   },
   methods: {
-    sort(sorting, validateOnly, refusedSuggestion) {
-      this.sortBy = sorting;
-      this.validateOnly = validateOnly;
-      this.refusedSuggestion = refusedSuggestion;
-      this.$root.$emit('sort-suggestion', sorting, validateOnly, refusedSuggestion)
-      this.searching = false;
+  sort(sorting, validateOnly, refusedSuggestion) {
+    // Si le tri actuel est par votes_up, inversez la direction de tri
+    if (sorting === 'votes_up' && this.sortBy === 'votes_up') {
+      // Si la direction de tri est déjà 'asc', changez-la en 'desc', sinon changez-la en 'asc'
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      // Si ce n'est pas un tri par votes_up, réinitialisez la direction de tri à 'desc'
+      this.sortDirection = 'desc';
     }
+    this.sortBy = sorting;
+    this.validateOnly = validateOnly;
+    this.refusedSuggestion = refusedSuggestion;
+    this.$root.$emit('sort-suggestion', sorting, validateOnly, refusedSuggestion, this.sortDirection);
+    this.searching = false;
   }
+}
 };
 </script>
 
