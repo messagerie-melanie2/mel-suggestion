@@ -347,35 +347,50 @@ export default {
     ...mapGetters(['allIndexes']),
 
     sortedSuggestions() {
-  const acceptedState = ['vote', 'moderate'];
+    const acceptedState = ['vote', 'moderate'];
 
-  let filteredLocalSuggestions = this.localSuggestions.slice(0).filter(suggestion => {
-    if (suggestion.id == this.$searchId && suggestion.state == 'validate' && !this.$hasScrolled) {
-      setTimeout(() => {
-        this.$root.$emit('sort-suggestion-validate');
-      }, 50);
-    }
-    if (this.refusedSuggestion) {
-      return suggestion.state.toLowerCase().includes("refused");
-    }
-    if (this.validateOnly) {
-      return suggestion.state.toLowerCase().includes("validate");
-    } else {
-      return acceptedState.includes(suggestion.state.toLowerCase())
-    }
-  });
+    let filteredLocalSuggestions = this.localSuggestions.slice(0).filter(suggestion => {
+      if (suggestion.id == this.$searchId && suggestion.state == 'validate' && !this.$hasScrolled) {
+        setTimeout(() => {
+          this.$root.$emit('sort-suggestion-validate');
+        }, 50);
+      }
+      if (this.refusedSuggestion) {
+        return suggestion.state.toLowerCase().includes("refused");
+      }
+      if (this.validateOnly) {
+        return suggestion.state.toLowerCase().includes("validate");
+      } else {
+        return acceptedState.includes(suggestion.state.toLowerCase())
+      }
+    });
 
-  // Trie en fonction du nombre de votes (vote-up)
-  let sortedSuggestions = filteredLocalSuggestions.slice(0).sort((suggestion1, suggestion2) => {
-    if (this.sortDirection === 'desc') {
-      return suggestion2.votes_up - suggestion1.votes_up;
-    } else {
-      return suggestion1.votes_up - suggestion2.votes_up;
+    // Trie en fonction de la propriété votes_up
+    if (this.sortBy === 'votes_up') {
+      filteredLocalSuggestions.sort((suggestion1, suggestion2) => {
+        if (this.sortDirection === 'desc') {
+          return suggestion2.votes_up - suggestion1.votes_up;
+        } else {
+          return suggestion1.votes_up - suggestion2.votes_up;
+        }
+      });
     }
-  });
 
-  return sortedSuggestions;
-},
+    // Trie en fonction de la propriété updated_at
+    if (this.sortBy === 'updated_at') {
+      filteredLocalSuggestions.sort((suggestion1, suggestion2) => {
+        const date1 = new Date(suggestion1.updated_at);
+        const date2 = new Date(suggestion2.updated_at);
+        if (this.sortDirection === 'desc') {
+          return date2 - date1;
+        } else {
+          return date1 - date2;
+        }
+      });
+    }
+
+    return filteredLocalSuggestions;
+  },
 
 
     /**
