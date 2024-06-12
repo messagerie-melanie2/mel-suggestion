@@ -187,7 +187,8 @@ export default {
     searchValue(s) {
       this.isSearching = true; // Indique que l'utilisateur a commencé une recherche
       const searchNormalized = normalizeString(s);
-      this.search = searchNormalized;
+      this.search = s;
+      this.searchNormalized = searchNormalized;
     },
     showCreateSuggestion() {
       this.create = !this.create;
@@ -407,7 +408,7 @@ export default {
      */
     filteredSuggestions() {
     if (this.search.length >= 3) {
-      const searchWords = splitWords(this.search).map(word => normalizeString(word));
+      const searchWords = splitWords(this.searchNormalized).map(word => normalizeString(word));
       const relatedWords = searchWords.flatMap(word => [...this.getRelatedWords(word), word]);
 
       // Calculer TF-IDF pour chaque suggestion
