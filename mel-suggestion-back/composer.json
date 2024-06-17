@@ -4,6 +4,11 @@
     "description": "The Laravel Framework.",
     "keywords": ["framework", "laravel"],
     "license": "MIT",
+    "repositories" : [{
+			"type" : "vcs",
+			"url" : "https://github.com/messagerie-melanie2/ORM-M2.git"
+		}
+	],
     "require": {
         "php": "^7.3|^8.0",
         "fruitcake/laravel-cors": "^2.0",

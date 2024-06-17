@@ -18,5 +18,5 @@ Route::group(['middleware' => ['web']], function () {
   Route::get('/', [LoginController::class, 'index'])->name('connection');
   Route::get('/connexion/{connector}', [LoginController::class, 'externalConnection'])->name('connection.external');
 
-  Route::get('/liste_operateurs', [LoginController::class, 'showOpenIdConnectOperators'])->name('list.operators');
+  Route::get('/liste_operators', [LoginController::class, 'showOpenIdConnectOperators'])->name('list.operators');
 });
