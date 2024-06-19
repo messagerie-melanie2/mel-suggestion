@@ -36,9 +36,7 @@ class Suggestion extends Model
           continue;
         }
       }
-      if ($suggestion->state == 'moderate') {
-        $suggestion->updated_at = now();
-      }
+      
       if ($suggestion->user_email == $session_user->email) {
         $suggestion->my_suggestion = true;
       }
