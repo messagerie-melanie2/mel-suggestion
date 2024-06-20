@@ -9,17 +9,33 @@ use Illuminate\Support\Facades\Session;
 use Jumbojett\OpenIDConnectClient;
 use App\Models\SvgListOperators;
 
+/**
+ * Class LoginController
+ *
+ * @package App\Http\Controllers
+ */
 class LoginController extends Controller
 {
   public function __construct()
   {
   }
 
+  /**
+     * Display the login form.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
   public function index()
   {
     return view('connection');
   }
 
+  /**
+     * Disconnect the user and clear session data.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
   public function disconnect(Request $request)
   {
     $request->session()->flush();
@@ -27,6 +43,12 @@ class LoginController extends Controller
     return response()->json("Disconnected");
   }
 
+  /**
+     * Handle external authentication with OpenID Connect.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
   public function externalConnection(Request $request)
   {
     $connector = config('external_connector')[$request->connector];
