@@ -32,7 +32,28 @@ Pour exécuter l'application en local, suivez ces étapes :
 2. Naviguez jusqu'au répertoire du projet.
 3. Installez les dépendances en exécutant `npm install`.
 
-**A compléter avec les bonnes infos ...***
+## Cloner la release de l'outil de suggestion
+
+ 1. Télécharger la release :
+	 Sans proxy : `wget https://github.com/messagerie-melanie2/mel-suggestion/releases/download/1.56.0/suggestion.tar.gz`
+	 
+	Avec proxy : 		`	wget -e use_proxy=yes http_proxy=pfrie-std.proxy.e2.rie.gouv.fr:8080 -e https_proxy=pfrie-std.proxy.e2.rie.gouv.fr:8080 https://github.com/messagerie-melanie2/mel-suggestion/releases/download/1.56.0/suggestion.tar.gz `
+
+ 2. Extraire le dossier tar
+ `tar -xzvf suggestion.tar.gz`
+
+ 3. Passage des droits de user à apache (www-data) :
+    `sudo chown -R www-data:www-data (dossier)`
+
+ 4. Configurer Apache pour /public :
+```
+Alias "/suggestion" "[chemin]/mel-suggestion-back/public"
+<Directory "[chemin]/mel-suggestion-release/mel-suggestion-back/public">
+	Options Indexes FollowSymLinks MultiViews
+	AllowOverride All
+	Require all granted
+</Directory>
+```
 
 ## Utilisation
 
