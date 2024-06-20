@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 //Comment group for dev
-//Route::group(['middleware' => ['web']], function () {
+Route::group(['middleware' => ['web']], function () {
   Route::apiResource('suggestions', SuggestionController::class);
   Route::get('user', [UserController::class, 'index']);
   Route::put('suggestions/state/{id}', [SuggestionController::class, 'updateState']);
@@ -26,4 +26,4 @@ use Illuminate\Support\Facades\Route;
   Route::get('disconnect', [LoginController::class, 'disconnect']);
   Route::apiResource('votes', VoteController::class);
   Route::get('synonyms', [SuggestionController::class, 'getUrl']);
-//});
+});
