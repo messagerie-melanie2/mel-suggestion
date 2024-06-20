@@ -28,14 +28,14 @@ class Session extends Model
      */
   public static function sessionConnect()
   {    
-    $user = new User([
-      'origin' => 'mel',
-      'name' => "Damien Cotton",
-      'email' => "damien.cotton@i-carre.net",
-      'moderator' => true,
-    ]);
-    Log::debug('Utilisateur en session : ' . $user);
-    FacadesSession::put('utilisateur', $user);
+    // $user = new User([
+    //   'origin' => 'mel',
+    //   'name' => "Damien Cotton",
+    //   'email' => "damien.cotton@i-carre.net",
+    //   'moderator' => true,
+    // ]);
+    // Log::debug('Utilisateur en session : ' . $user);
+    // FacadesSession::put('utilisateur', $user);
 
     if (isset($_COOKIE['roundcube_sessid'])) {
       session_id($_COOKIE['roundcube_sessid']);
