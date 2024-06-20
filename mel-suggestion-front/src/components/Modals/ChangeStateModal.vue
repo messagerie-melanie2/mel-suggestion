@@ -100,9 +100,9 @@ export default {
     onSubmit() {
       if (this.modalInfo.state == 'delete') {
         this.deleteSuggestion(this.modalInfo.suggestion.id)
-        if (this.sendMail) {
-          this.sendEmail(this.allText.mail_subject.replace('%%title%%', this.modalInfo.suggestion.title), this.modalInfo.suggestion.description);
-        }
+          if (this.sendMail && this.modalInfo.suggestion.user_email !== 'Anonyme') {
+            this.sendEmail(this.allText.mail_subject.replace('%%title%%', this.modalInfo.suggestion.title), this.modalInfo.suggestion.description);
+          }        
         this.$emit('close-modal');
 
       }

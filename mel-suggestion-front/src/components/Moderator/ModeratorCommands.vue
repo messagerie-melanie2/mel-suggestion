@@ -95,7 +95,9 @@ export default {
       this.$root.$emit('showStateModal', { state: 'validate', suggestion: this.suggestion });
     },
     modifySuggestion() {
-      this.sendEmail(this.allText.mail_subject.replace('%%title%%', this.suggestion.title));
+      if(this.suggestion.user_email !== 'Anonyme') {
+        this.sendEmail(this.allText.mail_subject.replace('%%title%%', this.suggestion.title));
+      }
     },
     sendEmail(subject = '', body = '') {
       const windowRef = window.open(`mailto:${this.suggestion.user_email}?subject=${subject}&body=${body}`);
