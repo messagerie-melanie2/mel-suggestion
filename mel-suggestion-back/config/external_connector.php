@@ -24,5 +24,12 @@ return [
     'client_id' => env('MICROSOFT_ID'),
     'client_secret' => env('MICROSOFT_SECRET'),
     'client_fields' => explode(',', env('MICROSOFT_FIELDS'))
+  ],
+
+  'cerbere' => [
+    'client_url' => env('CERBERE_URL'),
+    'client_id' => env('CERBERE_ID'),
+    'client_secret' => env('CERBERE_SECRET'),
+    'client_fields' => explode(',', env('CERBERE_FIELDS'))
   ]
 ];

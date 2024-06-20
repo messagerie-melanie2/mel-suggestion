@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Jumbojett\OpenIDConnectClient;
+use App\Models\SvgListOperators;
 
 /**
  * Class LoginController
@@ -58,8 +59,7 @@ class LoginController extends Controller
       $connector['client_secret']
     );
 
-    $oidc->addScope('email');
-    $oidc->addScope('profile');
+    $oidc->addScope('openid', 'email', 'profile');
     $oidc->setCertPath(__DIR__ . '/cacert.pem');
     if (config('external_connector')['external_proxy']) {
       $oidc->setHttpProxy(config('external_connector')['external_proxy']);
@@ -78,4 +78,10 @@ class LoginController extends Controller
 
     return Redirect::to(env('APPLICATION_URL'));
   }
+
+  public function showOpenIdConnectOperators() 
+    { 
+        $operators = explode(',', env('LIST_OPERATORS_OPENIDCONNECT'));
+        return view('list_operators', ['operators' => $operators]); 
+    }
 }
