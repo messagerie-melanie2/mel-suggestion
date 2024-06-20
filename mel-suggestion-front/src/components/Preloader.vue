@@ -1,4 +1,5 @@
 <template>
+  <!-- Preloader component -->
   <div class="preloader" :style="cssVars">
     <span class="rot-1"></span>
     <span class="rot-2"></span>
@@ -13,18 +14,23 @@
 
 <script>
 export default {
+  // Component name
   name: 'Preloader',
+  // Component props
   props: {
+    // Color of the preloader circles
     color: {
       type: String,
       default: '#41b883',
     },
+    // Scale factor for the preloader size
     scale: {
       type: Number,
       default: 0.3,
     },
   },
   computed: {
+    // Computed CSS variables based on props
     cssVars() {
       return {
         '--color': this.color,
@@ -36,7 +42,9 @@ export default {
 </script>
 
 <style scoped>
+/* Scoped styles for the Preloader component */
 .preloader {
+  /* Preloader container styles */
   position: relative;
   width: 125px;
   height: 125px;
@@ -44,6 +52,7 @@ export default {
   transform: scale(var(--scale));
 }
 .preloader > span {
+  /* Preloader circle styles */
   position: absolute;
   background-color: transparent;
   height: 22px;
@@ -54,6 +63,7 @@ export default {
   animation-iteration-count: infinite;
   animation-direction: normal;
 }
+/* Individual circle position and animation */
 .rot-1 {
   left: 0;
   top: 51px;
@@ -94,6 +104,7 @@ export default {
   bottom: 15px;
   animation-delay: 1.5s;
 }
+/* Keyframe animation definition */
 @keyframes f_fadeG {
   0% {
     background-color: var(--color);

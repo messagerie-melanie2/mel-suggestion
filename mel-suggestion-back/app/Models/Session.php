@@ -7,10 +7,25 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session as FacadesSession;
 
+/**
+ * Class Session
+ *
+ * @package App\Models
+ */
 class Session extends Model
 {
   use HasFactory;
 
+  /**
+     * Connect the user session.
+     *
+     * This method is responsible for connecting the user session based on the presence of a specific cookie.
+     * It retrieves user session information from the cookie, initializes session variables, and sets the user data in the session.
+     * If the session data is retrieved successfully, it creates a User object and stores it in the session.
+     * If there's an error retrieving the cookie, it logs an error message.
+     *
+     * @return void
+     */
   public static function sessionConnect()
   {    
     // $user = new User([
