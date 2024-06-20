@@ -113,7 +113,9 @@ export default {
     },
     // Modify suggestion method
     modifySuggestion() {
-      this.sendEmail(this.allText.mail_subject.replace('%%title%%', this.suggestion.title));
+      if(this.suggestion.user_email !== 'Anonyme') {
+        this.sendEmail(this.allText.mail_subject.replace('%%title%%', this.suggestion.title));
+      }
     },
     // Send email method
     sendEmail(subject = '', body = '') {

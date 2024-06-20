@@ -110,10 +110,9 @@ export default {
       // If the state is 'delete', delete the suggestion
       if (this.modalInfo.state == 'delete') {
         this.deleteSuggestion(this.modalInfo.suggestion.id)
-        // If sendMail is true, send email
-        if (this.sendMail) {
-          this.sendEmail(this.allText.mail_subject.replace('%%title%%', this.modalInfo.suggestion.title), this.modalInfo.suggestion.description);
-        }
+          if (this.sendMail && this.modalInfo.suggestion.user_email !== 'Anonyme') {
+            this.sendEmail(this.allText.mail_subject.replace('%%title%%', this.modalInfo.suggestion.title), this.modalInfo.suggestion.description);
+          }        
         this.$emit('close-modal');
 
       }

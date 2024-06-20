@@ -88,6 +88,7 @@ export default {
   // Component methods
   methods: {
     sendEmail() {
+      if (this.suggestion.user_email !== 'Anonyme') {
       const windowRef = window.open(`mailto:${this.suggestion.user_email}?subject=${this.allText.mail_subject.replace('%%title%%', this.suggestion.title)}`);
       windowRef.focus();
       setTimeout(function () {
@@ -95,6 +96,8 @@ export default {
           windowRef.close();
         }
       }, 500);
+    }
+
     },
     // Copy link method
     copyLink() {

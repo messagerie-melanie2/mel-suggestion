@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Notification;
 use App\Models\Suggestion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 
 class SuggestionController extends Controller
 {
@@ -50,13 +51,21 @@ class SuggestionController extends Controller
       'user_email' => '',
     ]);
 
+    // Récupérer la configuration d'anonymisation
+    $anonymize = Config::get('app.suggestion_anonymize');
+
+    // Si l'anonymisation est activée, ne pas inclure les informations personnelles de l'utilisateur
+    $user_email = $anonymize ? 'Anonyme' : $session_user->email;
+    $user_firstname = $anonymize ? 'Anonyme' : explode(' ', $session_user->name)[0];
+    $user_lastname = $anonymize ? ' ' : explode(' ', $session_user->name)[1];
+
 
     $newSuggestion = new Suggestion([
       'title' => $request->get('title'),
       'description' => $request->get('description'),
-      'user_email' => $session_user->email,
-      'user_firstname' => explode(' ', $session_user->name)[0],
-      'user_lastname' => explode(' ', $session_user->name)[1],
+      'user_email' => $user_email,
+      'user_firstname' => $user_firstname,
+      'user_lastname' => $user_lastname,
       'state' => 'moderate',
       'instance' => env('INSTANCE'),
     ]);
