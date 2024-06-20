@@ -38,7 +38,7 @@ export default {
   name: "CreateSuggestion",
   // Component props
   props: {
-    titleprops: String
+    titleprops: String,
   },
   data() {
     return {
