@@ -6,9 +6,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Session;
 
+/**
+ * Class Suggestion
+ *
+ * @package App\Models
+ */
 class Suggestion extends Model
 {
   use HasFactory;
+
+  /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
   protected $fillable = [
     'id',
     'title',
@@ -21,6 +32,15 @@ class Suggestion extends Model
     'comment'
   ];
 
+  /**
+     * Get all suggestions by instance.
+     *
+     * This method retrieves all suggestions belonging to the current instance from the database.
+     * It filters the suggestions based on the user's moderator status and whether they are the owner of the suggestion.
+     * It also retrieves vote information for each suggestion and updates suggestion attributes accordingly.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
   public static function getAllSuggestionsByInstance()
   {
     $suggestions = Suggestion::where('instance', env('INSTANCE'))->get();
@@ -36,9 +56,7 @@ class Suggestion extends Model
           continue;
         }
       }
-      if ($suggestion->state == 'moderate') {
-        $suggestion->updated_at = now();
-      }
+      
       if ($suggestion->user_email == $session_user->email) {
         $suggestion->my_suggestion = true;
       }
@@ -70,6 +88,14 @@ class Suggestion extends Model
     return $suggestions;
   }
 
+  /**
+     * Count the votes for a suggestion.
+     *
+     * This method counts the number of upvotes and downvotes for a given suggestion.
+     *
+     * @param  \App\Models\Suggestion  $suggestion The suggestion for which to count the votes.
+     * @return \App\Models\Suggestion
+     */
   public static function countVote($suggestion)
   {
     $suggestion->votes_up = Vote::where([
@@ -83,6 +109,14 @@ class Suggestion extends Model
     return $suggestion;
   }
 
+  /**
+     * Check if a suggestion belongs to the current user.
+     *
+     * This method checks if a given suggestion belongs to the current user based on their session data.
+     *
+     * @param  \App\Models\Suggestion  $suggestion The suggestion to check ownership.
+     * @return \App\Models\Suggestion
+     */
   public static function isMySuggestion($suggestion)
   {
     if ($suggestion->user_email == Session::get('utilisateur')->email) {

@@ -25,4 +25,5 @@ Route::group(['middleware' => ['web']], function () {
   Route::get('text', [SuggestionController::class, 'getText']);
   Route::get('disconnect', [LoginController::class, 'disconnect']);
   Route::apiResource('votes', VoteController::class);
+  Route::get('synonyms', [SuggestionController::class, 'getUrl']);
 });

@@ -1,10 +1,13 @@
 <template>
+  <!-- Modal Overlay -->
   <div class="modal-overlay" @click="$emit('close-modal')">
+    <!-- Popup Modal -->
     <div id="popup-modal" tabindex="-1" @click.stop
       class="grid h-screen place-items-center overflow-y-auto overflow-x-hidden h-modal md:h-full">
       <form @submit.prevent="onSubmit">
         <div class="relative p-4 w-full max-w-lg h-full md:h-auto">
           <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <!-- Close Button -->
             <button @click="$emit('close-modal')" type="button"
               class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
               data-modal-toggle="popup-modal">
@@ -17,6 +20,7 @@
               <span class="sr-only">Fermer</span>
             </button>
             <div class="p-6 text-center">
+              <!-- Modal Content -->
               <div v-if="modalInfo.state == 'vote'">
                 <i class="far fa-circle-check text-5xl mx-auto mb-4 text-green-400"></i>
                 <h3 class="mb-9 mt-3 text-lg font-normal text-gray-500 dark:text-gray-400">Etes-vous sûr de vouloir valider
@@ -62,7 +66,7 @@
                     mail</label>
                 </div>
               </div>
-
+              <!-- Action Buttons -->
               <button type="button" @click="$emit('close-modal')"
                 class="mr-3 text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Annuler</button>
               <button type="submit" :class="[
@@ -88,16 +92,22 @@ export default {
   name: 'ChangeStateModal',
   data() {
     return {
+      // The comment input
       comment: '',
+      // Whether to send mail or not
       sendMail: true,
     };
   },
   props: {
+    // Info about the modal
     modalInfo: Object,
   },
   methods: {
+    // Map Vuex actions to local methods
     ...mapActions(['changeStateSuggestion', 'deleteSuggestion', 'fetchText']),
+    // Handle form submission
     onSubmit() {
+      // If the state is 'delete', delete the suggestion
       if (this.modalInfo.state == 'delete') {
         this.deleteSuggestion(this.modalInfo.suggestion.id)
           if (this.sendMail && this.modalInfo.suggestion.user_email !== 'Anonyme') {
@@ -106,12 +116,14 @@ export default {
         this.$emit('close-modal');
 
       }
+      // Otherwise, change suggestion state
       else {
         this.changeStateSuggestion({ id: this.modalInfo.suggestion.id, state: this.modalInfo.state, comment: this.comment });
         this.comment = '';
         this.$emit('close-modal');
       }
     },
+    // Send email
     sendEmail(subject = '', body = '') {
       const windowRef = window.open(`mailto:${this.modalInfo.suggestion.user_email}?subject=${subject}&body=${this.removeImage(body)}`);
       windowRef.focus();
@@ -121,6 +133,7 @@ export default {
         }
       }, 500);
     },
+    // Remove image tags from body
     removeImage(body) {
       return body.replace(/<img[^>]*>/g, '');
     }
@@ -130,6 +143,7 @@ export default {
 </script>
 
 <style scoped>
+/* Scoped CSS for Modal Overlay */
 .modal-overlay {
   position: fixed;
   top: 0;

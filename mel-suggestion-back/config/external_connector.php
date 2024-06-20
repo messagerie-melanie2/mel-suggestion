@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Configuration file for external authentication connectors.
+ *
+ * This file contains configuration settings for external authentication connectors such as Google and Microsoft.
+ * Each connector has its own configuration parameters including client URL, client ID, client secret, and client fields.
+ *
+ * @return array
+ */
 return [
   'external_connector' => explode(',', env('EXTERNAL_CONNECTOR')),
   'external_proxy' => env('EXTERNAL_PROXY'),
@@ -16,5 +24,12 @@ return [
     'client_id' => env('MICROSOFT_ID'),
     'client_secret' => env('MICROSOFT_SECRET'),
     'client_fields' => explode(',', env('MICROSOFT_FIELDS'))
+  ],
+
+  'cerbere' => [
+    'client_url' => env('CERBERE_URL'),
+    'client_id' => env('CERBERE_ID'),
+    'client_secret' => env('CERBERE_SECRET'),
+    'client_fields' => explode(',', env('CERBERE_FIELDS'))
   ]
 ];

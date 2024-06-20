@@ -166,4 +166,14 @@ class SuggestionController extends Controller
   {
     return response()->json(config('text'));
   }
+
+  /**
+   * Display a URL of Synonyms from the config
+   *
+   * @return \Illuminate\Http\Response
+   */
+  public function getUrl()
+  {
+    return response()->json(config('synonyms'));
+  }
 }

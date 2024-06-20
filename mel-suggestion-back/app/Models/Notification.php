@@ -5,6 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Notification
+ *
+ * @package App\Models
+ */
 class Notification extends Model
 {
   use HasFactory;
@@ -29,6 +34,12 @@ class Notification extends Model
     $user->addNotification($notification);
   }
 
+  /**
+     * Send a notification for updating a suggestion.
+     *
+     * @param  mixed  $suggestion_owner The owner of the suggestion.
+     * @return void
+     */
   public static function sendUpdateSuggestionNotification($suggestion_owner)
   {
     $class = env("ORM_PATH") . "\User";
