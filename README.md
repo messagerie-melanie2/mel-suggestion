@@ -35,9 +35,9 @@ Pour exécuter l'application en local, suivez ces étapes :
 ## Cloner la release de l'outil de suggestion
 
  1. Télécharger la release :
-	 Sans proxy : `wget https://github.com/messagerie-melanie2/mel-suggestion/releases/download/1.56.0/suggestion.tar.gz`
+	 Sans proxy : `wget https://github.com/messagerie-melanie2/mel-suggestion/releases/download/[TAG]/suggestion.tar.gz` 
 	 
-	Avec proxy : 		`	wget -e use_proxy=yes http_proxy=pfrie-std.proxy.e2.rie.gouv.fr:8080 -e https_proxy=pfrie-std.proxy.e2.rie.gouv.fr:8080 https://github.com/messagerie-melanie2/mel-suggestion/releases/download/1.56.0/suggestion.tar.gz `
+	Avec proxy : 		`	wget -e use_proxy=yes http_proxy=pfrie-std.proxy.e2.rie.gouv.fr:8080 -e https_proxy=pfrie-std.proxy.e2.rie.gouv.fr:8080 https://github.com/messagerie-melanie2/mel-suggestion/releases/download/[TAG]/suggestion.tar.gz `
 
  2. Extraire le dossier tar
  `tar -xzvf suggestion.tar.gz`
