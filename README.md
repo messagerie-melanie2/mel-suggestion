@@ -26,14 +26,6 @@
 
 ## Pour Commencer
 
-Pour exécuter l'application en local, suivez ces étapes :
-
-1. Clonez ce dépôt.
-2. Naviguez jusqu'au répertoire du projet.
-3. Installez les dépendances en exécutant `npm install`.
-
-## Cloner la release de l'outil de suggestion
-
  1. Télécharger la release :
 	 Sans proxy : `wget https://github.com/messagerie-melanie2/mel-suggestion/releases/download/[TAG]/suggestion.tar.gz` 
 	 
