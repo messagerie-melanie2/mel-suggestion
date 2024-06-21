@@ -55,7 +55,7 @@ Alias "/suggestion" "[chemin]/mel-suggestion-back/public"
 </Directory>
 ```
 
- 5. Modifier le fichier .env dans mel-suggestion-back (clé secrète, connexion à la base, anonymisation des données, instance, etc...) puis valider avec `php artisan config:cache`
+ 5. Modifier le fichier .env dans mel-suggestion-back (clé secrète, connexion à la base, anonymisation des données, instance, etc...) puis valider avec `php artisan config:clear`
 
 Si problème d'écriture dans laravel.log :
 `sudo chmod -R 775 storage`
