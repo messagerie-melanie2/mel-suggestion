@@ -59,7 +59,7 @@ class LoginController extends Controller
       $connector['client_secret']
     );
 
-    $oidc->addScope('openid', 'email', 'profile');
+    $oidc->addScope(['email', 'profile']);
     $oidc->setCertPath(__DIR__ . '/cacert.pem');
     if (config('external_connector')['external_proxy']) {
       $oidc->setHttpProxy(config('external_connector')['external_proxy']);
@@ -70,6 +70,14 @@ class LoginController extends Controller
       'origin' => $request->connector,
     ]);
     foreach ($connector['client_fields'] as $field) {
+      if ($field === "email") {
+        if ($oidc->requestUserInfo($field) === null) {
+          if ($oidc->requestUserInfo('unique_name') !== null) {
+            $user->$field = $oidc->requestUserInfo('unique_name');
+            continue;
+          }
+        }
+      }
       $user->$field = $oidc->requestUserInfo($field);
     }
 
