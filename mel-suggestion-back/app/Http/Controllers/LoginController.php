@@ -68,7 +68,9 @@ class LoginController extends Controller
 
     $user = new User([
       'origin' => $request->connector,
+      'sub' =>  $oidc->requestUserInfo('sub'),
     ]);
+
     foreach ($connector['client_fields'] as $field) {
       if ($field === "email") {
         if ($oidc->requestUserInfo($field) === null) {

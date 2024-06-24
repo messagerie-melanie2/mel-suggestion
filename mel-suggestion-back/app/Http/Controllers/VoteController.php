@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Vote;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 
 class VoteController extends Controller
@@ -32,8 +33,14 @@ class VoteController extends Controller
       'suggestion_id' => 'required'
     ]);
 
+    if (Config::get('app.suggestion_anonymize') === true) {
+      $user_email = isset($request->session()->get('utilisateur')->sub) ? $request->session()->get('utilisateur')->sub : $request->session()->get('utilisateur')->email;
+    } else {
+      $user_email = $request->session()->get('utilisateur')->email;
+    }
+
     $newVote = new Vote([
-      'user_email' => $request->session()->get('utilisateur')->email,
+      'user_email' => $user_email,
       'suggestion_id' => $request->get('suggestion_id'),
       'type' => $request->get('type'),
     ]);
