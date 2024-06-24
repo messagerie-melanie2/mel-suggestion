@@ -27,7 +27,7 @@ class LoginController extends Controller
      */
   public function index()
   {
-    return view('connection');
+    return view('list_operators');
   }
 
   /**
@@ -59,7 +59,7 @@ class LoginController extends Controller
       $connector['client_secret']
     );
 
-    $oidc->addScope('openid', 'email', 'profile');
+    $oidc->addScope(['email', 'profile']);
     $oidc->setCertPath(__DIR__ . '/cacert.pem');
     if (config('external_connector')['external_proxy']) {
       $oidc->setHttpProxy(config('external_connector')['external_proxy']);
@@ -68,13 +68,23 @@ class LoginController extends Controller
 
     $user = new User([
       'origin' => $request->connector,
+      'sub' =>  $oidc->requestUserInfo('sub'),
     ]);
+
     foreach ($connector['client_fields'] as $field) {
+      if ($field === "email") {
+        if ($oidc->requestUserInfo($field) === null) {
+          if ($oidc->requestUserInfo('unique_name') !== null) {
+            $user->$field = $oidc->requestUserInfo('unique_name');
+            continue;
+          }
+        }
+      }
       $user->$field = $oidc->requestUserInfo($field);
     }
 
     Session::put('utilisateur', $user);
-    Session::put('no_auth', false);
+    // Session::put('no_auth', false);
 
     return Redirect::to(env('APPLICATION_URL'));
   }

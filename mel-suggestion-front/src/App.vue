@@ -60,6 +60,7 @@ export default {
     this.fetchSuggestions(),
       this.fetchText()
   },
+
   mounted() {
     this.$root.$on('showStateModal', (e) => {
       this.showStateModal = true;

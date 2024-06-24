@@ -16,8 +16,19 @@
             </span> 
             <span class="mx-auto ml-1 text-sm font-bold leading-none select-none">Retour</span> 
         </a> 
-    </div> 
+    </div>
+    
+    <!-- <div class="grid place-items-center pb-8">
+        <div class="text-xl font-bold text-gray-900">
+            Pour accéder au module de suggestions vous devez être connecté :
+        </div>
+    </div> -->
+    
     <div class="grid place-items-center h-screen pb-20"> 
+        <div class="grid  place-items-center">
+        <div class="text-xl font-bold text-gray-900">
+            Pour accéder au module de suggestions vous devez être connecté :
+        </div>
         <div class="p-4 max-w-sm bg-white rounded-lg border shadow-md sm:p-6 "> 
             <h5 class="mb-3 text-base font-semibold text-gray-900 lg:text-xl">Liste des opérateurs disponibles :</h5> 
             <p class="text-sm font-normal text-gray-500 ">Choisissez l'un des opérateurs ci-dessous pour vous connecter au module de suggestions : </p> 
@@ -35,6 +46,7 @@
                 </li> 
                 @endforeach 
             </ul> 
+        </div> 
         </div> 
     </div> 
 </body> 

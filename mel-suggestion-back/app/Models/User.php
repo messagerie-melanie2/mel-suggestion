@@ -23,5 +23,6 @@ class User extends Authenticatable
         'email',
         'picture',
         'moderator',
+        'sub',
     ];
 }
