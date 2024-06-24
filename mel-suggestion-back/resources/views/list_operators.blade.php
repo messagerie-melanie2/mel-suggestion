@@ -4,7 +4,8 @@
     <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <script src="https://cdn.tailwindcss.com"></script> 
-    <title>Liste des opérateurs disponibles</title> 
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <title>Outil de suggestion</title> 
 </head> 
 <body> 
     <div class="flex items-center justify-center w-full py-3 bg-white border-b border-gray-200"> 
@@ -24,13 +25,9 @@
         </div>
     </div> -->
     
-    <div class="grid place-items-center h-screen pb-20"> 
-        <div class="grid  place-items-center">
-        <div class="text-xl font-bold text-gray-900">
-            Pour accéder au module de suggestions vous devez être connecté :
-        </div>
+    <div class="grid place-items-center h-screen pb-40"> 
         <div class="p-4 max-w-sm bg-white rounded-lg border shadow-md sm:p-6 "> 
-            <h5 class="mb-3 text-base font-semibold text-gray-900 lg:text-xl">Liste des opérateurs disponibles :</h5> 
+            <h5 class="mb-3 text-base font-semibold text-gray-900 lg:text-xl text-center">Connexion</h5> 
             <p class="text-sm font-normal text-gray-500 ">Choisissez l'un des opérateurs ci-dessous pour vous connecter au module de suggestions : </p> 
             <ul class="my-4 space-y-3"> 
             {{-- Boucler sur tous les opérateurs disponibles --}} 
@@ -46,7 +43,6 @@
                 </li> 
                 @endforeach 
             </ul> 
-        </div> 
         </div> 
     </div> 
 </body> 
