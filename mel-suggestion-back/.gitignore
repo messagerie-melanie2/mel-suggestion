@@ -4,7 +4,6 @@
 /public/css
 /public/js
 /public/index.html
-/public/favicon.ico
 /storage/*.key
 /storage/*
 !/storage/app

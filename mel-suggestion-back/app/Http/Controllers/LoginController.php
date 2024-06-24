@@ -52,6 +52,7 @@ class LoginController extends Controller
   public function externalConnection(Request $request)
   {
     $connector = config('external_connector')[$request->connector];
+    $moderator = array_map('strtolower', config('moderator')['moderator']);
 
     $oidc = new OpenIDConnectClient(
       $connector['client_url'],
@@ -75,16 +76,22 @@ class LoginController extends Controller
       if ($field === "email") {
         if ($oidc->requestUserInfo($field) === null) {
           if ($oidc->requestUserInfo('unique_name') !== null) {
-            $user->$field = $oidc->requestUserInfo('unique_name');
+            $email = $oidc->requestUserInfo('unique_name');
+            $user->$field =  $email;
+            $user->moderator = in_array(strtolower($email), $moderator) ? true : false;
             continue;
           }
+        } else {
+          $email = $oidc->requestUserInfo('email');
+          $user->$field = $email;
+          $user->moderator = in_array(strtolower($email), $moderator) ? true : false;
         }
+      } else {
+        $user->$field = $oidc->requestUserInfo($field);
       }
-      $user->$field = $oidc->requestUserInfo($field);
     }
 
     Session::put('utilisateur', $user);
-    // Session::put('no_auth', false);
 
     return Redirect::to(env('APPLICATION_URL'));
   }
