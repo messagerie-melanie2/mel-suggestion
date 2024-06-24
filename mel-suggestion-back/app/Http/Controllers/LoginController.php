@@ -27,7 +27,7 @@ class LoginController extends Controller
      */
   public function index()
   {
-    return view('connection');
+    return view('list_operators');
   }
 
   /**
@@ -84,7 +84,7 @@ class LoginController extends Controller
     }
 
     Session::put('utilisateur', $user);
-    Session::put('no_auth', false);
+    // Session::put('no_auth', false);
 
     return Redirect::to(env('APPLICATION_URL'));
   }

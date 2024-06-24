@@ -2,7 +2,6 @@ import Vue from 'vue';
 import axiosClient from '../../axios';
 
 Vue.prototype.$user = {};
-Vue.prototype.$no_auth = false;
 
 const state = {
   suggestions: [],
@@ -31,8 +30,8 @@ const actions = {
         
         //Si l'utilisateur n'est pas connecté
         if (Object.keys(response.data).length === 0) {
-          Vue.prototype.$no_auth = true;
-        }  
+          window.location.href = process.env.VUE_APP_ROOT_API;
+        }
         axiosClient
           .get("/suggestions")
           .then((response) => {

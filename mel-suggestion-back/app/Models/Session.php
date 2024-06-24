@@ -37,10 +37,16 @@ class Session extends Model
     // Log::debug('Utilisateur en session : ' . $user);
     // FacadesSession::put('utilisateur', $user);
 
+    // Vérifier si la connexion via session Roundcube est activée
+    if (!env('USE_ROUNDCUBE_SESSION', false)) {
+      Log::debug('Connexion via session Roundcube désactivée.');
+      return;
+    }
+    
     if (isset($_COOKIE['roundcube_sessid'])) {
       session_id($_COOKIE['roundcube_sessid']);
       session_start();
-      //On réinitialise les variables session
+      // On réinitialise les variables session
       if (isset($_SESSION['firstname']) && isset($_SESSION['lastname']) && isset($_SESSION['email'])) {
         $_SESSION['firstname'] = null;
         $_SESSION['lastname'] = null;
@@ -58,7 +64,6 @@ class Session extends Model
         session_decode($vars['vars']);
         Log::info('Cache type : memcache');
       }
-
 
       if (isset($_SESSION['firstname']) && isset($_SESSION['lastname']) && isset($_SESSION['email'])) {
         $moderator = array_map('strtolower', config('moderator')['moderator']);

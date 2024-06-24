@@ -60,7 +60,7 @@
           </div>
         </div>
         <div id="user-actions"
-          v-show="(suggestion.my_suggestion || $user.moderator) && suggestion.state == 'moderate' && !this.$no_auth">
+          v-show="(suggestion.my_suggestion || $user.moderator) && suggestion.state == 'moderate'">
           <i class="fa-solid fa-edit mb-4 dark:text-title-blue dark:hover:text-blue-500 hover:text-blue-500 cursor-pointer"
             @click="toggleSuggestion" title="Éditer la suggestion"></i>
           <br>
@@ -148,18 +148,18 @@ export default {
   methods: {
     ...mapActions(['deleteSuggestion']),
     changeVoteText() {
-      if (!this.suggestion.my_suggestion && this.suggestion.state != 'validate' && !this.$no_auth)
+      if (!this.suggestion.my_suggestion && this.suggestion.state != 'validate')
         this.voteHover = true
     },
     resetVoteText() {
-      if (!this.suggestion.my_suggestion && this.suggestion.state != 'validate' && !this.$no_auth)
+      if (!this.suggestion.my_suggestion && this.suggestion.state != 'validate')
         this.voteHover = false
     },
     changeComment() {
       this.$root.$emit('showCommentModal', { suggestion: this.suggestion });
     },
     toggleVote(new_type) {
-      if (!this.suggestion.my_suggestion && this.suggestion.state != 'validate' && !this.$no_auth) {
+      if (!this.suggestion.my_suggestion && this.suggestion.state != 'validate') {
         // on annule le vote
         if (this.suggestion.voted_type && this.suggestion.voted_type == new_type) {
           if (this.suggestion.vote_id) {
