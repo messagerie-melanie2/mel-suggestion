@@ -35,6 +35,7 @@ jobs:
         run: |
           cd mel-suggestion-back
           composer remove messagerie-melanie2/orm-m2 --no-update
+          composer install --no-dev
           cd ..
           tar -zcvf suggestion_no_orm.tar.gz mel-suggestion-back
 
