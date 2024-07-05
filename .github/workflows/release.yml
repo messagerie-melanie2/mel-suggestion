@@ -34,7 +34,7 @@ jobs:
       - name: Remove dependency and tar again
         run: |
           cd mel-suggestion-back
-          composer remove messagerie-melanie2/orm-m2
+          composer remove messagerie-melanie2/orm-m2 --no-update
           cd ..
           tar -zcvf suggestion_no_orm.tar.gz mel-suggestion-back
 
