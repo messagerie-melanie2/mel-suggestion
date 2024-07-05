@@ -28,11 +28,15 @@ jobs:
       - name: Copy env & gitignore
         run: cd mel-suggestion-back && php -r "copy('.env.example', '.env');"  && php -r "copy('.gitignore-release', '.gitignore');"
   
-      #- name: Composer Autoload
-      #  run: cd mel-suggestion-back && composer dumpautoload
-        
       - name: Tar folder
         run: tar -zcvf suggestion.tar.gz mel-suggestion-back
+
+      - name: Remove dependency and tar again
+        run: |
+          cd mel-suggestion-back
+          composer remove messagerie-melanie2/orm-m2
+          cd ..
+          tar -zcvf suggestion_no_orm.tar.gz mel-suggestion-back
 
       - name: 'Get Previous tag'
         id: previoustag
@@ -53,5 +57,7 @@ jobs:
           automatic_release_tag: "${{ steps.bump_version.outputs.next-version }}"
           prerelease: false
           title: "Suggestion ${{ steps.bump_version.outputs.next-version }}"
-          files: suggestion.tar.gz
+          files: |
+            suggestion.tar.gz
+            suggestion_no_orm.tar.gz
 
