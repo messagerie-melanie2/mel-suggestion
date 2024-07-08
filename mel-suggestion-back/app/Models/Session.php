@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session as FacadesSession;
 
@@ -29,10 +30,11 @@ class Session extends Model
   public static function sessionConnect()
   {    
     // $user = new User([
-    //   'origin' => 'mel',
-    //   'name' => "Damien Cotton",
+    //   'origin' => 'google',
+    //   'name' => "Arnaud Goubier",
     //   'email' => "damien.cotton@i-carre.net",
     //   'moderator' => true,
+    //   'anonymised' => Config::get('app.suggestion_anonymize'),
     // ]);
     // Log::debug('Utilisateur en session : ' . $user);
     // FacadesSession::put('utilisateur', $user);
@@ -72,6 +74,7 @@ class Session extends Model
           'name' => $_SESSION['firstname'] . ' ' . $_SESSION['lastname'],
           'email' => $_SESSION['email'],
           'moderator' => in_array(strtolower($_SESSION['email']), $moderator) ? true : false,
+          'anonymised' => Config::get('app.suggestion_anonymize'),
         ]);
         Log::debug('Utilisateur en session : ' . $user);
         FacadesSession::put('utilisateur', $user);

@@ -2,6 +2,7 @@ import Vue from 'vue';
 import axiosClient from '../../axios';
 
 Vue.prototype.$user = {};
+Vue.prototype.$anonymised = false;
 
 const state = {
   suggestions: [],
@@ -27,6 +28,7 @@ const actions = {
       })
       .then((response) => {
         Vue.prototype.$user = response.data;
+        Vue.prototype.$anonymised = response.data.anonymised ?? false;
         
         //Si l'utilisateur n'est pas connecté
         if (Object.keys(response.data).length === 0) {
