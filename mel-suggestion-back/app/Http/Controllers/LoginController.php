@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Jumbojett\OpenIDConnectClient;
-use App\Models\SvgListOperators;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Class LoginController
@@ -70,6 +70,7 @@ class LoginController extends Controller
     $user = new User([
       'origin' => $request->connector,
       'sub' =>  $oidc->requestUserInfo('sub'),
+      'anonymised' =>  Config::get('app.suggestion_anonymize'),
     ]);
 
     foreach ($connector['client_fields'] as $field) {
