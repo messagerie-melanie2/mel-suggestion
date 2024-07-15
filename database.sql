@@ -2,4 +2,4 @@ create table "suggestions" ("id" bigserial primary key not null, "title" varchar
 
 create index "suggestions_instance_index" on "suggestions" ("instance");
 
-create table "votes" ("id" bigserial primary key not null, "user_email" varchar(255) not null, "suggestion_id" bigint not null, "created_at" timestamp(0) without time zone null, "updated_at" timestamp(0) without time zone null, "type" TEXT DEFAULT "up");
+create table "votes" ("id" bigserial primary key not null, "user_email" varchar(255) not null, "suggestion_id" bigint not null, "created_at" timestamp(0) without time zone null, "updated_at" timestamp(0) without time zone null, "type" TEXT DEFAULT '"up"');
