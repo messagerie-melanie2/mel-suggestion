@@ -21,8 +21,7 @@ class UserController extends Controller
      */
   public function index(Request $request)
   {
-    $user = Session::get('utilisateur');
-    Log::debug($user);
+    $user = Session::get('utilisateur');   
     
     if (isset($user) && $user->origin == "google") {
       return response()->json($request->session()->get('utilisateur'));

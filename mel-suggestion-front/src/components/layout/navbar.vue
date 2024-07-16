@@ -4,7 +4,7 @@
     <div class="container flex flex-wrap justify-between items-center mx-auto">
       <div class="flex items-center select-none">
         <!-- Title Display -->
-        <img src="/favicon.ico" alt="Example Image">
+        <img src="/favicon.ico" alt="Suggestion logo">
         <span class="self-center text-xl ml-4 font-semibold whitespace-nowrap dark:text-white">{{title ? title : 'Suggestion'}}</span>
 
       <!-- Mobile Menu Content -->
