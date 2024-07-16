@@ -31,7 +31,7 @@ class SuggestionController extends Controller
   {
     $session_user = $request->session()->get('utilisateur');
 
-    if (env('NOTIFICATION') && config('moderator')) {
+    if (env('NOTIFICATION') && config('moderator')["moderator"][0] !== "") {
       foreach (config('moderator')["moderator"] as $email) {
         if ($email != $session_user->email) {
           $class = env("ORM_PATH") . "\User";
@@ -138,8 +138,9 @@ class SuggestionController extends Controller
 
     $suggestion->save();
 
-    Notification::sendUpdateSuggestionNotification($suggestion);
-
+    if (env('NOTIFICATION')) {
+      Notification::sendUpdateSuggestionNotification($suggestion);
+    }
     return response()->json(Suggestion::countVote($suggestion));
   }
 
