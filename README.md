@@ -37,7 +37,9 @@
  3. Passage des droits de user à apache (www-data) :
     `sudo chown -R www-data:www-data (dossier)`
 
- 4. Configurer Apache pour /public :
+ 4. Générer une clé d'application avec `php artisan key:generate`
+
+ 5. Configurer Apache pour /public :
 ```
 Alias "/suggestion" "[chemin]/mel-suggestion-back/public"
 <Directory "[chemin]/mel-suggestion-release/mel-suggestion-back/public">
@@ -47,7 +49,7 @@ Alias "/suggestion" "[chemin]/mel-suggestion-back/public"
 </Directory>
 ```
 
- 5. Modifier le fichier .env dans mel-suggestion-back (clé secrète, connexion à la base, anonymisation des données, instance, etc...) puis valider avec `php artisan config:clear`
+ 6. Modifier le fichier .env dans mel-suggestion-back (clé secrète, connexion à la base, anonymisation des données, instance, etc...) puis valider avec `php artisan config:clear`
 
 Si problème d'écriture dans laravel.log :
 `sudo chmod -R 775 storage`
