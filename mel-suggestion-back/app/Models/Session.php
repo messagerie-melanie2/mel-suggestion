@@ -41,7 +41,7 @@ class Session extends Model
 
     // Vérifier si la connexion via session Roundcube est activée
     if (!env('USE_ROUNDCUBE_SESSION', false)) {
-      Log::debug('Connexion via session Roundcube désactivée.');
+      // Log::debug('Connexion via session Roundcube désactivée.');
       return;
     }
     
@@ -84,4 +84,5 @@ class Session extends Model
       Log::debug('Erreur lors de la récupération du cookie');
     }
   }
+
 }

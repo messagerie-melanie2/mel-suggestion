@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 //Comment group for dev
-Route::group(['middleware' => ['web']], function () {
+Route::group(['middleware' => ['api']], function () {
   Route::apiResource('suggestions', SuggestionController::class);
   Route::get('user', [UserController::class, 'index']);
   Route::put('suggestions/state/{id}', [SuggestionController::class, 'updateState']);

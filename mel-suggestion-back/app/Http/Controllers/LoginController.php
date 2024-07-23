@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
 use Jumbojett\OpenIDConnectClient;
 use Illuminate\Support\Facades\Config;
+use App\Services\SessionService;
 
 /**
  * Class LoginController
@@ -16,8 +16,11 @@ use Illuminate\Support\Facades\Config;
  */
 class LoginController extends Controller
 {
-  public function __construct()
+  protected $sessionService;
+
+  public function __construct(SessionService $sessionService)
   {
+    $this->sessionService = $sessionService;
   }
 
   /**
@@ -33,12 +36,11 @@ class LoginController extends Controller
   /**
      * Disconnect the user and clear session data.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-  public function disconnect(Request $request)
+  public function disconnect()
   {
-    $request->session()->flush();
+    $this->sessionService->flush();
 
     return response()->json("Disconnected");
   }
@@ -65,6 +67,7 @@ class LoginController extends Controller
     if (config('external_connector')['external_proxy']) {
       $oidc->setHttpProxy(config('external_connector')['external_proxy']);
     }
+    
     $oidc->authenticate();
 
     $user = new User([
@@ -92,7 +95,8 @@ class LoginController extends Controller
       }
     }
 
-    Session::put('utilisateur', $user);
+    $this->sessionService->flush();
+    $this->sessionService->set('suggestion_user', $user);
 
     return Redirect::to(env('APPLICATION_URL'));
   }
