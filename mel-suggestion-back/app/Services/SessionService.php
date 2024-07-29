@@ -18,7 +18,4 @@ abstract class SessionService
 
     // Méthode abstraite pour supprimer une valeur de session
     abstract public function forget($key);
-
-    // Méthode abstraite pour supprimer toutes les variables session
-    abstract public function flush();
 }

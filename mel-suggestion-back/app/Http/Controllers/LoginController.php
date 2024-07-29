@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Redirect;
 use Jumbojett\OpenIDConnectClient;
 use Illuminate\Support\Facades\Config;
 use App\Services\SessionService;
+use Illuminate\Contracts\Session\Session;
+use Illuminate\Support\Facades\Crypt;
 
 /**
  * Class LoginController
@@ -24,34 +26,34 @@ class LoginController extends Controller
   }
 
   /**
-     * Display the login form.
-     *
-     * @return \Illuminate\Contracts\View\View
-     */
+   * Display the login form.
+   *
+   * @return \Illuminate\Contracts\View\View
+   */
   public function index()
   {
     return view('list_operators');
   }
 
   /**
-     * Disconnect the user and clear session data.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-  public function disconnect()
+   * Disconnect the user and clear session data.
+   *
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function disconnect(Session $session)
   {
-    $this->sessionService->flush();
-
+    $this->sessionService->forget('suggestion_user:'.$session->token());
+    
     return response()->json("Disconnected");
   }
 
   /**
-     * Handle external authentication with OpenID Connect.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-  public function externalConnection(Request $request)
+   * Handle external authentication with OpenID Connect.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\RedirectResponse
+   */
+  public function externalConnection(Request $request, Session $session)
   {
     $connector = config('external_connector')[$request->connector];
     $moderator = array_map('strtolower', config('moderator')['moderator']);
@@ -67,7 +69,7 @@ class LoginController extends Controller
     if (config('external_connector')['external_proxy']) {
       $oidc->setHttpProxy(config('external_connector')['external_proxy']);
     }
-    
+
     $oidc->authenticate();
 
     $user = new User([
@@ -95,15 +97,14 @@ class LoginController extends Controller
       }
     }
 
-    $this->sessionService->flush();
-    $this->sessionService->set('suggestion_user', $user);
+    $this->sessionService->set('suggestion_user:'.$session->token(), Crypt::encryptString($user));
 
     return Redirect::to(env('APPLICATION_URL'));
   }
 
-  public function showOpenIdConnectOperators() 
-    { 
-        $operators = explode(',', env('LIST_OPERATORS_OPENIDCONNECT'));
-        return view('list_operators', ['operators' => $operators]); 
-    }
+  public function showOpenIdConnectOperators()
+  {
+    $operators = explode(',', env('LIST_OPERATORS_OPENIDCONNECT'));
+    return view('list_operators', ['operators' => $operators]);
+  }
 }

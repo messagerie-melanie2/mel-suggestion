@@ -27,9 +27,4 @@ class RedisSessionService extends SessionService
     {
         Redis::del($key);
     }
-
-    public function flush() 
-    {
-        Redis::flushdb();
-    }
 }

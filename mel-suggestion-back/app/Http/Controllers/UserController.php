@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Services\SessionService;
+use Illuminate\Contracts\Session\Session;
+use Illuminate\Support\Facades\Crypt;
 
 /**
  * Class UserController
@@ -21,12 +23,12 @@ class UserController extends Controller
   /**
      * Display user information.
      *
-     * @return \Illuminate\Http\JsonResponse
      */
-  public function index()
+  public function index(Session $session)
   {
-    if ($this->sessionService->has('suggestion_user')) {
-      return $this->sessionService->get('suggestion_user');
+    if ($this->sessionService->has('suggestion_user:'.$session->token())) {
+      $encryptedUser = $this->sessionService->get('suggestion_user:'.$session->token());
+      return Crypt::decryptString($encryptedUser);
     }
     else {
       return "La valeur n'existe pas en session";

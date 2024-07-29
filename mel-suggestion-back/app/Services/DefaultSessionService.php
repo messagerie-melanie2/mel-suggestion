@@ -27,9 +27,4 @@ class DefaultSessionService extends SessionService
     {
         Session::forget($key);
     }
-
-    public function flush() 
-    {
-        Session::flush();
-    }
 }
