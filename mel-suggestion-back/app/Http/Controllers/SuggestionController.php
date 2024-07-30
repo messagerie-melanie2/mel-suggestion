@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Notification;
 use App\Models\Suggestion;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 
 class SuggestionController extends Controller
 {
@@ -31,10 +30,10 @@ class SuggestionController extends Controller
   {
     $session_user = $request->session()->get('utilisateur');
 
-    if (env('NOTIFICATION') && config('moderator')["moderator"][0] !== "") {
-      foreach (config('moderator')["moderator"] as $email) {
+    if (config('suggestion.notification') && config('moderator.moderator')[0] !== "") {
+      foreach (config('moderator.moderator') as $email) {
         if ($email != $session_user->email) {
-          $class = env("ORM_PATH") . "\User";
+          $class = config('suggestion.orm_path') . "\User";
           $user = new $class();
           $user->email = $email;
           $user->load();
@@ -52,7 +51,7 @@ class SuggestionController extends Controller
     ]);
 
     // Récupérer la configuration d'anonymisation
-    $anonymize = Config::get('app.suggestion_anonymize');
+    $anonymize = config('app.suggestion_anonymize');
 
     // Si l'anonymisation est activée, ne pas inclure les informations personnelles de l'utilisateur
     $user_email = $anonymize ? 'Anonyme' : $session_user->email;
@@ -67,7 +66,7 @@ class SuggestionController extends Controller
       'user_firstname' => $user_firstname,
       'user_lastname' => $user_lastname,
       'state' => 'moderate',
-      'instance' => env('INSTANCE'),
+      'instance' => config('suggestion.instance'),
     ]);
 
     $newSuggestion->save();
@@ -138,7 +137,7 @@ class SuggestionController extends Controller
 
     $suggestion->save();
 
-    if (env('NOTIFICATION')) {
+    if (config('suggestion.notification')) {
       Notification::sendUpdateSuggestionNotification($suggestion);
     }
     return response()->json(Suggestion::countVote($suggestion));
@@ -175,6 +174,6 @@ class SuggestionController extends Controller
    */
   public function getUrl()
   {
-    return response()->json(config('synonyms'));
+    return response()->json(config('suggestion.synonyms_url'));
   }
 }

@@ -43,7 +43,7 @@ class Suggestion extends Model
      */
   public static function getAllSuggestionsByInstance()
   {
-    $suggestions = Suggestion::where('instance', env('INSTANCE'))->get();
+    $suggestions = Suggestion::where('instance', config('suggestion.instance'))->get();
 
     $session_user = Session::get('utilisateur') != null ? Session::get('utilisateur') : new User();
 

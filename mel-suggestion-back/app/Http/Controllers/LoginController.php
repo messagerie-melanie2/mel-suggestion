@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
 use Jumbojett\OpenIDConnectClient;
 use Illuminate\Support\Facades\Config;
+use App\Services\SessionService;
+use Illuminate\Contracts\Session\Session;
+use Illuminate\Support\Facades\Crypt;
 
 /**
  * Class LoginController
@@ -16,40 +18,43 @@ use Illuminate\Support\Facades\Config;
  */
 class LoginController extends Controller
 {
-  public function __construct()
+  protected $sessionService;
+
+  public function __construct(SessionService $sessionService)
   {
+    $this->sessionService = $sessionService;
   }
 
   /**
-     * Display the login form.
-     *
-     * @return \Illuminate\Contracts\View\View
-     */
+   * Display the login form.
+   *
+   * @return \Illuminate\Contracts\View\View
+   */
   public function index()
   {
-    return view('list_operators');
+    $operators = explode(',', config('suggestion.list_operators_openidconnect'));
+    return view('list_operators')->with('operators', $operators);
   }
 
   /**
-     * Disconnect the user and clear session data.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-  public function disconnect(Request $request)
+   * Disconnect the user and clear session data.
+   *
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function disconnect(Session $session)
   {
-    $request->session()->flush();
-
+    $this->sessionService->forget('suggestion_user:'.$session->token());
+    
     return response()->json("Disconnected");
   }
 
   /**
-     * Handle external authentication with OpenID Connect.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-  public function externalConnection(Request $request)
+   * Handle external authentication with OpenID Connect.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @return \Illuminate\Http\RedirectResponse
+   */
+  public function externalConnection(Request $request, Session $session)
   {
     $connector = config('external_connector')[$request->connector];
     $moderator = array_map('strtolower', config('moderator')['moderator']);
@@ -65,6 +70,7 @@ class LoginController extends Controller
     if (config('external_connector')['external_proxy']) {
       $oidc->setHttpProxy(config('external_connector')['external_proxy']);
     }
+
     $oidc->authenticate();
 
     $user = new User([
@@ -92,14 +98,8 @@ class LoginController extends Controller
       }
     }
 
-    Session::put('utilisateur', $user);
+    $this->sessionService->set('suggestion_user:'.$session->token(), Crypt::encryptString($user));
 
-    return Redirect::to(env('APPLICATION_URL'));
+    return Redirect::to(config('app.url'));
   }
-
-  public function showOpenIdConnectOperators() 
-    { 
-        $operators = explode(',', env('LIST_OPERATORS_OPENIDCONNECT'));
-        return view('list_operators', ['operators' => $operators]); 
-    }
 }

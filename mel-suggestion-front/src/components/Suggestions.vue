@@ -24,21 +24,16 @@
         </tbody>
       </table>
       <div v-if="search.length >= 3 || !filteredSuggestions.length">
-        <div v-if="$no_auth" class="text-center mt-3">
-          <span class="text-red-600 dark:text-red-400">Vous devez être connecté pour publier une suggestion</span>
+        <div class="flex justify-center dark:text-title-blue">
+          <p v-show="!filteredSuggestions.length" class="my-3">Aucun résultat</p>
         </div>
-        <div v-else>
-          <div class="flex justify-center dark:text-title-blue">
-            <p v-show="!filteredSuggestions.length" class="my-3">Aucun résultat</p>
-          </div>
-          <div class="flex justify-center">
-            <button @click="showCreateSuggestion"
-              class="text-gray-900 dark:text-light-yellow bg-white dark:bg-light-blue border border-gray-300 dark:border-light-yellow hover:bg-gray-100 dark:hover:bg-dark-blue rounded-md text-sm px-5 py-2.5 mr-2 mb-2 mt-2">Créer
-              une suggestion</button>
-          </div>
-          <div v-show="create">
-            <CreateSuggestion :titleprops="search" />
-          </div>
+        <div class="flex justify-center">
+          <button @click="showCreateSuggestion"
+            class="text-gray-900 dark:text-light-yellow bg-white dark:bg-light-blue border border-gray-300 dark:border-light-yellow hover:bg-gray-100 dark:hover:bg-dark-blue rounded-md text-sm px-5 py-2.5 mr-2 mb-2 mt-2">Créer
+            une suggestion</button>
+        </div>
+        <div v-show="create">
+          <CreateSuggestion :titleprops="search" />
         </div>
       </div>
     </div>

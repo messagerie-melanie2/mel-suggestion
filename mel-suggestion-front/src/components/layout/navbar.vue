@@ -11,22 +11,20 @@
     </div>
       <ul class="flex p-4 rounded-lg md:space-x-8 text-sm md:font-medium md:bg-white dark:bg-gray-800 md:dark:bg-dark-blue dark:border-gray-700">
         <li>
-          <div v-if="!$no_auth">
-            <button @click="isHidden = !isHidden"
-              class="flex justify-between items-center p-2.5 w-full font-medium text-gray-700 rounded border-0 hover:text-blue-700 md:w-auto dark:text-gray-400 dark:hover:text-white dark:border-gray-700 dark:hover:bg-transparent focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700">
-              <img v-show="$user.picture" :src="$user.picture" referrerpolicy="no-referrer" class="rounded-full" width="40">
-              <span >{{ $user.name }}</span>
-              <i v-if="isHidden" class="fa-solid fa-chevron-down ml-2 w-3 h-3"></i>
-              <i v-else class="fa-solid fa-chevron-up ml-2 w-3 h-3"></i>
-            </button>
-            <div id="dropdownNavbar"
-              class="z-10 w-44 font-normal bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600"
-              :class="[isHidden ? 'hidden' : 'block']"
-              style="position: absolute;  margin: 0px; transform: translate(0px, 10px);">
-              <div class="py-1">
-                <a href="#" @click="disconnect"
-                  class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">Déconnexion</a>
-              </div>
+          <button @click="isHidden = !isHidden"
+            class="flex justify-between items-center p-2.5 w-full font-medium text-gray-700 rounded border-0 hover:text-blue-700 md:w-auto dark:text-gray-400 dark:hover:text-white dark:border-gray-700 dark:hover:bg-transparent focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700">
+            <img v-show="$user.picture" :src="$user.picture" referrerpolicy="no-referrer" class="rounded-full" width="40">
+            <span >{{ $user.name }}</span>
+            <i v-if="isHidden" class="fa-solid fa-chevron-down ml-2 w-3 h-3"></i>
+            <i v-else class="fa-solid fa-chevron-up ml-2 w-3 h-3"></i>
+          </button>
+          <div id="dropdownNavbar"
+            class="z-10 w-44 font-normal bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600"
+            :class="[isHidden ? 'hidden' : 'block']"
+            style="position: absolute;  margin: 0px; transform: translate(0px, 10px);">
+            <div class="py-1">
+              <a href="#" @click="disconnect"
+                class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">Déconnexion</a>
             </div>
           </div>
         </li>

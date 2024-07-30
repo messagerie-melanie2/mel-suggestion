@@ -43,10 +43,17 @@ class Kernel extends HttpKernel
     'api' => [
       \App\Http\Middleware\EncryptCookies::class,
       \Illuminate\Session\Middleware\StartSession::class,
-      // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
       'throttle:api',
       \Illuminate\Routing\Middleware\SubstituteBindings::class,
     ],
+
+    'user' => [
+      \App\Http\Middleware\EncryptCookies::class,
+      \Illuminate\Session\Middleware\StartSession::class,
+      'throttle:api',
+      \Illuminate\Routing\Middleware\SubstituteBindings::class,
+      'detect.auth.context'
+    ]
   ];
 
   /**
@@ -67,5 +74,6 @@ class Kernel extends HttpKernel
     'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
     'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     'custom_auth' => \App\Http\Middleware\CustomAuth::class,
+    'detect.auth.context' => \App\Http\Middleware\DetectAuthContext::class,
   ];
 }
