@@ -15,7 +15,8 @@ class RedisSessionService extends SessionService
 
     public function set($key, $value)
     {
-        Redis::set($key, json_encode($value));
+        $ttl = config('session.lifetime')*60;
+        Redis::setex($key, $ttl, json_encode($value));
     }
 
     public function has($key)

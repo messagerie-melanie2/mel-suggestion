@@ -30,10 +30,6 @@
             <h5 class="mb-3 text-base font-semibold text-gray-900 lg:text-xl text-center">Connexion</h5> 
             <p class="text-sm font-normal text-gray-500 ">Choisissez l'un des opérateurs ci-dessous pour vous connecter au module de suggestions : </p> 
             <ul class="my-4 space-y-3"> 
-            {{-- Boucler sur tous les opérateurs disponibles --}} 
-                @php
-                    $operators = explode(',', env('LIST_OPERATORS_OPENIDCONNECT'));
-                @endphp
                 @foreach($operators as $operator) 
                 <li> 
                     <a href="{{ url('connexion', ['connector' => $operator]) }}" class="flex items-center p-3 text-base font-bold text-gray-900 bg-gray-50 rounded-lg hover:bg-gray-100 group hover:shadow"> 

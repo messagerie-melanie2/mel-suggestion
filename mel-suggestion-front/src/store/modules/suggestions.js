@@ -29,9 +29,9 @@ const actions = {
       .then((response) => {
         Vue.prototype.$user = response.data;
         Vue.prototype.$anonymised = response.data.anonymised ?? false;
-        
+
         //Si l'utilisateur n'est pas connecté
-        if (Object.keys(response.data).length === 0) {
+        if (response.data.error) {
           window.location.href = process.env.VUE_APP_ROOT_API;
         }
         axiosClient

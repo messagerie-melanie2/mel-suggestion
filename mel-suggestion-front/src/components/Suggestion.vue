@@ -60,7 +60,7 @@
           </div>
         </div>
         <div id="user-actions"
-          v-show="(suggestion.my_suggestion || $user.moderator) && suggestion.state == 'moderate'">
+          v-show="(!$anonymised && (suggestion.my_suggestion || $user.moderator)) && suggestion.state == 'moderate'">
           <i class="fa-solid fa-edit mb-4 dark:text-title-blue dark:hover:text-blue-500 hover:text-blue-500 cursor-pointer"
             @click="toggleSuggestion" title="Éditer la suggestion"></i>
           <br>

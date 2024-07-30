@@ -17,8 +17,8 @@ class SessionServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(SessionService::class, function ($app) {
-            $driver = env('SESSION_DRIVER', 'file');
-
+            $driver = config('session.driver');
+            
             if ($driver === 'redis') {
                 return new RedisSessionService();
             }

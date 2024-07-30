@@ -31,7 +31,9 @@ class UserController extends Controller
       return Crypt::decryptString($encryptedUser);
     }
     else {
-      return "La valeur n'existe pas en session";
+        return response()->json([
+          'error' => 'Data not found'
+      ]);
     }
   }
 }

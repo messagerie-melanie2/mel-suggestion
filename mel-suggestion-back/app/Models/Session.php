@@ -40,7 +40,7 @@ class Session extends Model
     // FacadesSession::put('utilisateur', $user);
 
     // Vérifier si la connexion via session Roundcube est activée
-    if (!env('USE_ROUNDCUBE_SESSION', false)) {
+    if (!config('suggestion.use_roundcube_session')) {
       // Log::debug('Connexion via session Roundcube désactivée.');
       return;
     }

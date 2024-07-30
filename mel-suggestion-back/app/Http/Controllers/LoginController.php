@@ -32,7 +32,8 @@ class LoginController extends Controller
    */
   public function index()
   {
-    return view('list_operators');
+    $operators = explode(',', config('suggestion.list_operators_openidconnect'));
+    return view('list_operators')->with('operators', $operators);
   }
 
   /**
@@ -99,12 +100,6 @@ class LoginController extends Controller
 
     $this->sessionService->set('suggestion_user:'.$session->token(), Crypt::encryptString($user));
 
-    return Redirect::to(env('APPLICATION_URL'));
-  }
-
-  public function showOpenIdConnectOperators()
-  {
-    $operators = explode(',', env('LIST_OPERATORS_OPENIDCONNECT'));
-    return view('list_operators', ['operators' => $operators]);
+    return Redirect::to(config('app.url'));
   }
 }
