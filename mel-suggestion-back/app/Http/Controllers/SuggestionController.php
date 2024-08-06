@@ -4,18 +4,35 @@ namespace App\Http\Controllers;
 
 use App\Models\Notification;
 use App\Models\Suggestion;
+use App\Models\User;
+use App\Services\SessionService;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Session\Session;
+use Illuminate\Support\Facades\Crypt;
 
 class SuggestionController extends Controller
 {
+  protected $sessionService;
+
+  public function __construct(SessionService $sessionService)
+  {
+    $this->sessionService = $sessionService;
+  }
+  
   /**
    * Display a listing of the moderate and user's suggestions.
    *
    * @return \Illuminate\Http\Response
    */
-  public function index()
+  public function index(Session $session)
   {
-    $suggestions = Suggestion::getAllSuggestionsByInstance();
+    $user = New User();
+    if ($this->sessionService->has('suggestion_user:'.$session->token())) {
+      $encryptedUser = $this->sessionService->get('suggestion_user:'.$session->token());
+      $user = json_decode(Crypt::decryptString($encryptedUser));
+    }
+    
+    $suggestions = Suggestion::getAllSuggestionsByInstance($user);
 
     return response()->json($suggestions);
   }

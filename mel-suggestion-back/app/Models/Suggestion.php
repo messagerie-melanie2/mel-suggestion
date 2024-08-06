@@ -32,6 +32,7 @@ class Suggestion extends Model
     'comment'
   ];
 
+
   /**
      * Get all suggestions by instance.
      *
@@ -41,16 +42,14 @@ class Suggestion extends Model
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-  public static function getAllSuggestionsByInstance()
+  public static function getAllSuggestionsByInstance($session_user)
   {
     $suggestions = Suggestion::where('instance', config('suggestion.instance'))->get();
-
-    $session_user = Session::get('utilisateur') != null ? Session::get('utilisateur') : new User();
 
     $suggestions_ids = [];
 
     foreach ($suggestions as $key => $suggestion) {
-      if (!$session_user['moderator']) {
+      if (!$session_user->moderator) {
         if ($suggestion->state == 'moderate' && $suggestion->user_email != $session_user->email) {
           unset($suggestions[$key]);
           continue;
