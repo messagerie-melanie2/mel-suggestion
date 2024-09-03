@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 //Comment group for dev
-Route::group(['middleware' => ['api']], function () {
+Route::group(['middleware' => ['secured_api']], function () {
   Route::apiResource('suggestions', SuggestionController::class);
   Route::put('suggestions/state/{id}', [SuggestionController::class, 'updateState']);
   Route::get('text', [SuggestionController::class, 'getText']);
