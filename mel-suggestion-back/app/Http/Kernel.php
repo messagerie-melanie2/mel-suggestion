@@ -45,6 +45,7 @@ class Kernel extends HttpKernel
       \Illuminate\Session\Middleware\StartSession::class,
       'throttle:api',
       \Illuminate\Routing\Middleware\SubstituteBindings::class,
+      'check.user.authenticated'
     ],
 
     'user' => [
@@ -75,5 +76,6 @@ class Kernel extends HttpKernel
     'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     'custom_auth' => \App\Http\Middleware\CustomAuth::class,
     'detect.auth.context' => \App\Http\Middleware\DetectAuthContext::class,
+    'check.user.authenticated' => \App\Http\Middleware\CheckUserAuthenticated::class,
   ];
 }
