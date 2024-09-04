@@ -1,30 +1,35 @@
 <template>
   <section>
     <div v-if="!loadingStatus">
-      <div v-if="$user.origin != 'mel'">
-        <Navbar :title="allText.application_name" />
-      </div>
-      <ChangeStateModal v-show="showStateModal" :modalInfo="this.modalInfo" @close-modal="showStateModal = false" />
-      <ChangeCommentModal v-show="showCommentModal" :modalInfo="this.modalInfo" :comment="this.modalComment"
-        @close-modal="showCommentModal = false" />
+      <div v-if="$no_authenticated === false">
+        <div v-if="$user.origin != 'mel'">
+          <Navbar :title="allText.application_name" />
+        </div>
+        <ChangeStateModal v-show="showStateModal" :modalInfo="this.modalInfo" @close-modal="showStateModal = false" />
+        <ChangeCommentModal v-show="showCommentModal" :modalInfo="this.modalInfo" :comment="this.modalComment"
+          @close-modal="showCommentModal = false" />
 
-      <body class="flex items-center justify-center">
-        <div class="w-full max-w-4xl px-4" :class="[$user.origin != 'mel' ? 'mt-7' : '']">
-          <Header :title="allText.title" />
-          <div class="rounded-lg pb-6 border border-gray-300 dark:border-gray-800 bg-white dark:bg-light-blue">
-            <div
-              class="flex flex-wrap items-center justify-between px-6 py-3 border-b border-gray-300 dark:border-light-blue">
-              <SortingButton />
-              <Search />
-            </div>
-            <div>
-              <section>
-                <Suggestions :suggestions="allSuggestions" :index="allIndexes" />
-              </section>
+        <body class="flex items-center justify-center">
+          <div class="w-full max-w-4xl px-4" :class="[$user.origin != 'mel' ? 'mt-7' : '']">
+            <Header :title="allText.title" />
+            <div class="rounded-lg pb-6 border border-gray-300 dark:border-gray-800 bg-white dark:bg-light-blue">
+              <div
+                class="flex flex-wrap items-center justify-between px-6 py-3 border-b border-gray-300 dark:border-light-blue">
+                <SortingButton />
+                <Search />
+              </div>
+              <div>
+                <section>
+                  <Suggestions :suggestions="allSuggestions" :index="allIndexes" />
+                </section>
+              </div>
             </div>
           </div>
-        </div>
-      </body>
+        </body>
+      </div>
+      <div v-else>
+        <Login :loginOperators="loginOperators" />
+      </div>
     </div>
     <div v-else>
       <Preloader color="gray" />
@@ -44,6 +49,7 @@ import Preloader from './components/Preloader.vue'
 import Navbar from './components/layout/navbar.vue'
 import ChangeStateModal from './components/Modals/ChangeStateModal.vue';
 import ChangeCommentModal from "./components/Modals/ChangeCommentModal.vue";
+import Login from "./components/Login/Login.vue";
 
 export default {
   name: "App",
@@ -57,8 +63,7 @@ export default {
     };
   },
   created() {
-    this.fetchSuggestions(),
-      this.fetchText()
+    this.fetchData()
   },
 
   mounted() {
@@ -72,11 +77,21 @@ export default {
         this.modalComment = e.suggestion.comment;
       }),
       this.$root.$on('refresh', () => {
-      this.fetchSuggestions()
-    })
+        this.fetchData();
+      })
   },
   methods: {
-    ...mapActions(['fetchSuggestions', 'fetchText'])
+    ...mapActions(['fetchUser', 'fetchSuggestions', 'fetchLoginOperators', 'fetchText']),
+    fetchData() {
+      this.fetchUser().then(() => {
+        if (this.user) {
+          this.fetchSuggestions();
+        }
+        else {
+          this.fetchLoginOperators();
+        }
+      })
+    }
   },
   components: {
     Header,
@@ -86,16 +101,17 @@ export default {
     Preloader,
     Navbar,
     ChangeStateModal,
-    ChangeCommentModal
+    ChangeCommentModal,
+    Login
   },
-  computed: mapGetters(['allSuggestions', 'allIndexes', 'loadingStatus', 'allText']),
+  computed: mapGetters(['allSuggestions', 'allIndexes', 'loadingStatus', 'allText', 'user', 'loginOperators']),
 };
 
 </script>
 
 
 <style>
-.Vue-Toastification__toast.bottom-right{
+.Vue-Toastification__toast.bottom-right {
   margin-bottom: 60px !important;
 }
 
@@ -127,5 +143,9 @@ export default {
 .dark svg,
 .dark .svg {
   filter: invert(69%) sepia(75%) saturate(408%) hue-rotate(184deg) brightness(100%) contrast(82%);
+}
+
+.no-dark-svg {
+  filter: none !important;
 }
 </style>

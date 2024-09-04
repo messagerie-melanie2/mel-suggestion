@@ -37,8 +37,33 @@ class LoginController extends Controller
   }
 
   /**
+   * Return operator credential
+   * @param  \Illuminate\Http\Request  $request
+   * 
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function getOperatorCredential(Request $request)
+  {
+    $connector = config('external_connector')[$request->connector];
+    return response()->json($connector);
+  }
+
+  /**
+   * Return login operators
+   * 
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function getOperators()
+  {
+    $operators = explode(',', config('suggestion.list_operators_openidconnect'));
+    return response()->json($operators);
+  }
+
+  /**
    * Disconnect the user and clear session data.
    *
+   * @param  \Illuminate\Contracts\Session\Session  $session
+   * 
    * @return \Illuminate\Http\JsonResponse
    */
   public function disconnect(Session $session)
@@ -52,6 +77,8 @@ class LoginController extends Controller
    * Handle external authentication with OpenID Connect.
    *
    * @param  \Illuminate\Http\Request  $request
+   * @param  \Illuminate\Contracts\Session\Session  $session
+   * 
    * @return \Illuminate\Http\RedirectResponse
    */
   public function externalConnection(Request $request, Session $session)

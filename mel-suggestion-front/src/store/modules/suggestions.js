@@ -3,8 +3,12 @@ import axiosClient from '../../axios';
 
 Vue.prototype.$user = {};
 Vue.prototype.$anonymised = false;
+Vue.prototype.$no_authenticated = false;
 
 const state = {
+  user: null,
+  loginOperators: [],
+  loginOperatorCredential: [],
   suggestions: [],
   indexes: [],
   loadingStatus: false
@@ -13,46 +17,73 @@ const state = {
 const getters = {
   allSuggestions: (state) => state.suggestions,
   allIndexes: (state) => state.indexes,
-  loadingStatus: (state) => state.loadingStatus
+  loadingStatus: (state) => state.loadingStatus,
+  user: (state) => state.user,
+  loginOperators: (state) => state.loginOperators,
+  loginOperatorCredential: (state) => state.loginOperatorCredential
 };
 
 const actions = {
-  fetchSuggestions({ commit }) {
+  fetchUser({ commit }) {
     commit('loadingStatus', true)
-    axiosClient
-      .get("/user")
+    return axiosClient.get("/user")
       .catch((error) => {
         console.log(error);
         commit('loadingStatus', false)
         this._vm.$toast.error("Erreur lors du chargement des données");
       })
       .then((response) => {
-        Vue.prototype.$user = response.data;
-        Vue.prototype.$anonymised = response.data.anonymised ?? false;
-
         //Si l'utilisateur n'est pas connecté
         if (response.data.error) {
-          window.location.href = process.env.VUE_APP_ROOT_API;
+          Vue.prototype.$no_authenticated = true;
         }
-        axiosClient
-          .get("/suggestions")
-          .then((response) => {
-            if (typeof response.data === 'object') {
-              response.data = Object.keys(response.data)
-                .map(function (key) {
-                  return response.data[key];
-                });
-            }
-            commit('setSuggestions', response.data);
-            commit('setIndexes', createIndex(response.data));
-            // createIndex(response.data);
-          })
-          .catch((error) => {
-            console.log(error);
-            this._vm.$toast.error("Erreur lors du chargement des données");
-          }).finally(() => {
-            commit('loadingStatus', false)
-          });
+        else {
+          Vue.prototype.$user = response.data;
+          Vue.prototype.$anonymised = response.data.anonymised ?? false;
+          commit('setUser', response.data);
+        }
+      }).finally(() => {
+        commit('loadingStatus', false)
+      });
+  },
+
+  fetchSuggestions({ commit }) {
+    axiosClient.get("/suggestions")
+      .then((response) => {
+        if (typeof response.data === 'object') {
+          response.data = Object.keys(response.data)
+            .map(function (key) {
+              return response.data[key];
+            });
+        }
+        commit('setSuggestions', response.data);
+        commit('setIndexes', createIndex(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+        this._vm.$toast.error("Erreur lors du chargement des suggestions");
+      })
+  },
+
+  fetchLoginOperators({ commit }) {
+    axiosClient.get("/login/operators")
+      .then((response) => {
+        commit('setLoginOperators', response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        this._vm.$toast.error("Erreur lors de la récupération des moyens de connexion");
+      });
+  },
+
+  fetchOperatorCredential({ commit }, connector) {
+    return axiosClient.get(`login/operator/${connector}`)
+      .then((response) => {
+        commit('setLoginOperatorCredential', response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        this._vm.$toast.error("Erreur lors de la récupération des moyens de connexion");
       });
   },
 
@@ -131,7 +162,10 @@ const mutations = {
       state.suggestions.splice(index, 1, updSuggestion);
     }
     state.indexes = createIndex(state.suggestions);
-  }
+  },
+  setUser: (state, user) => (state.user = user),
+  setLoginOperators: (state, loginOperators) => (state.loginOperators = loginOperators),
+  setLoginOperatorCredential: (state, loginOperatorCredential) => (state.loginOperatorCredential = loginOperatorCredential),
 };
 
 export default {

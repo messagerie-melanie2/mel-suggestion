@@ -29,4 +29,6 @@ Route::group(['middleware' => ['secured_api']], function () {
 
 Route::group(['middleware' => ['user']], function () {
   Route::get('user', [UserController::class, 'index']);
+  Route::get('login/operator/{connector}', [LoginController::class, 'getOperatorCredential']);
+  Route::get('login/operators', [LoginController::class, 'getOperators']);
 });
