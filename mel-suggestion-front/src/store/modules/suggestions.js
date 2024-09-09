@@ -3,7 +3,6 @@ import axiosClient from '../../axios';
 
 Vue.prototype.$user = {};
 Vue.prototype.$anonymised = false;
-Vue.prototype.$no_authenticated = false;
 
 const state = {
   user: null,
@@ -11,7 +10,9 @@ const state = {
   loginOperatorCredential: [],
   suggestions: [],
   indexes: [],
-  loadingStatus: false
+  loadingStatus: false,
+  oidcSettings: null,
+  isAuthenticated: false
 };
 
 const getters = {
@@ -20,7 +21,9 @@ const getters = {
   loadingStatus: (state) => state.loadingStatus,
   user: (state) => state.user,
   loginOperators: (state) => state.loginOperators,
-  loginOperatorCredential: (state) => state.loginOperatorCredential
+  loginOperatorCredential: (state) => state.loginOperatorCredential,
+  oidcSettings: state => state.oidcSettings,
+  isAuthenticated: state => state.isAuthenticated,
 };
 
 const actions = {
@@ -35,7 +38,7 @@ const actions = {
       .then((response) => {
         //Si l'utilisateur n'est pas connecté
         if (response.data.error) {
-          Vue.prototype.$no_authenticated = true;
+          // Vue.prototype.$isAuthenticated = true;
         }
         else {
           Vue.prototype.$user = response.data;
@@ -45,6 +48,21 @@ const actions = {
       }).finally(() => {
         commit('loadingStatus', false)
       });
+  },
+
+  setUser({ commit }, user) {
+    axiosClient
+      .post("/login/connect", {
+        user: user
+      })
+      .then((response) => {
+        console.log(response);
+
+        commit('isAuthenticated', response.data ? true : false);
+      }).catch((error) => {
+        console.log(error);
+        this._vm.$toast.error("Erreur lors de la création de la suggestion");
+      })
   },
 
   fetchSuggestions({ commit }) {
@@ -141,6 +159,14 @@ const actions = {
         this._vm.$toast.error("Erreur lors de la modification de la suggestion");
         console.log(error);
       })
+  },
+
+  setOidcSettings({ commit }, settings) {
+    commit('setOidcSettings', settings)
+  },
+
+  setIsAuthenticated({ commit }, auth) {
+    commit('setIsAuthenticated', auth)
   }
 };
 
@@ -166,6 +192,8 @@ const mutations = {
   setUser: (state, user) => (state.user = user),
   setLoginOperators: (state, loginOperators) => (state.loginOperators = loginOperators),
   setLoginOperatorCredential: (state, loginOperatorCredential) => (state.loginOperatorCredential = loginOperatorCredential),
+  setOidcSettings: (state, settings) => (state.oidcSettings = settings),
+  setIsAuthenticated: (state, auth) => (state.isAuthenticated = auth),
 };
 
 export default {

@@ -129,4 +129,40 @@ class LoginController extends Controller
 
     return Redirect::to(config('app.url'));
   }
+
+  public function loginUser(Request $request, Session $session) {
+    $request_user = $request->input('user');
+    
+    $connector = config('external_connector')[$request_user['connector']];
+    $moderator = array_map('strtolower', config('moderator')['moderator']);
+
+    $user = new User([
+      'origin' => $request_user['connector'],
+      'sub' =>  $request_user['sub'],
+      'anonymised' =>  Config::get('app.suggestion_anonymize'),
+    ]);
+
+    foreach ($connector['client_fields'] as $field) {
+      if ($field === "email") {
+        if ($request_user[$field] === null) {
+          if ($request_user['unique_name'] !== null) {
+            $email = $request_user['unique_name'];
+            $user->$field =  $email;
+            $user->moderator = in_array(strtolower($email), $moderator) ? true : false;
+            continue;
+          }
+        } else {
+          $email = $request_user['email'];
+          $user->$field = $email;
+          $user->moderator = in_array(strtolower($email), $moderator) ? true : false;
+        }
+      } else {
+        $user->$field = $request_user[$field];
+      }
+    }
+
+    $this->sessionService->set('suggestion_user:'.$session->token(), Crypt::encryptString($user));
+
+    return response()->json($user);
+  }
 }

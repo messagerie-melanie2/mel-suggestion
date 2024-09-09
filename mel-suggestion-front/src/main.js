@@ -4,7 +4,8 @@ import axios from 'axios';
 import Toast from "vue-toastification";
 import store from './store'
 import "vue-toastification/dist/index.css";
-import './index.css'
+import './index.css';
+import router from './router';
 
 Vue.config.productionTip = false
 Vue.use(Toast, { position: "bottom-right" });
@@ -12,6 +13,7 @@ Vue.prototype.$axios = axios;
 
 new Vue({
   store,
+  router,
   beforeCreate: function () {
     window.addEventListener('message', (arg) => {
       if (arg.data == "colorMode") {
@@ -19,17 +21,17 @@ new Vue({
       }
     })
     getTheme();
-    Vue.prototype.$suggestionUrl = window.location.origin + window.location.pathname + '#suggestionId';
-    Vue.prototype.$hasScrolled = false;
-    Vue.prototype.$searchId = location.hash.replace('#','');
-    if (window !== top) {
-      top.postMessage('suggestion.app.url', '*');
-      window.addEventListener('message', (arg) => {
-        if (arg.data.type == "suggestionUrl") {
-          Vue.prototype.$suggestionUrl = arg.data.value;
-        }
-      })
-    }
+    // Vue.prototype.$suggestionUrl = window.location.origin + window.location.pathname + '#suggestionId';
+    // Vue.prototype.$hasScrolled = false;
+    // Vue.prototype.$searchId = location.hash.replace('#','');
+    // if (window !== top) {
+    //   top.postMessage('suggestion.app.url', '*');
+    //   window.addEventListener('message', (arg) => {
+    //     if (arg.data.type == "suggestionUrl") {
+    //       Vue.prototype.$suggestionUrl = arg.data.value;
+    //     }
+    //   })
+    // }
 
   },
   render: h => h(App),

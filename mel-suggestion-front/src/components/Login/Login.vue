@@ -91,50 +91,45 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import { UserManager, UserManagerSettings } from 'oidc-client-ts';
+import { UserManager } from 'oidc-client';
 
 export default {
-  name: "Login",
-  props: {
-    loginOperators: Array,
-  },
   data() {
     return {
       userManager: null,
+      userProfile: null,
+      isAuthenticated: false,
     };
   },
+  mounted() {
+    this.fetchLoginOperators();
+  },
   methods: {
-    ...mapActions(['fetchOperatorCredential']),
-    login(operator) {
-      this.fetchOperatorCredential(operator).then(() => {
-        console.log(this.loginOperatorCredential);        
-      });
-    },
-    async configureOidc(credential) {
-      try {
-        // Récupérer la configuration depuis l'API backend
-        const response = await fetch('https://your-backend-api.com/oidc-config');
-        const config = credential;
+    ...mapActions(['fetchOperatorCredential', 'fetchLoginOperators', 'setOidcSettings']),
+    async login(operator) {
+      await this.fetchOperatorCredential(operator);
 
-        // Créer une configuration OIDC dynamique
-        const oidcConfig: UserManagerSettings = {
-          authority: config.authority,
-          client_id: config.client_id,
-          redirect_uri: config.redirect_uri || 'http://localhost:8080/callback',
-          post_logout_redirect_uri: config.post_logout_redirect_uri || 'http://localhost:8080/',
-          response_type: config.response_type || 'code',
-          scope: config.scope || 'openid profile email',
-          automaticSilentRenew: true,
-          silent_redirect_uri: config.silent_redirect_uri || 'http://localhost:8080/silent-renew.html',
-        };
+      const redirectUri = this.$router.resolve({ name: 'Callback' }).href
 
-        // Initialiser le gestionnaire OIDC
-        this.userManager = new UserManager(oidcConfig);
-      } catch (error) {
-        console.error('Erreur de configuration OIDC:', error);
+      const settings = {
+        authority: this.loginOperatorCredential.client_url,
+        client_id: this.loginOperatorCredential.client_id,
+        client_secret: this.loginOperatorCredential.client_secret,
+        redirect_uri: window.location.origin + redirectUri,
+        response_type: 'code',
+        scope: 'openid profile email'
       }
+
+      this.userManager = new UserManager(settings);
+
+      // localStorage.setItem('oidcSettings', JSON.stringify(settings));
+
+      console.log('LOGIN', JSON.stringify(settings));
+
+      // this.$router.push({ name: 'Callback' });
+      // this.userManager.signinRedirect();
     },
   },
-  computed: mapGetters(['loginOperatorCredential']),
+  computed: mapGetters(['loginOperatorCredential', 'loginOperators', 'oidcSettings']),
 };
 </script>
