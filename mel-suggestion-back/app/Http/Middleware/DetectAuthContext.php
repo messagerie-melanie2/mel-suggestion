@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class DetectAuthContext
 {
@@ -28,19 +29,35 @@ class DetectAuthContext
      */
     public function handle(Request $request, Closure $next)
     {
+        //Si l'utilisateur est authentifié on ne recréé pas de session
         if ($this->sessionService->has('suggestion_user:'.$request->session()->token())) {
             return $next($request);
         }
-        
+
         if (config('suggestion.use_roundcube_session')) {
-            if ($request->cookie('roundcube_sessid')) {
-                // Authentifiez l'utilisateur avec le token
-                // $user = $this->sessionService->get('user:' . $token);
+            if (isset($_COOKIE['roundcube_sessid']) && !empty($_COOKIE['roundcube_sessid'])) {
+                session_id($_COOKIE['roundcube_sessid']);
+                session_start();
+              
+                if (env('ROUNDCUBE_SESSION_DRIVER') == "memcached") {
+                    $m = new \Memcache();
+                    $memcached_hosts = explode(',', env('MEMCACHED_HOSTS'));
+                    foreach ($memcached_hosts as $host) {
+                      list($host, $port) = explode(':', $host);
+                      if (!$port) $port = 11211;
+                      $m->addServer($host, $port);
+                    }
+                    $vars = unserialize($m->get($_COOKIE['roundcube_sessid']));
+                    session_decode($vars['vars']);
+                    Log::info('Cache type : memcache');
+                  }
+
+                $moderator = array_map('strtolower', config('moderator')['moderator']);
                 $user = new User([
-                    'origin' => 'google',
-                    'name' => "Test Test2",
-                    'email' => "Test@email.com",
-                    'moderator' => true,
+                    'origin' => 'mel',
+                    'name' => $_SESSION['firstname'] . ' ' . $_SESSION['lastname'],
+                    'email' => $_SESSION['email'],
+                    'moderator' => in_array(strtolower($_SESSION['email']), $moderator) ? true : false,
                     'anonymised' => Config::get('app.suggestion_anonymize'),
                   ]);
                 if ($user) {
