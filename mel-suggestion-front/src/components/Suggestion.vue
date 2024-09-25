@@ -7,7 +7,7 @@
         <div id="suggestion" class="flex items-center w-full">
           <div class="flex justify-between" v-show="suggestion.state == 'vote'">
             <div class="mr-4">
-              <i class="fa-solid fa-check text-xl"
+              <i class="fas fa-check text-xl"
                 :class="[suggestion.voted_type == 'up' ? 'text-green-500 hover:text-gray-500' : 'text-gray-500 hover:text-green-500 dark:text-gray-400 dark:hover:text-green-500']"
                 @click.stop="toggleVote('up')"></i>
               <br>
@@ -16,7 +16,7 @@
               </div>
             </div>
             <div class="mr-2">
-              <i class="fa-solid fa-times text-xl "
+              <i class="fas fa-times text-xl "
                 :class="[suggestion.voted_type == 'down' ? 'text-red-400 hover:text-gray-500' : 'text-gray-500 hover:text-red-400 dark:text-gray-400 dark:hover:text-red-400']"
                 @click.stop="toggleVote('down')"></i>
               <br>
@@ -61,11 +61,11 @@
         </div>
         <div id="user-actions"
           v-show="(!$anonymised && (suggestion.my_suggestion || $user.moderator)) && suggestion.state == 'moderate'">
-          <i class="fa-solid fa-edit mb-4 dark:text-title-blue dark:hover:text-blue-500 hover:text-blue-500 cursor-pointer"
+          <i class="fas fa-edit mb-4 dark:text-title-blue dark:hover:text-blue-500 hover:text-blue-500 cursor-pointer"
             @click="toggleSuggestion" title="Éditer la suggestion"></i>
           <br>
           <i v-show="!$user.moderator"
-            class="fa-solid fa-trash mt-4 dark:text-title-blue dark:hover:text-red-500 hover:text-red-500 cursor-pointer"
+            class="fas fa-trash mt-4 dark:text-title-blue dark:hover:text-red-500 hover:text-red-500 cursor-pointer"
             title="Supprimer la suggestion" @click.stop="onDelete"></i>
         </div>
 
@@ -75,7 +75,7 @@
 
       <div v-if="showSuggestion">
         <div class="flex justify-end">
-          <i class="fa-solid fa-edit mb-4 hover:text-blue-500 cursor-pointer" @click="toggleSuggestion"></i>
+          <i class="fas fa-edit mb-4 hover:text-blue-500 cursor-pointer" @click="toggleSuggestion"></i>
         </div>
 
         <UpdateSuggestion @update-suggestion="updateSuggestions" :suggestion="suggestion" />
@@ -86,11 +86,11 @@
         <div class="flex justify-between">
           <div>
             <h5 class="mb-2 text-md font-semibold tracking-tight dark:text-white">{{ this.allText.comment_from }}<i
-                class="fa-solid fa-circle-check text-blue-700 ml-2"></i></h5>
+                class="fas fa-circle-check text-blue-700 ml-2"></i></h5>
             <p class="font-normal text-gray-700 dark:text-gray-400">{{ suggestion.comment }}</p>
           </div>
           <i v-if="$user.moderator"
-            class="fa-solid fa-edit dark:text-title-blue dark:hover:text-blue-500 hover:text-blue-500 cursor-pointer"
+            class="fas fa-edit dark:text-title-blue dark:hover:text-blue-500 hover:text-blue-500 cursor-pointer"
             @click.stop="changeComment" title="Éditer le commentaire"></i>
         </div>
       </div>

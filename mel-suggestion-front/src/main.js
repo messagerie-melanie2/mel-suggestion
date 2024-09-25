@@ -5,7 +5,8 @@ import Toast from "vue-toastification";
 import store from './store'
 import "vue-toastification/dist/index.css";
 import './index.css'
-import '@fortawesome/fontawesome-free/css/all.css';
+
+import '@/assets/styles/fontawesome.css';
 
 Vue.config.productionTip = false
 Vue.use(Toast, { position: "bottom-right" });

@@ -4,8 +4,8 @@
     <!-- Tab Header -->
     <div class="tab__header">
       <a href="#" class="tab__link pb-2 block bg-blue-dark text-gray-600 dark:text-common-blue flex justify-center">
-        <span v-show="!active"><i class="fa-solid fa-chevron-down"></i></span>
-        <span class="up-Arrow" v-show="active"><i class="fa-solid fa-chevron-up"></i></span>
+        <span v-show="!active"><i class="fas fa-chevron-down"></i></span>
+        <span class="up-Arrow" v-show="active"><i class="fas fa-chevron-up"></i></span>
       </a>
     </div>
     <!-- Tab Content -->
@@ -36,7 +36,7 @@
           <div v-if="suggestion.state != 'refused' && suggestion.state != 'moderate'">
             <button @click.stop="copyLink"
               class="text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white active:bg-blue-600 font-bold uppercase text-xs px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150">
-              <i class="fa-solid fa-link mr-1"></i> {{ copyLinkText }}</button>
+              <i class="fas fa-link mr-1"></i> {{ copyLinkText }}</button>
           
           </div>
         </div>
@@ -51,7 +51,7 @@
           <div v-if="suggestion.state != 'refused' && suggestion.state != 'moderate'">
             <button @click.stop="copyLink"
               class="text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white active:bg-blue-600 font-bold uppercase text-xs px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150">
-              <i class="fa-solid fa-link mr-1"></i> {{ copyLinkText }}</button>
+              <i class="fas fa-link mr-1"></i> {{ copyLinkText }}</button>
           </div>
         </div>
       </div>

@@ -43,11 +43,15 @@ class SuggestionController extends Controller
    * @param  \Illuminate\Http\Request  $request
    * @return \Illuminate\Http\Response
    */
-  public function store(Request $request)
+  public function store(Request $request, Session $session)
   {
-    $session_user = $request->session()->get('utilisateur');
+    $session_user = New User();
+    if ($this->sessionService->has('suggestion_user:'.$session->token())) {
+      $encryptedUser = $this->sessionService->get('suggestion_user:'.$session->token());
+      $session_user = json_decode(Crypt::decryptString($encryptedUser));
+    }
 
-    if (config('suggestion.notification') && config('moderator.moderator')[0] !== "") {
+    if (config('suggestion.notification') && config('moderator.moderator')[0] !== "" && config('suggestion.use_roundcube_session')) {
       foreach (config('moderator.moderator') as $email) {
         if ($email != $session_user->email) {
           $class = config('suggestion.orm_path') . "\User";
@@ -86,11 +90,14 @@ class SuggestionController extends Controller
       'instance' => config('suggestion.instance'),
     ]);
 
-    $newSuggestion->save();
-    $newSuggestion->votes_up = 0;
-    $newSuggestion->votes_down = 0;
-
-    return response()->json($newSuggestion);
+    if ($newSuggestion->save()) {
+      $newSuggestion->votes_up = 0;
+      $newSuggestion->votes_down = 0;
+  
+      return response()->json($newSuggestion);
+    } else {
+      return response('Error saving the data', 401);
+    }
   }
 
 
