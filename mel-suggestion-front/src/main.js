@@ -6,8 +6,6 @@ import store from './store'
 import "vue-toastification/dist/index.css";
 import './index.css'
 
-import '@/assets/styles/fontawesome.css';
-
 Vue.config.productionTip = false
 Vue.use(Toast, { position: "bottom-right" });
 Vue.prototype.$axios = axios;
