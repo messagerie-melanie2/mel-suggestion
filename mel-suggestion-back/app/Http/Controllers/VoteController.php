@@ -2,13 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Vote;
+use App\Services\SessionService;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Crypt;
 
 class VoteController extends Controller
 {
+
+  protected $sessionService;
+
+  public function __construct(SessionService $sessionService)
+  {
+    $this->sessionService = $sessionService;
+  }
+  
   /**
    * Display a listing of the votes.
    *
@@ -24,19 +35,26 @@ class VoteController extends Controller
   /**
    * Store a newly vote in storage.
    *
+   * @param  Illuminate\Contracts\Session\Session $session
    * @param  \Illuminate\Http\Request  $request
+   * 
    * @return \Illuminate\Http\Response
    */
-  public function store(Request $request)
+  public function store(Request $request, Session $session)
   {
+    $user = New User();
+    if ($this->sessionService->has('suggestion_user:'.$session->token())) {
+      $encryptedUser = $this->sessionService->get('suggestion_user:'.$session->token());
+      $user = json_decode(Crypt::decryptString($encryptedUser));
+    }
     $request->validate([
       'suggestion_id' => 'required'
     ]);
 
     if (Config::get('app.suggestion_anonymize') === true) {
-      $user_email = isset($request->session()->get('utilisateur')->sub) ? $request->session()->get('utilisateur')->sub : $request->session()->get('utilisateur')->email;
+      $user_email = isset($user->sub) ? $user->sub : $user->email;
     } else {
-      $user_email = $request->session()->get('utilisateur')->email;
+      $user_email = $user->email;
     }
 
     $newVote = new Vote([
