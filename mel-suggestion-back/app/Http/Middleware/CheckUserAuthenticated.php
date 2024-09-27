@@ -25,7 +25,7 @@ class CheckUserAuthenticated
     public function handle(Request $request, Closure $next)
     {
         // Si l'utilisateur n'est pas authentifié, on bloque la requête
-        if (!$this->sessionService->has('suggestion_user:'.$request->session()->token())) {
+        if (!$this->sessionService->has('suggestion_user:'.session()->getId())) {
             return response('Unauthorized', 401);
         }
         

@@ -30,7 +30,7 @@ class DetectAuthContext
     public function handle(Request $request, Closure $next)
     {
         //Si l'utilisateur est authentifié on ne recréé pas de session
-        if ($this->sessionService->has('suggestion_user:'.$request->session()->token())) {
+        if ($this->sessionService->has('suggestion_user:'.session()->getId())) {
             return $next($request);
         }
 
@@ -61,7 +61,7 @@ class DetectAuthContext
                     'anonymised' => Config::get('app.suggestion_anonymize'),
                   ]);
                 if ($user) {
-                    $this->sessionService->set('suggestion_user:' . $request->session()->token(), Crypt::encryptString($user));
+                    $this->sessionService->set('suggestion_user:' . session()->getId(), Crypt::encryptString($user));
                 } else {
                     return response('Unauthorized', 401);
                 }

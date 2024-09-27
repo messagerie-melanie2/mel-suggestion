@@ -98,7 +98,7 @@ class LoginController extends Controller
       }
     }
 
-    $this->sessionService->set('suggestion_user:'.$session->token(), Crypt::encryptString($user));
+    $this->sessionService->set('suggestion_user:'.session()->getId(), Crypt::encryptString($user));
 
     return Redirect::to(config('app.url'));
   }
