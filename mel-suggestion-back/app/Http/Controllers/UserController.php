@@ -24,10 +24,10 @@ class UserController extends Controller
      * Display user information.
      *
      */
-  public function index(Session $session)
+  public function index()
   {
-    if ($this->sessionService->has('suggestion_user:'.$session->token())) {
-      $encryptedUser = $this->sessionService->get('suggestion_user:'.$session->token());
+    if ($this->sessionService->has('suggestion_user:'.session()->getId())) {
+      $encryptedUser = $this->sessionService->get('suggestion_user:'.session()->getId());
       return Crypt::decryptString($encryptedUser);
     }
     else {

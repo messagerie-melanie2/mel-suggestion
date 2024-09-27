@@ -41,9 +41,9 @@ class LoginController extends Controller
    *
    * @return \Illuminate\Http\JsonResponse
    */
-  public function disconnect(Session $session)
+  public function disconnect()
   {
-    $this->sessionService->forget('suggestion_user:'.$session->token());
+    $this->sessionService->forget('suggestion_user:'.session()->getId());
     
     return response()->json("Disconnected");
   }

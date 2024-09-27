@@ -27,8 +27,8 @@ class SuggestionController extends Controller
   public function index(Session $session)
   {
     $user = New User();
-    if ($this->sessionService->has('suggestion_user:'.$session->token())) {
-      $encryptedUser = $this->sessionService->get('suggestion_user:'.$session->token());
+    if ($this->sessionService->has('suggestion_user:'.session()->getId())) {
+      $encryptedUser = $this->sessionService->get('suggestion_user:'.session()->getId());
       $user = json_decode(Crypt::decryptString($encryptedUser));
     }
     
@@ -46,8 +46,8 @@ class SuggestionController extends Controller
   public function store(Request $request, Session $session)
   {
     $session_user = New User();
-    if ($this->sessionService->has('suggestion_user:'.$session->token())) {
-      $encryptedUser = $this->sessionService->get('suggestion_user:'.$session->token());
+    if ($this->sessionService->has('suggestion_user:'.session()->getId())) {
+      $encryptedUser = $this->sessionService->get('suggestion_user:'.session()->getId());
       $session_user = json_decode(Crypt::decryptString($encryptedUser));
     }
 
