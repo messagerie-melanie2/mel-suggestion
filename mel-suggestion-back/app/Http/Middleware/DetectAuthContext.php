@@ -53,7 +53,7 @@ class DetectAuthContext
                     'anonymised' => Config::get('app.suggestion_anonymize'),
                   ]);
                 if ($user) {
-                    $request->session()->put('suggestion_user:' . $_COOKIE['PHPSESSID'], Crypt::encryptString($user));
+                    $request->session()->put('suggestion_user', Crypt::encryptString($user));
                 } else {
                     return response('Unauthorized', 401);
                 }
