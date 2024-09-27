@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 //Comment group for dev
-Route::group(['middleware' => ['secured_api']], function () {
+Route::group(['middleware' => ['api', 'secured_api']], function () {
   Route::apiResource('suggestions', SuggestionController::class);
   Route::put('suggestions/state/{id}', [SuggestionController::class, 'updateState']);
   Route::get('text', [SuggestionController::class, 'getText']);
@@ -26,7 +26,7 @@ Route::group(['middleware' => ['secured_api']], function () {
   Route::get('synonyms', [SuggestionController::class, 'getUrl']);
 });
 
-Route::group(['middleware' => ['user']], function () {
+Route::group(['middleware' => ['api', 'user']], function () {
   Route::get('user', [UserController::class, 'index']);
   Route::get('disconnect', [LoginController::class, 'disconnect']);
 });

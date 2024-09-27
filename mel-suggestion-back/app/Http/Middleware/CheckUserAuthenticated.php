@@ -2,18 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\SessionService;
 use Closure;
 use Illuminate\Http\Request;
 
 class CheckUserAuthenticated
 {
-    protected $sessionService;
-
-    public function __construct(SessionService $sessionService)
-    {
-        $this->sessionService = $sessionService;
-    }
     
     /**
      * Handle an incoming request.
@@ -25,7 +18,7 @@ class CheckUserAuthenticated
     public function handle(Request $request, Closure $next)
     {
         // Si l'utilisateur n'est pas authentifié, on bloque la requête
-        if (!$this->sessionService->has('suggestion_user:'.session()->getId())) {
+        if (!$request->session()->has('suggestion_user')) {
             return response('Unauthorized', 401);
         }
         

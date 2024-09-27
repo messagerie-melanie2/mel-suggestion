@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\SessionService;
-use Illuminate\Contracts\Session\Session;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 
 /**
@@ -12,22 +11,15 @@ use Illuminate\Support\Facades\Crypt;
  * @package App\Http\Controllers
  */
 class UserController extends Controller
-{
-  protected $sessionService;
-
-  public function __construct(SessionService $sessionService)
-  {
-    $this->sessionService = $sessionService;
-  }
-  
+{  
   /**
      * Display user information.
      *
      */
-  public function index()
+  public function index(Request $request)
   {
-    if ($this->sessionService->has('suggestion_user:'.session()->getId())) {
-      $encryptedUser = $this->sessionService->get('suggestion_user:'.session()->getId());
+    if ($request->session()->has('suggestion_user')) {
+      $encryptedUser = $request->session()->get('suggestion_user');
       return Crypt::decryptString($encryptedUser);
     }
     else {

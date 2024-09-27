@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Jumbojett\OpenIDConnectClient;
 use Illuminate\Support\Facades\Config;
-use App\Services\SessionService;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Crypt;
 
@@ -18,13 +17,6 @@ use Illuminate\Support\Facades\Crypt;
  */
 class LoginController extends Controller
 {
-  protected $sessionService;
-
-  public function __construct(SessionService $sessionService)
-  {
-    $this->sessionService = $sessionService;
-  }
-
   /**
    * Display the login form.
    *
@@ -41,9 +33,9 @@ class LoginController extends Controller
    *
    * @return \Illuminate\Http\JsonResponse
    */
-  public function disconnect()
+  public function disconnect(Request $request)
   {
-    $this->sessionService->forget('suggestion_user:'.session()->getId());
+    $request->session()->forget('suggestion_user');
     
     return response()->json("Disconnected");
   }
@@ -98,7 +90,7 @@ class LoginController extends Controller
       }
     }
 
-    $this->sessionService->set('suggestion_user:'.session()->getId(), Crypt::encryptString($user));
+    $request->session()->put('suggestion_user', Crypt::encryptString($user));
 
     return Redirect::to(config('app.url'));
   }

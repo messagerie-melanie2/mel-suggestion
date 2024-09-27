@@ -4,22 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Vote;
-use App\Services\SessionService;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Crypt;
 
 class VoteController extends Controller
-{
-
-  protected $sessionService;
-
-  public function __construct(SessionService $sessionService)
-  {
-    $this->sessionService = $sessionService;
-  }
-  
+{  
   /**
    * Display a listing of the votes.
    *
@@ -43,8 +34,8 @@ class VoteController extends Controller
   public function store(Request $request, Session $session)
   {
     $user = New User();
-    if ($this->sessionService->has('suggestion_user:'.session()->getId())) {
-      $encryptedUser = $this->sessionService->get('suggestion_user:'.session()->getId());
+    if ($request->session()->has('suggestion_user')) {
+      $encryptedUser = $request->session()->get('suggestion_user');
       $user = json_decode(Crypt::decryptString($encryptedUser));
     }
     $request->validate([
