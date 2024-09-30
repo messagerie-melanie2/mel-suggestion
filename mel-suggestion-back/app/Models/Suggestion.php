@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Throwable;
 
 /**
  * Class Suggestion
@@ -44,7 +46,11 @@ class Suggestion extends Model
      */
   public static function getAllSuggestionsByInstance($session_user)
   {
-    $suggestions = Suggestion::where('instance', config('suggestion.instance'))->get();
+    try {
+      $suggestions = Suggestion::where('instance', config('suggestion.instance'))->get();
+    } catch (Throwable $e) {
+      Log::error($e);
+    }
 
     $suggestions_ids = [];
 

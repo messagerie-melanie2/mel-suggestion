@@ -34,9 +34,8 @@ class VoteController extends Controller
   public function store(Request $request, Session $session)
   {
     $user = New User();
-    if ($request->session()->has('suggestion_user')) {
-      $encryptedUser = $request->session()->get('suggestion_user');
-      $user = json_decode(Crypt::decryptString($encryptedUser));
+    if (session()->has('suggestion_user')) {
+      $user = json_decode(session()->get('suggestion_user'));
     }
     $request->validate([
       'suggestion_id' => 'required'

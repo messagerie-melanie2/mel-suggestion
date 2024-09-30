@@ -5,25 +5,25 @@ namespace App\Http\Controllers;
 use App\Models\Notification;
 use App\Models\Suggestion;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 
 class SuggestionController extends Controller
-{  
+{
   /**
    * Display a listing of the moderate and user's suggestions.
    *
    * @return \Illuminate\Http\Response
    */
-  public function index(Request $request, Session $session)
+  public function index()
   {
-    $user = New User();
-    if ($request->session()->has('suggestion_user')) {
-      $encryptedUser = $request->session()->get('suggestion_user');
-      $user = json_decode(Crypt::decryptString($encryptedUser));
+    $user = new User();
+    if (session()->has('suggestion_user')) {
+      $user = json_decode(session()->get('suggestion_user'));
     }
-    
+
     $suggestions = Suggestion::getAllSuggestionsByInstance($user);
 
     return response()->json($suggestions);
@@ -35,12 +35,11 @@ class SuggestionController extends Controller
    * @param  \Illuminate\Http\Request  $request
    * @return \Illuminate\Http\Response
    */
-  public function store(Request $request, Session $session)
+  public function store(Request $request)
   {
-    $session_user = New User();
-    if ($request->session()->has('suggestion_user')) {
-      $encryptedUser = $request->session()->get('suggestion_user');
-      $session_user = json_decode(Crypt::decryptString($encryptedUser));
+    $session_user = new User();
+    if (session()->has('suggestion_user')) {
+      $session_user = json_decode(session()->get('suggestion_user'));
     }
 
     if (config('suggestion.notification') && config('moderator.moderator')[0] !== "" && config('suggestion.use_roundcube_session')) {
@@ -82,12 +81,14 @@ class SuggestionController extends Controller
       'instance' => config('suggestion.instance'),
     ]);
 
-    if ($newSuggestion->save()) {
+    try {
+      $newSuggestion->save();
       $newSuggestion->votes_up = 0;
       $newSuggestion->votes_down = 0;
-  
+
       return response()->json($newSuggestion);
-    } else {
+    } catch (Exception $e) {
+      Log::error('Erreur lors de la récupération des suggestions', ['error' => $e]);
       return response('Error saving the data', 401);
     }
   }
@@ -127,7 +128,7 @@ class SuggestionController extends Controller
     $suggestion->save();
 
     $suggestion = Suggestion::isMySuggestion($suggestion);
-    
+
     return response()->json(Suggestion::countVote($suggestion));
   }
 

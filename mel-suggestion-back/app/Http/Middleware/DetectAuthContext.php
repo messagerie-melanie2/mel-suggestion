@@ -22,7 +22,7 @@ class DetectAuthContext
     public function handle(Request $request, Closure $next)
     {
         //Si l'utilisateur est authentifié on ne recréé pas de session
-        if ($request->session()->has('suggestion_user')) {
+        if (session()->has('suggestion_user')) {
             return $next($request);
         }
 
@@ -53,7 +53,10 @@ class DetectAuthContext
                     'anonymised' => Config::get('app.suggestion_anonymize'),
                   ]);
                 if ($user) {
-                    $request->session()->put('suggestion_user', Crypt::encryptString($user));
+                    session()->put('suggestion_user', $user);
+                    Log::info('Ajout de l\'utilisateur Roundcube dans la session : ', [
+                        'name' => $user->name
+                    ]);
                 } else {
                     return response('Unauthorized', 401);
                 }

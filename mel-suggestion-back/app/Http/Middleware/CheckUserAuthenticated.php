@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CheckUserAuthenticated
 {
@@ -18,7 +19,8 @@ class CheckUserAuthenticated
     public function handle(Request $request, Closure $next)
     {
         // Si l'utilisateur n'est pas authentifié, on bloque la requête
-        if (!$request->session()->has('suggestion_user')) {
+        if (!session()->has('suggestion_user')) {
+            Log::debug("Utilisateur non authentifié : ", [session()->all()]);
             return response('Unauthorized', 401);
         }
         
