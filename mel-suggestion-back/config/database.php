@@ -76,6 +76,9 @@ return [
             'prefix_indexes' => true,
             'schema' => 'public',
             'sslmode' => 'prefer',
+            'options' => [
+                PDO::ATTR_TIMEOUT => env('DB_TIMEOUT', 20),
+            ],
         ],
 
         'sqlsrv' => [
@@ -134,16 +137,16 @@ return [
         //     'cluster' => false,
         // ],
 
-        'clusters' => [            
-            'default' => 
-                array_map(function ($host) {
-                    return [
-                        'host' => $host,
-                        'password' => env('REDIS_PASSWORD', null),
-                        'port' => env('REDIS_PORT', 6379),
-                        'database' => env('REDIS_DB', '0'),
-                    ];
-                }, explode(',', env('REDIS_HOST', '127.0.0.1'))),
+        'clusters' => [
+            'default' =>
+            array_map(function ($host) {
+                return [
+                    'host' => $host,
+                    'password' => env('REDIS_PASSWORD', null),
+                    'port' => env('REDIS_PORT', 6379),
+                    'database' => env('REDIS_DB', '0'),
+                ];
+            }, explode(',', env('REDIS_HOST', '127.0.0.1'))),
         ],
     ],
 ];
