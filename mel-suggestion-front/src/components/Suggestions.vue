@@ -44,7 +44,7 @@
 import Suggestion from "./Suggestion";
 import CreateSuggestion from "./CreateSuggestion";
 import unaccent from "unaccent";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import axiosClient from '../axios';
 
 /**
@@ -134,13 +134,13 @@ export default {
       localSuggestions: this.suggestions,
       validateOnly: false,
       refusedSuggestion: false,
-      synonymsArray: [],
       isLoading: true, // Variable d'état pour le chargement
       isSearching: false // Variable d'état pour savoir si l'utilisateur a commencé une recherche
     };
   },
   mounted() {
-    this.loadSynonyms();
+    // this.loadSynonyms();
+    this.fetchSynonyms();
     this.$root.$on('sort-suggestion', (sortBy, validateOnly, refusedSuggestion) => {
       this.sort(sortBy, validateOnly, refusedSuggestion);
       this.resetSearch();
@@ -161,11 +161,12 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['fetchSynonyms']),
     async loadSynonyms() {
       this.isLoading = true;
       try {
         const getUrl = await axiosClient.get('/synonyms');
-        const url = getUrl.data.url;
+        const url = getUrl.data;
         const response = await fetch(url);
         this.synonymsArray = await response.json();
       } catch (error) {
@@ -294,8 +295,8 @@ export default {
      * searchWithSynonyms(searchWord);
      */
     searchWithSynonyms(searchWord) {
-      if (this.synonymsArray[searchWord])  {
-          return [searchWord, ...(Array.isArray(this.synonymsArray[searchWord]) ? this.synonymsArray[searchWord] : [])];
+      if (this.synonyms[searchWord])  {
+          return [searchWord, ...(Array.isArray(this.synonyms[searchWord]) ? this.synonyms[searchWord] : [])];
       }
       return [];
     },
@@ -340,7 +341,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['allIndexes']),
+    ...mapGetters(['allIndexes', 'Synonyms']),
 
     sortedSuggestions() {
     const acceptedState = ['vote', 'moderate'];
@@ -411,13 +412,13 @@ export default {
 
       // Suggestions contenant tous les mots recherchés
       const suggestionsContainingSearchWords = this.localSuggestions.filter(suggestion => {
-        const suggestionText = normalizeString(suggestion.title + " " + suggestion.description);
+        const suggestionText = normalizeString(suggestion.title + " " + suggestion.description.replace(/<img[^>]*>/g,""));
         return searchWords.every(word => suggestionText.includes(word));
       });
 
       // Suggestions contenant au moins un des mots recherchés ou leurs synonymes
       const suggestionsContainingSomeSearchWords = this.localSuggestions.filter(suggestion => {
-        const suggestionText = normalizeString(suggestion.title + " " + suggestion.description);
+        const suggestionText = normalizeString(suggestion.title + " " + suggestion.description.replace(/<img[^>]*>/g,""));
         return relatedWords.some(word => suggestionText.includes(word)) && !suggestionsContainingSearchWords.includes(suggestion);
       });
 

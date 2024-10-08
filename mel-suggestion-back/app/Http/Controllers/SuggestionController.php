@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class SuggestionController extends Controller
 {
@@ -191,6 +192,8 @@ class SuggestionController extends Controller
    */
   public function getUrl()
   {
-    return response()->json(config('suggestion.synonyms_url'));
+    $filePath = Storage::get('data/synonymes.json');
+    
+    return response($filePath, 200)->header('Content-Type', 'application/json');
   }
 }

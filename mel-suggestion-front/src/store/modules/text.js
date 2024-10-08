@@ -6,6 +6,7 @@ const state = {
 
 const getters = {
   allText: (state) => state.text,
+  synonyms: (state) => state.synonyms,
 };
 
 const actions = {
@@ -19,12 +20,25 @@ const actions = {
       .catch((error) => {
         console.log(error);
       });
+  },
+
+  fetchSynonyms({ commit }) {
+    axiosClient
+      .get("/synonyms")
+      .then((response) => {
+        console.log("Synonymes trouvés");
+        
+        commit('setSynonyms', response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 };
 
 const mutations = {
   setText: (state, text) => (state.text = text),
-
+  setSynonyms: (state, synonyms) => (state.synonyms = synonyms)
 };
 
 export default {

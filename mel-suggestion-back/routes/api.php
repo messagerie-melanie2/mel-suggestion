@@ -22,6 +22,9 @@ Route::group(['middleware' => ['api', 'secured_api']], function () {
   Route::put('suggestions/state/{id}', [SuggestionController::class, 'updateState']);
   Route::get('text', [SuggestionController::class, 'getText']);
   Route::apiResource('votes', VoteController::class);
+});
+
+Route::group(['middleware' => ['api']], function () {
   Route::get('synonyms', [SuggestionController::class, 'getUrl']);
 });
 
