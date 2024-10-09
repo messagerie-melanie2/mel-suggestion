@@ -28,12 +28,12 @@
           <div class="pl-3">
             <div class="flex items-center text-sm leading-none">
               <p class="font-semibold overflow-hidden custom_width text-slate-800 dark:text-title-blue pb-2" :class="[description ? '' : 'truncate']">
-                {{ suggestion.title | strippedContent }}
+                <Highlighter :searchWords="keywords" :autoEscape="true" :sanitize="sanitize"  :textToHighlight="suggestion.title | strippedContent"/>
               </p>
             </div>
             <div :class="[description ? 'invisible' : 'visible', $darkTheme ? 'dark-text' : '']"
               class="overflow-hidden truncate custom_width dark:text-common-blue">
-              <span>{{ suggestion.description | strippedContent }}</span>
+              <Highlighter :searchWords="keywords" :autoEscape="true"  :sanitize="sanitize" :textToHighlight="suggestion.description | strippedContent"/>
             </div>
           </div>
         </div>
@@ -111,10 +111,14 @@ import ModeratorCommands from "./Moderator/ModeratorCommands";
 import UpdateSuggestion from "./UpdateSuggestion";
 import Accordion from "./Accordion";
 
+import Highlighter from 'vue-highlight-words';
+import DOMPurify from 'dompurify';
+
 export default {
   name: "Suggestion",
   props: {
-    suggestion: Object
+    suggestion: Object,
+    words: String
   },
   data() {
     return {
@@ -122,7 +126,7 @@ export default {
       voteId: Number,
       showSuggestion: false,
       modifiedSuggestion: false,
-      description: false,
+      description: false
     }
   },
   mounted() {
@@ -154,6 +158,12 @@ export default {
     resetVoteText() {
       if (!this.suggestion.my_suggestion && this.suggestion.state != 'validate')
         this.voteHover = false
+    },
+    sanitize(html) {
+      // Désinfecter le HTML
+      const cleanHtml = DOMPurify.sanitize(html);
+      // Enlever les accents
+      return cleanHtml.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     },
     changeComment() {
       this.$root.$emit('showCommentModal', { suggestion: this.suggestion });
@@ -257,11 +267,22 @@ export default {
       return '';
     }
   },
-  computed: mapGetters(['allText']),
+  computed: {
+    ...mapGetters(['allText']),
+    keywords() {
+      if (this.words) {
+        let wordsArray = this.words.split(' ');
+        return wordsArray.filter(word => word.length >= 3);
+      } else {
+        return [];
+      }
+    }
+  },
   components: {
     UpdateSuggestion,
     Accordion,
-    ModeratorCommands
+    ModeratorCommands,
+    Highlighter
   },
 };
 </script>

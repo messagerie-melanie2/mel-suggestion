@@ -24,9 +24,14 @@
     <div class="flex items-center justify-between">
       <!-- Submit button -->
       <button
-        class="text-gray-900 dark:text-light-yellow bg-white dark:bg-light-blue border border-gray-300 dark:border-light-yellow hover:bg-gray-100 dark:hover:bg-dark-blue rounded-md text-sm px-5 py-2.5 mr-2 mb-2 mt-2"
+        class="text-white border border-blue-500 hover:bg-blue-500 bg-blue-600 font-bold uppercase text-xs px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 px-5 py-2.5 mr-2 mb-2 mt-2"
         type="submit">
         Valider
+      </button>
+      <button
+        class="text-blue-500 border border-blue-500 hover:bg-blue-500 hover:text-white active:bg-gray-600 font-bold uppercase text-xs px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 px-5 py-2.5 mr-2 mb-2 mt-2"
+        type="button" @click="cancelCreate">
+        Annuler
       </button>
     </div>
   </form>
@@ -86,6 +91,11 @@ export default {
     handleSearch() {
       this.$root.$emit('search', this.title)
     },
+    cancelCreate() {
+      this.title = '';
+      this.description = '';
+      this.$root.$emit('cancel-create', true)
+    },
   },
   // Vue components
   components: {
@@ -97,6 +107,6 @@ export default {
 <style scoped>
 .ql-editor {
   padding: 12px 20px 12px 0px;
-  min-height: auto;
+  min-height: 50px !important;
 }
 </style>
