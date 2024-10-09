@@ -9,6 +9,9 @@
       <p>Chargement des informations en cours, merci de votre patience...</p>
     </div>
     <div v-else>
+      <div v-show="create">
+          <CreateSuggestion :titleprops="search"/>
+        </div>
       <table class="w-full text-sm text-left">
         <tbody>
           <div v-if="search.length >= 3 || !filteredSuggestions.length">
@@ -27,14 +30,6 @@
         <div class="flex justify-center dark:text-title-blue">
           <p v-show="!filteredSuggestions.length" class="my-3">Aucun résultat</p>
         </div>
-        <div class="flex justify-center">
-          <button @click="showCreateSuggestion"
-            class="text-gray-900 dark:text-light-yellow bg-white dark:bg-light-blue border border-gray-300 dark:border-light-yellow hover:bg-gray-100 dark:hover:bg-dark-blue rounded-md text-sm px-5 py-2.5 mr-2 mb-2 mt-2">Créer
-            une suggestion</button>
-        </div>
-        <div v-show="create">
-          <CreateSuggestion :titleprops="search" />
-        </div>
       </div>
     </div>
   </div>
@@ -45,7 +40,7 @@ import Suggestion from "./Suggestion";
 import CreateSuggestion from "./CreateSuggestion";
 import unaccent from "unaccent";
 import { mapGetters, mapActions } from "vuex";
-import axiosClient from '../axios';
+// import axiosClient from '../axios';
 
 /**
  * Normalise une chaîne de caractères en la convertissant en minuscules,
@@ -139,8 +134,7 @@ export default {
     };
   },
   mounted() {
-    // this.loadSynonyms();
-    this.fetchSynonyms();
+    this.loadSynonyms();
     this.$root.$on('sort-suggestion', (sortBy, validateOnly, refusedSuggestion) => {
       this.sort(sortBy, validateOnly, refusedSuggestion);
       this.resetSearch();
@@ -151,6 +145,9 @@ export default {
     this.$root.$on('reset-search', () => {
       this.resetSearch();
     });
+    this.$root.$on('create-suggestion', () => {
+      this.create = !this.create;
+    })
   },
   watch: {
     suggestions: {
@@ -165,10 +162,7 @@ export default {
     async loadSynonyms() {
       this.isLoading = true;
       try {
-        const getUrl = await axiosClient.get('/synonyms');
-        const url = getUrl.data;
-        const response = await fetch(url);
-        this.synonymsArray = await response.json();
+        this.fetchSynonyms();        
       } catch (error) {
         console.error('Erreur lors du chargement des synonymes:', error);
       } finally {
@@ -180,10 +174,10 @@ export default {
       this.validateOnly = v;
       this.refusedSuggestion = r;
     },
-    searchValue(s) {
+    searchValue(s) {      
       this.isSearching = true; // Indique que l'utilisateur a commencé une recherche
       const searchNormalized = normalizeString(s);
-      this.search = s;
+      this.search = s;      
       this.searchNormalized = searchNormalized;
     },
     showCreateSuggestion() {
@@ -295,8 +289,10 @@ export default {
      * searchWithSynonyms(searchWord);
      */
     searchWithSynonyms(searchWord) {
-      if (this.synonyms[searchWord])  {
-          return [searchWord, ...(Array.isArray(this.synonyms[searchWord]) ? this.synonyms[searchWord] : [])];
+      
+      if (this.synonyms[searchWord])  {        
+        // console.log([searchWord, ...(Array.isArray(this.synonyms[searchWord]) ? this.synonyms[searchWord] : [])]);
+        return [searchWord, ...(Array.isArray(this.synonyms[searchWord]) ? this.synonyms[searchWord] : [])];
       }
       return [];
     },
@@ -341,7 +337,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['allIndexes', 'Synonyms']),
+    ...mapGetters(['allIndexes', 'synonyms']),
 
     sortedSuggestions() {
     const acceptedState = ['vote', 'moderate'];
@@ -403,9 +399,12 @@ export default {
      * filteredSuggestions();
      */
     filteredSuggestions() {
-    if (this.search.length >= 3) {
+      if (this.search.length >= 3) {    
       const searchWords = splitWords(this.searchNormalized).map(word => normalizeString(word));
+      console.log("searchWords",searchWords);
+      
       const relatedWords = searchWords.flatMap(word => [...this.getRelatedWords(word), word]);
+      console.log("related",relatedWords);
 
       // Calculer TF-IDF pour chaque suggestion
       const tfIdfScores = this.calculateTfIdfScores(this.localSuggestions, relatedWords);
@@ -423,11 +422,11 @@ export default {
       });
 
       // Trier les suggestions contenant tous les mots recherchés
-      suggestionsContainingSearchWords.sort((a, b) => {
-        const aDistance = this.calculateDistance(a.title + " " + a.description, relatedWords, searchWords);
-        const bDistance = this.calculateDistance(b.title + " " + b.description, relatedWords, searchWords);
-        return aDistance - bDistance;
-      });
+      // suggestionsContainingSearchWords.sort((a, b) => {
+      //   const aDistance = this.calculateDistance(a.title + " " + a.description, relatedWords, searchWords);
+      //   const bDistance = this.calculateDistance(b.title + " " + b.description, relatedWords, searchWords);
+      //   return aDistance - bDistance;
+      // });
 
       // Trier les suggestions contenant certains mots recherchés ou leurs synonymes par TF-IDF puis ordre alphabétique
       suggestionsContainingSomeSearchWords.sort((a, b) => {
@@ -439,7 +438,7 @@ export default {
           return aText.localeCompare(bText);
         }
         return bTfIdf - aTfIdf;
-      });
+      });      
 
       return [...suggestionsContainingSearchWords, ...suggestionsContainingSomeSearchWords];
     } else {

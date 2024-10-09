@@ -1,16 +1,14 @@
 <template>
   <section>
     <div v-if="!loadingStatus">
-      <div v-if="$user.origin != 'mel'">
-        <Navbar :title="allText.application_name" />
-      </div>
+      <Navbar :title="allText.application_name" />
       <ChangeStateModal v-show="showStateModal" :modalInfo="this.modalInfo" @close-modal="showStateModal = false" />
       <ChangeCommentModal v-show="showCommentModal" :modalInfo="this.modalInfo" :comment="this.modalComment"
         @close-modal="showCommentModal = false" />
 
       <body class="flex items-center justify-center">
         <div class="w-full max-w-4xl px-4" :class="[$user.origin != 'mel' ? 'mt-7' : '']">
-          <Header :title="allText.title" />
+          <!-- <Header :title="allText.title" /> -->
           <div class="rounded-lg pb-6 border border-gray-300 dark:border-gray-800 bg-white dark:bg-light-blue">
             <div
               class="flex flex-wrap items-center justify-between px-6 py-3 border-b border-gray-300 dark:border-light-blue">
@@ -36,7 +34,6 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 
-import Header from "./components/Header";
 import SortingButton from "./components/SortingButton";
 import Search from "./components/Search";
 import Suggestions from "./components/Suggestions";
@@ -72,14 +69,13 @@ export default {
         this.modalComment = e.suggestion.comment;
       }),
       this.$root.$on('refresh', () => {
-      this.fetchSuggestions()
-    })
+        this.fetchSuggestions()
+      })
   },
   methods: {
     ...mapActions(['fetchSuggestions', 'fetchText'])
   },
   components: {
-    Header,
     SortingButton,
     Search,
     Suggestions,
@@ -95,7 +91,7 @@ export default {
 
 
 <style>
-.Vue-Toastification__toast.bottom-right{
+.Vue-Toastification__toast.bottom-right {
   margin-bottom: 60px !important;
 }
 

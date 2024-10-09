@@ -1,12 +1,12 @@
 <template>
   <!-- Form for creating a suggestion -->
-  <form @submit="onSubmit" class="px-8 pt-6 pb-8 mb-4">
+  <form @submit="onSubmit" class="px-8 pt-6 mb-4">
     <div class="mb-4">
       <label class="block text-slate-700 dark:text-title-blue text-sm font-semibold mb-2">
         Titre
       </label>
       <!-- Input for title -->
-      <input
+      <input @input="handleSearch"
         class="bg-white dark:bg-light-blue appearance-none border border-gray-300 dark:text-common-blue rounded w-full py-2 px-3 leading-tight focus:outline-none dark:border-light-yellow"
         id="title" type="text" placeholder="Titre..." maxlength="255" required v-model="title" />
     </div>
@@ -82,6 +82,9 @@ export default {
       // Emit events to reset search and sort suggestions
       this.$root.$emit('reset-search')
       this.$root.$emit('sort-suggestion-active', 'updated_at')
+    },
+    handleSearch() {
+      this.$root.$emit('search', this.title)
     },
   },
   // Vue components
