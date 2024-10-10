@@ -22,7 +22,7 @@
         <tbody>
           <div v-if="search.length >= 3 || !filteredSuggestions.length">
             <div v-for="suggestion in filteredSuggestions" :key="suggestion.id">
-              <Suggestion :suggestion="suggestion" :words="search" />
+              <Suggestion :suggestion="suggestion" :words="searchedWords" />
             </div>
           </div>
           <div v-else>
@@ -56,7 +56,7 @@ import { mapGetters, mapActions } from "vuex";
  * @return {string} La chaîne de caractères normalisée.
  *
  * @example
- * // retourne 'exampleat'
+ * // retourne 'examplesat'
  * normalizeString('éxamPlèsâtx');
  */
 function normalizeString(str) {
@@ -123,8 +123,7 @@ function splitWords(input) {
 export default {
   name: "Suggestions",
   props: {
-    suggestions: Array,
-    index: Array
+    suggestions: Array
   },
   data() {
     return {
@@ -137,7 +136,7 @@ export default {
       refusedSuggestion: false,
       isLoading: true, // Variable d'état pour le chargement
       isSearching: false, // Variable d'état pour savoir si l'utilisateur a commencé une recherche,
-      words: []
+      searchedWords: []
     };
   },
   mounted() {
@@ -169,7 +168,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchSynonyms']),
+    ...mapActions(['fetchSynonyms', 'fetchExcludeWords']),
     async loadSynonyms() {
       this.isLoading = true;
       try {
@@ -187,9 +186,16 @@ export default {
     },
     searchValue(s) {
       this.isSearching = true; // Indique que l'utilisateur a commencé une recherche
-      const searchNormalized = normalizeString(s);
+      const searchNormalized = normalizeString(s);      
       this.search = s;
       this.searchNormalized = searchNormalized;
+
+      if (this.search.length >= 3) {
+        let searchWords = splitWords(this.searchNormalized).map(word => normalizeString(word));
+        
+        searchWords = searchWords.filter(word => !this.excludeWords.includes(word));
+        this.searchedWords = searchWords;
+      }
     },
     resetSearch() {
       this.search = "";
@@ -345,7 +351,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['allIndexes', 'synonyms']),
+    ...mapGetters(['synonyms', 'excludeWords']),
 
     sortedSuggestions() {
       const acceptedState = ['vote', 'moderate'];
@@ -408,23 +414,25 @@ export default {
      */
     filteredSuggestions() {
       if (this.search.length >= 3) {
-        const searchWords = splitWords(this.searchNormalized).map(word => normalizeString(word));
+        let searchWords = splitWords(this.searchNormalized).map(word => normalizeString(word));
+        
+        searchWords = searchWords.filter(word => !this.excludeWords.includes(word));
 
         const relatedWords = searchWords.flatMap(word => [...this.getRelatedWords(word), word]);
 
         // Calculer TF-IDF pour chaque suggestion
-        const tfIdfScores = this.calculateTfIdfScores(this.localSuggestions, relatedWords);
+        // const tfIdfScores = this.calculateTfIdfScores(this.localSuggestions, relatedWords);
 
         // Suggestions contenant tous les mots recherchés
         const suggestionsContainingSearchWords = this.localSuggestions.filter(suggestion => {
           const suggestionText = normalizeString(suggestion.title + " " + suggestion.description.replace(/<img[^>]*>/g, ""));
-          return searchWords.every(word => suggestionText.includes(word));
+          return searchWords.every(word => word.length >= 3 && suggestionText.includes(word));
         });
 
         // Suggestions contenant au moins un des mots recherchés ou leurs synonymes
         const suggestionsContainingSomeSearchWords = this.localSuggestions.filter(suggestion => {
           const suggestionText = normalizeString(suggestion.title + " " + suggestion.description.replace(/<img[^>]*>/g, ""));
-          return relatedWords.some(word => suggestionText.includes(word)) && !suggestionsContainingSearchWords.includes(suggestion);
+          return relatedWords.some(word => word.length >= 3 && suggestionText.includes(word)) && !suggestionsContainingSearchWords.includes(suggestion);
         });
 
         // Trier les suggestions contenant tous les mots recherchés
@@ -435,16 +443,16 @@ export default {
         // });
 
         // Trier les suggestions contenant certains mots recherchés ou leurs synonymes par TF-IDF puis ordre alphabétique
-        suggestionsContainingSomeSearchWords.sort((a, b) => {
-          const aTfIdf = tfIdfScores[a.id] || 0;
-          const bTfIdf = tfIdfScores[b.id] || 0;
-          if (aTfIdf === bTfIdf) {
-            const aText = normalizeString(a.title + " " + a.description);
-            const bText = normalizeString(b.title + " " + b.description);
-            return aText.localeCompare(bText);
-          }
-          return bTfIdf - aTfIdf;
-        });
+        // suggestionsContainingSomeSearchWords.sort((a, b) => {
+        //   const aTfIdf = tfIdfScores[a.id] || 0;
+        //   const bTfIdf = tfIdfScores[b.id] || 0;
+        //   if (aTfIdf === bTfIdf) {
+        //     const aText = normalizeString(a.title + " " + a.description);
+        //     const bText = normalizeString(b.title + " " + b.description);
+        //     return aText.localeCompare(bText);
+        //   }
+        //   return bTfIdf - aTfIdf;
+        // });
 
         return [...suggestionsContainingSearchWords, ...suggestionsContainingSomeSearchWords];
       } else {

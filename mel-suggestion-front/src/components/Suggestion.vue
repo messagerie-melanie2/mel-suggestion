@@ -118,7 +118,7 @@ export default {
   name: "Suggestion",
   props: {
     suggestion: Object,
-    words: String
+    words: Array
   },
   data() {
     return {
@@ -271,8 +271,7 @@ export default {
     ...mapGetters(['allText']),
     keywords() {
       if (this.words) {
-        let wordsArray = this.words.split(' ');
-        return wordsArray.filter(word => word.length >= 3);
+        return this.words.filter(word => word.length >= 3);
       } else {
         return [];
       }

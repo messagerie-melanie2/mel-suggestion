@@ -6,13 +6,11 @@ Vue.prototype.$anonymised = false;
 
 const state = {
   suggestions: [],
-  indexes: [],
   loadingStatus: false
 };
 
 const getters = {
   allSuggestions: (state) => state.suggestions,
-  allIndexes: (state) => state.indexes,
   loadingStatus: (state) => state.loadingStatus
 };
 
@@ -44,8 +42,6 @@ const actions = {
                 });
             }
             commit('setSuggestions', response.data);
-            commit('setIndexes', createIndex(response.data));
-            // createIndex(response.data);
           })
           .catch((error) => {
             console.log(error);
@@ -116,21 +112,17 @@ const actions = {
 const mutations = {
   loadingStatus: (state, newLoadingStatus) => (state.loadingStatus = newLoadingStatus),
   setSuggestions: (state, suggestions) => (state.suggestions = suggestions),
-  setIndexes: (state, indexes) => (state.indexes = indexes),
   newSuggestion: (state, suggestion) => {
     state.suggestions.push(suggestion)
-    state.indexes = createIndex(state.suggestions);
   },
   deleteSuggestion: (state, id) => {
     state.suggestions = state.suggestions.filter(suggestion => suggestion.id !== id)
-    state.indexes = createIndex(state.suggestions);
   },
   updateSuggestion: (state, updSuggestion) => {
     const index = state.suggestions.findIndex(suggestion => suggestion.id === updSuggestion.id);
     if (index !== -1) {
       state.suggestions.splice(index, 1, updSuggestion);
     }
-    state.indexes = createIndex(state.suggestions);
   }
 };
 
@@ -139,42 +131,4 @@ export default {
   getters,
   actions,
   mutations
-}
-
-function createIndex(suggestions) {
-  const jsonData = require('./dictionary.json');
-
-  let index = [];
-  let k = -1;
-  for (const element of suggestions) {
-    k++
-
-    let keywords = element.description.replace(/(<([^>]+)>)/gi, "").toLowerCase() + ' ' + element.title.replace(/(<([^>]+)>)/gi, "").toLowerCase();
-    let array = keywords.split(' ');
-
-    array.forEach(word => {
-      jsonData.synonyme.forEach((e) => {
-        if (e.includes(word)) {
-          array = array.concat(e)
-          array.splice(array.indexOf(word), 1);
-        }
-      })
-      jsonData.exclude.forEach((e) => {
-        if (e.includes(word)) {
-          array = array.filter(e => e !== word);
-        }
-      })
-    });
-
-    array.forEach(word => {
-      if (Array.isArray(index[word])) {
-        if (index[word] != k) {
-          index[word].push(k);
-        }
-      } else {
-        index[word] = [k]
-      }
-    });
-  }
-  return index;
 }

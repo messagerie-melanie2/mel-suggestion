@@ -17,7 +17,7 @@
             </div>
             <div>
               <section>
-                <Suggestions :suggestions="allSuggestions" :index="allIndexes" />
+                <Suggestions :suggestions="allSuggestions"/>
               </section>
             </div>
           </div>
@@ -84,7 +84,7 @@ export default {
     ChangeStateModal,
     ChangeCommentModal
   },
-  computed: mapGetters(['allSuggestions', 'allIndexes', 'loadingStatus', 'allText']),
+  computed: mapGetters(['allSuggestions', 'loadingStatus', 'allText']),
 };
 
 </script>

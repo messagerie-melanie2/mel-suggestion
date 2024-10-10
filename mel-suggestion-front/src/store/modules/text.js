@@ -2,11 +2,16 @@ import axiosClient from '../../axios';
 
 const state = {
   text: [],
+  synonyms: []
 };
 
 const getters = {
   allText: (state) => state.text,
   synonyms: (state) => state.synonyms,
+  excludeWords: () => {    
+    const dictionary = require('./dictionary.json');
+    return dictionary.exclude;
+  },
 };
 
 const actions = {
@@ -26,8 +31,6 @@ const actions = {
     axiosClient
       .get("/synonyms")
       .then((response) => {
-        console.log("Synonymes trouvés");
-        
         commit('setSynonyms', response.data);
       })
       .catch((error) => {
