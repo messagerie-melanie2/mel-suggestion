@@ -4,7 +4,7 @@
     <div class="container flex flex-wrap justify-between items-center mx-auto">
       <div class="flex items-center select-none">
         <!-- Title Display -->
-        <img src="/favicon.ico" alt="Suggestion logo" width="35">
+        <img :src="imageUrl" alt="Suggestion logo" width="35">
         <span class="self-center text-lg ml-4 font-semibold whitespace-nowrap dark:text-white">{{ title ? title :
           'Suggestion' }}</span>
 
@@ -66,7 +66,8 @@ export default {
       isHidden: true,
       isMobile: false,
       darkTheme: this.$darkTheme,
-      search: ""
+      search: "",
+      imageUrl: '/favicon.ico'
     }
   },
   props: {
