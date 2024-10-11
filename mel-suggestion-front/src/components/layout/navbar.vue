@@ -4,7 +4,7 @@
     <div class="container flex flex-wrap justify-between items-center mx-auto">
       <div class="flex items-center select-none">
         <!-- Title Display -->
-        <img :src="`/images/logo.png`" alt="Suggestion logo" width="35">
+        <img :src="logo" alt="Suggestion logo" width="35">
         <span class="self-center text-lg ml-4 font-semibold whitespace-nowrap dark:text-white">{{ title ? title :
           'Suggestion' }}</span>
 
@@ -67,6 +67,7 @@ export default {
       isMobile: false,
       darkTheme: this.$darkTheme,
       search: "",
+      logo: process.env.VUE_APP_IMAGE_PATH
     }
   },
   props: {
