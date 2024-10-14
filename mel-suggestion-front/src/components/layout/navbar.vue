@@ -67,7 +67,7 @@ export default {
       isMobile: false,
       darkTheme: this.$darkTheme,
       search: "",
-      logo: window.location.origin + '/favicon.ico'
+      logo: window.location.href + '/favicon.ico'
     }
   },
   props: {
