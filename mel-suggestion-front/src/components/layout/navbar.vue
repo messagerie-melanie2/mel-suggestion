@@ -67,7 +67,7 @@ export default {
       isMobile: false,
       darkTheme: this.$darkTheme,
       search: "",
-      logo: process.env.VUE_APP_IMAGE_PATH
+      logo: window.location.origin + '/favicon.ico'
     }
   },
   props: {
