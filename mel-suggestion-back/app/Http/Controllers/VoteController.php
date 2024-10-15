@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Vote;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Crypt;
 
 class VoteController extends Controller
-{
+{  
   /**
    * Display a listing of the votes.
    *
@@ -24,19 +26,25 @@ class VoteController extends Controller
   /**
    * Store a newly vote in storage.
    *
+   * @param  Illuminate\Contracts\Session\Session $session
    * @param  \Illuminate\Http\Request  $request
+   * 
    * @return \Illuminate\Http\Response
    */
-  public function store(Request $request)
+  public function store(Request $request, Session $session)
   {
+    $user = New User();
+    if (session()->has('suggestion_user')) {
+      $user = json_decode(session()->get('suggestion_user'));
+    }
     $request->validate([
       'suggestion_id' => 'required'
     ]);
 
     if (Config::get('app.suggestion_anonymize') === true) {
-      $user_email = isset($request->session()->get('utilisateur')->sub) ? $request->session()->get('utilisateur')->sub : $request->session()->get('utilisateur')->email;
+      $user_email = isset($user->sub) ? $user->sub : $user->email;
     } else {
-      $user_email = $request->session()->get('utilisateur')->email;
+      $user_email = $user->email;
     }
 
     $newVote = new Vote([

@@ -5,33 +5,26 @@ namespace App\Http\Controllers;
 use App\Models\Notification;
 use App\Models\Suggestion;
 use App\Models\User;
-use App\Services\SessionService;
+use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class SuggestionController extends Controller
 {
-  protected $sessionService;
-
-  public function __construct(SessionService $sessionService)
-  {
-    $this->sessionService = $sessionService;
-  }
-  
   /**
    * Display a listing of the moderate and user's suggestions.
    *
    * @return \Illuminate\Http\Response
    */
-  public function index(Session $session)
+  public function index()
   {
-    $user = New User();
-    if ($this->sessionService->has('suggestion_user:'.$session->token())) {
-      $encryptedUser = $this->sessionService->get('suggestion_user:'.$session->token());
-      $user = json_decode(Crypt::decryptString($encryptedUser));
+    $user = new User();
+    if (session()->has('suggestion_user')) {
+      $user = json_decode(session()->get('suggestion_user'));
     }
-    
+
     $suggestions = Suggestion::getAllSuggestionsByInstance($user);
 
     return response()->json($suggestions);
@@ -45,9 +38,12 @@ class SuggestionController extends Controller
    */
   public function store(Request $request)
   {
-    $session_user = $request->session()->get('utilisateur');
+    $session_user = new User();
+    if (session()->has('suggestion_user')) {
+      $session_user = json_decode(session()->get('suggestion_user'));
+    }
 
-    if (config('suggestion.notification') && config('moderator.moderator')[0] !== "") {
+    if (config('suggestion.notification') && config('moderator.moderator')[0] !== "" && config('suggestion.use_roundcube_session')) {
       foreach (config('moderator.moderator') as $email) {
         if ($email != $session_user->email) {
           $class = config('suggestion.orm_path') . "\User";
@@ -86,11 +82,16 @@ class SuggestionController extends Controller
       'instance' => config('suggestion.instance'),
     ]);
 
-    $newSuggestion->save();
-    $newSuggestion->votes_up = 0;
-    $newSuggestion->votes_down = 0;
+    try {
+      $newSuggestion->save();
+      $newSuggestion->votes_up = 0;
+      $newSuggestion->votes_down = 0;
 
-    return response()->json($newSuggestion);
+      return response()->json($newSuggestion);
+    } catch (Exception $e) {
+      Log::error('Erreur lors de la récupération des suggestions', ['error' => $e]);
+      return response('Error saving the data', 401);
+    }
   }
 
 
@@ -128,7 +129,7 @@ class SuggestionController extends Controller
     $suggestion->save();
 
     $suggestion = Suggestion::isMySuggestion($suggestion);
-    
+
     return response()->json(Suggestion::countVote($suggestion));
   }
 
@@ -191,6 +192,8 @@ class SuggestionController extends Controller
    */
   public function getUrl()
   {
-    return response()->json(config('suggestion.synonyms_url'));
+    $filePath = Storage::get('data/synonymes.json');
+    
+    return response($filePath, 200)->header('Content-Type', 'application/json');
   }
 }

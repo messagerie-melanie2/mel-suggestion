@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Jumbojett\OpenIDConnectClient;
 use Illuminate\Support\Facades\Config;
-use App\Services\SessionService;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class LoginController
@@ -18,13 +18,6 @@ use Illuminate\Support\Facades\Crypt;
  */
 class LoginController extends Controller
 {
-  protected $sessionService;
-
-  public function __construct(SessionService $sessionService)
-  {
-    $this->sessionService = $sessionService;
-  }
-
   /**
    * Display the login form.
    *
@@ -41,10 +34,10 @@ class LoginController extends Controller
    *
    * @return \Illuminate\Http\JsonResponse
    */
-  public function disconnect(Session $session)
+  public function disconnect(Request $request)
   {
-    $this->sessionService->forget('suggestion_user:'.$session->token());
-    
+    session()->forget('suggestion_user');
+
     return response()->json("Disconnected");
   }
 
@@ -98,7 +91,10 @@ class LoginController extends Controller
       }
     }
 
-    $this->sessionService->set('suggestion_user:'.$session->token(), Crypt::encryptString($user));
+    session()->put('suggestion_user', $user);
+    Log::info('Ajout de l\'utilisateur Roundcube dans la session : ', [
+      'name' => $user->name
+    ]);
 
     return Redirect::to(config('app.url'));
   }

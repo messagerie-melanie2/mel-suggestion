@@ -1,19 +1,28 @@
 <template>
   <div class="relative overflow-x-auto">
-    <div v-if="isLoading && isSearching" class="loading-message absolute -translate-x-1/2 -translate-y-1/2 top-2/4 left-1/2">
-      <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
-        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+    <div v-if="isLoading && isSearching"
+      class="loading-message absolute -translate-x-1/2 -translate-y-1/2 top-2/4 left-1/2">
+      <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+        viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+          fill="currentColor" />
+        <path
+          d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+          fill="currentFill" />
       </svg>
       <span class="sr-only">Loading...</span>
       <p>Chargement des informations en cours, merci de votre patience...</p>
     </div>
     <div v-else>
+      <div v-show="create">
+        <CreateSuggestion :titleprops="search" />
+      </div>
       <table class="w-full text-sm text-left">
         <tbody>
           <div v-if="search.length >= 3 || !filteredSuggestions.length">
             <div v-for="suggestion in filteredSuggestions" :key="suggestion.id">
-              <Suggestion :suggestion="suggestion" />
+              <Suggestion :suggestion="suggestion" :words="searchedWords" />
             </div>
           </div>
           <div v-else>
@@ -27,14 +36,6 @@
         <div class="flex justify-center dark:text-title-blue">
           <p v-show="!filteredSuggestions.length" class="my-3">Aucun résultat</p>
         </div>
-        <div class="flex justify-center">
-          <button @click="showCreateSuggestion"
-            class="text-gray-900 dark:text-light-yellow bg-white dark:bg-light-blue border border-gray-300 dark:border-light-yellow hover:bg-gray-100 dark:hover:bg-dark-blue rounded-md text-sm px-5 py-2.5 mr-2 mb-2 mt-2">Créer
-            une suggestion</button>
-        </div>
-        <div v-show="create">
-          <CreateSuggestion :titleprops="search" />
-        </div>
       </div>
     </div>
   </div>
@@ -44,8 +45,8 @@
 import Suggestion from "./Suggestion";
 import CreateSuggestion from "./CreateSuggestion";
 import unaccent from "unaccent";
-import { mapGetters } from "vuex";
-import axiosClient from '../axios';
+import { mapGetters, mapActions } from "vuex";
+// import axiosClient from '../axios';
 
 /**
  * Normalise une chaîne de caractères en la convertissant en minuscules,
@@ -55,7 +56,7 @@ import axiosClient from '../axios';
  * @return {string} La chaîne de caractères normalisée.
  *
  * @example
- * // retourne 'exampleat'
+ * // retourne 'examplesat'
  * normalizeString('éxamPlèsâtx');
  */
 function normalizeString(str) {
@@ -122,8 +123,7 @@ function splitWords(input) {
 export default {
   name: "Suggestions",
   props: {
-    suggestions: Array,
-    index: Array
+    suggestions: Array
   },
   data() {
     return {
@@ -134,9 +134,9 @@ export default {
       localSuggestions: this.suggestions,
       validateOnly: false,
       refusedSuggestion: false,
-      synonymsArray: [],
       isLoading: true, // Variable d'état pour le chargement
-      isSearching: false // Variable d'état pour savoir si l'utilisateur a commencé une recherche
+      isSearching: false, // Variable d'état pour savoir si l'utilisateur a commencé une recherche,
+      searchedWords: []
     };
   },
   mounted() {
@@ -151,6 +151,13 @@ export default {
     this.$root.$on('reset-search', () => {
       this.resetSearch();
     });
+    this.$root.$on('create-suggestion', () => {
+      this.create = !this.create;
+    }),
+    this.$root.$on('cancel-create', () => {
+      this.resetSearch();
+      this.create = false;
+    })
   },
   watch: {
     suggestions: {
@@ -161,13 +168,11 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['fetchSynonyms', 'fetchExcludeWords']),
     async loadSynonyms() {
       this.isLoading = true;
       try {
-        const getUrl = await axiosClient.get('/synonyms');
-        const url = getUrl.data.url;
-        const response = await fetch(url);
-        this.synonymsArray = await response.json();
+        this.fetchSynonyms();
       } catch (error) {
         console.error('Erreur lors du chargement des synonymes:', error);
       } finally {
@@ -181,12 +186,16 @@ export default {
     },
     searchValue(s) {
       this.isSearching = true; // Indique que l'utilisateur a commencé une recherche
-      const searchNormalized = normalizeString(s);
+      const searchNormalized = normalizeString(s);      
       this.search = s;
       this.searchNormalized = searchNormalized;
-    },
-    showCreateSuggestion() {
-      this.create = !this.create;
+
+      if (this.search.length >= 3) {
+        let searchWords = splitWords(this.searchNormalized).map(word => normalizeString(word));
+        
+        searchWords = searchWords.filter(word => !this.excludeWords.includes(word));
+        this.searchedWords = searchWords;
+      }
     },
     resetSearch() {
       this.search = "";
@@ -212,49 +221,49 @@ export default {
      * calculateTfIdfScores(suggestions, searchWords);
      */
     calculateTfIdfScores(suggestions, searchWords) {
-    const tfIdfScores = {};
+      const tfIdfScores = {};
 
-    const wordCount = {};
-    const documentCount = {};
+      const wordCount = {};
+      const documentCount = {};
 
-    suggestions.forEach(suggestion => {
-      const suggestionText = normalizeString(suggestion.title + " " + suggestion.description);
-      const words = splitWords(suggestionText);
-      const wordSet = new Set(words);
+      suggestions.forEach(suggestion => {
+        const suggestionText = normalizeString(suggestion.title + " " + suggestion.description);
+        const words = splitWords(suggestionText);
+        const wordSet = new Set(words);
 
-      words.forEach(word => {
-        if (!wordCount[word]) {
-          wordCount[word] = 0;
-        }
-        wordCount[word]++;
+        words.forEach(word => {
+          if (!wordCount[word]) {
+            wordCount[word] = 0;
+          }
+          wordCount[word]++;
+        });
+
+        wordSet.forEach(word => {
+          if (!documentCount[word]) {
+            documentCount[word] = 0;
+          }
+          documentCount[word]++;
+        });
       });
 
-      wordSet.forEach(word => {
-        if (!documentCount[word]) {
-          documentCount[word] = 0;
-        }
-        documentCount[word]++;
-      });
-    });
+      const totalDocuments = suggestions.length;
 
-    const totalDocuments = suggestions.length;
+      suggestions.forEach(suggestion => {
+        const suggestionText = normalizeString(suggestion.title + " " + suggestion.description);
+        const words = splitWords(suggestionText);
+        let tfIdf = 0;
 
-    suggestions.forEach(suggestion => {
-      const suggestionText = normalizeString(suggestion.title + " " + suggestion.description);
-      const words = splitWords(suggestionText);
-      let tfIdf = 0;
+        searchWords.forEach(searchWord => {
+          const tf = words.filter(word => word === searchWord).length / words.length;
+          const idf = Math.log(totalDocuments / (documentCount[searchWord] || 1));
+          tfIdf += tf * idf;
+        });
 
-      searchWords.forEach(searchWord => {
-        const tf = words.filter(word => word === searchWord).length / words.length;
-        const idf = Math.log(totalDocuments / (documentCount[searchWord] || 1));
-        tfIdf += tf * idf;
+        tfIdfScores[suggestion.id] = tfIdf;
       });
 
-      tfIdfScores[suggestion.id] = tfIdf;
-    });
-
-    return tfIdfScores;
-  },
+      return tfIdfScores;
+    },
 
     /**
      * Calcule la distance entre un texte et une liste de mots de recherche, en utilisant la distance de Levenshtein.
@@ -294,12 +303,14 @@ export default {
      * searchWithSynonyms(searchWord);
      */
     searchWithSynonyms(searchWord) {
-      if (this.synonymsArray[searchWord])  {
-          return [searchWord, ...(Array.isArray(this.synonymsArray[searchWord]) ? this.synonymsArray[searchWord] : [])];
+
+      if (this.synonyms[searchWord]) {
+        // console.log([searchWord, ...(Array.isArray(this.synonyms[searchWord]) ? this.synonyms[searchWord] : [])]);
+        return [searchWord, ...(Array.isArray(this.synonyms[searchWord]) ? this.synonyms[searchWord] : [])];
       }
       return [];
     },
-    
+
     /**
      * Récupère les mots liés à un mot donné en incluant ses synonymes.
      *
@@ -336,57 +347,57 @@ export default {
 
       return suggestionsFound;
     }
-    
+
   },
 
   computed: {
-    ...mapGetters(['allIndexes']),
+    ...mapGetters(['synonyms', 'excludeWords']),
 
     sortedSuggestions() {
-    const acceptedState = ['vote', 'moderate'];
+      const acceptedState = ['vote', 'moderate'];
 
-    let filteredLocalSuggestions = this.localSuggestions.slice(0).filter(suggestion => {
-      if (suggestion.id == this.$searchId && suggestion.state == 'validate' && !this.$hasScrolled) {
-        setTimeout(() => {
-          this.$root.$emit('sort-suggestion-validate');
-        }, 50);
-      }
-      if (this.refusedSuggestion) {
-        return suggestion.state.toLowerCase().includes("refused");
-      }
-      if (this.validateOnly) {
-        return suggestion.state.toLowerCase().includes("validate");
-      } else {
-        return acceptedState.includes(suggestion.state.toLowerCase())
-      }
-    });
-
-    // Trie en fonction de la propriété votes_up
-    if (this.sortBy === 'votes_up') {
-      filteredLocalSuggestions.sort((suggestion1, suggestion2) => {
-        if (this.sortDirection === 'desc') {
-          return suggestion2.votes_up - suggestion1.votes_up;
+      let filteredLocalSuggestions = this.localSuggestions.slice(0).filter(suggestion => {
+        if (suggestion.id == this.$searchId && suggestion.state == 'validate' && !this.$hasScrolled) {
+          setTimeout(() => {
+            this.$root.$emit('sort-suggestion-validate');
+          }, 50);
+        }
+        if (this.refusedSuggestion) {
+          return suggestion.state.toLowerCase().includes("refused");
+        }
+        if (this.validateOnly) {
+          return suggestion.state.toLowerCase().includes("validate");
         } else {
-          return suggestion1.votes_up - suggestion2.votes_up;
+          return acceptedState.includes(suggestion.state.toLowerCase())
         }
       });
-    }
 
-    // Trie en fonction de la propriété updated_at
-    if (this.sortBy === 'updated_at') {
-      filteredLocalSuggestions.sort((suggestion1, suggestion2) => {
-        const date1 = new Date(suggestion1.updated_at);
-        const date2 = new Date(suggestion2.updated_at);
-        if (this.sortDirection === 'desc') {
-          return date2 - date1;
-        } else {
-          return date1 - date2;
-        }
-      });
-    }
+      // Trie en fonction de la propriété votes_up
+      if (this.sortBy === 'votes_up') {
+        filteredLocalSuggestions.sort((suggestion1, suggestion2) => {
+          if (this.sortDirection === 'desc') {
+            return suggestion2.votes_up - suggestion1.votes_up;
+          } else {
+            return suggestion1.votes_up - suggestion2.votes_up;
+          }
+        });
+      }
 
-    return filteredLocalSuggestions;
-  },
+      // Trie en fonction de la propriété updated_at
+      if (this.sortBy === 'updated_at') {
+        filteredLocalSuggestions.sort((suggestion1, suggestion2) => {
+          const date1 = new Date(suggestion1.updated_at);
+          const date2 = new Date(suggestion2.updated_at);
+          if (this.sortDirection === 'desc') {
+            return date2 - date1;
+          } else {
+            return date1 - date2;
+          }
+        });
+      }
+
+      return filteredLocalSuggestions;
+    },
 
 
     /**
@@ -402,49 +413,52 @@ export default {
      * filteredSuggestions();
      */
     filteredSuggestions() {
-    if (this.search.length >= 3) {
-      const searchWords = splitWords(this.searchNormalized).map(word => normalizeString(word));
-      const relatedWords = searchWords.flatMap(word => [...this.getRelatedWords(word), word]);
+      if (this.search.length >= 3) {
+        let searchWords = splitWords(this.searchNormalized).map(word => normalizeString(word));
+        
+        searchWords = searchWords.filter(word => !this.excludeWords.includes(word));
 
-      // Calculer TF-IDF pour chaque suggestion
-      const tfIdfScores = this.calculateTfIdfScores(this.localSuggestions, relatedWords);
+        const relatedWords = searchWords.flatMap(word => [...this.getRelatedWords(word), word]);
 
-      // Suggestions contenant tous les mots recherchés
-      const suggestionsContainingSearchWords = this.localSuggestions.filter(suggestion => {
-        const suggestionText = normalizeString(suggestion.title + " " + suggestion.description);
-        return searchWords.every(word => suggestionText.includes(word));
-      });
+        // Calculer TF-IDF pour chaque suggestion
+        // const tfIdfScores = this.calculateTfIdfScores(this.localSuggestions, relatedWords);
 
-      // Suggestions contenant au moins un des mots recherchés ou leurs synonymes
-      const suggestionsContainingSomeSearchWords = this.localSuggestions.filter(suggestion => {
-        const suggestionText = normalizeString(suggestion.title + " " + suggestion.description);
-        return relatedWords.some(word => suggestionText.includes(word)) && !suggestionsContainingSearchWords.includes(suggestion);
-      });
+        // Suggestions contenant tous les mots recherchés
+        const suggestionsContainingSearchWords = this.localSuggestions.filter(suggestion => {
+          const suggestionText = normalizeString(suggestion.title + " " + suggestion.description.replace(/<img[^>]*>/g, ""));
+          return searchWords.every(word => word.length >= 3 && suggestionText.includes(word));
+        });
 
-      // Trier les suggestions contenant tous les mots recherchés
-      suggestionsContainingSearchWords.sort((a, b) => {
-        const aDistance = this.calculateDistance(a.title + " " + a.description, relatedWords, searchWords);
-        const bDistance = this.calculateDistance(b.title + " " + b.description, relatedWords, searchWords);
-        return aDistance - bDistance;
-      });
+        // Suggestions contenant au moins un des mots recherchés ou leurs synonymes
+        const suggestionsContainingSomeSearchWords = this.localSuggestions.filter(suggestion => {
+          const suggestionText = normalizeString(suggestion.title + " " + suggestion.description.replace(/<img[^>]*>/g, ""));
+          return relatedWords.some(word => word.length >= 3 && suggestionText.includes(word)) && !suggestionsContainingSearchWords.includes(suggestion);
+        });
 
-      // Trier les suggestions contenant certains mots recherchés ou leurs synonymes par TF-IDF puis ordre alphabétique
-      suggestionsContainingSomeSearchWords.sort((a, b) => {
-        const aTfIdf = tfIdfScores[a.id] || 0;
-        const bTfIdf = tfIdfScores[b.id] || 0;
-        if (aTfIdf === bTfIdf) {
-          const aText = normalizeString(a.title + " " + a.description);
-          const bText = normalizeString(b.title + " " + b.description);
-          return aText.localeCompare(bText);
-        }
-        return bTfIdf - aTfIdf;
-      });
+        // Trier les suggestions contenant tous les mots recherchés
+        // suggestionsContainingSearchWords.sort((a, b) => {
+        //   const aDistance = this.calculateDistance(a.title + " " + a.description, relatedWords, searchWords);
+        //   const bDistance = this.calculateDistance(b.title + " " + b.description, relatedWords, searchWords);
+        //   return aDistance - bDistance;
+        // });
 
-      return [...suggestionsContainingSearchWords, ...suggestionsContainingSomeSearchWords];
-    } else {
-      return this.localSuggestions;
+        // Trier les suggestions contenant certains mots recherchés ou leurs synonymes par TF-IDF puis ordre alphabétique
+        // suggestionsContainingSomeSearchWords.sort((a, b) => {
+        //   const aTfIdf = tfIdfScores[a.id] || 0;
+        //   const bTfIdf = tfIdfScores[b.id] || 0;
+        //   if (aTfIdf === bTfIdf) {
+        //     const aText = normalizeString(a.title + " " + a.description);
+        //     const bText = normalizeString(b.title + " " + b.description);
+        //     return aText.localeCompare(bText);
+        //   }
+        //   return bTfIdf - aTfIdf;
+        // });
+
+        return [...suggestionsContainingSearchWords, ...suggestionsContainingSomeSearchWords];
+      } else {
+        return this.localSuggestions;
+      }
     }
-  }
   },
   components: {
     Suggestion,

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\SessionService;
-use Illuminate\Contracts\Session\Session;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class UserController
@@ -13,26 +13,21 @@ use Illuminate\Support\Facades\Crypt;
  */
 class UserController extends Controller
 {
-  protected $sessionService;
-
-  public function __construct(SessionService $sessionService)
-  {
-    $this->sessionService = $sessionService;
-  }
-  
   /**
-     * Display user information.
-     *
-     */
-  public function index(Session $session)
+   * Display user information.
+   *
+   */
+  public function index()
   {
-    if ($this->sessionService->has('suggestion_user:'.$session->token())) {
-      $encryptedUser = $this->sessionService->get('suggestion_user:'.$session->token());
-      return Crypt::decryptString($encryptedUser);
-    }
-    else {
-        return response()->json([
-          'error' => 'Data not found'
+    Log::info('Récupération de l\'utilisateur : ', [
+      'name' => session()->get('suggestion_user')
+    ]);
+    if (session()->has('suggestion_user')) {
+      return session()->get('suggestion_user');
+    } else {
+      Log::debug("Utilisateur non trouvé : " [session()->all()]);
+      return response()->json([
+        'error' => 'Data not found'
       ]);
     }
   }

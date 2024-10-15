@@ -18,3 +18,12 @@ Route::group(['middleware' => ['web']], function () {
   Route::get('/', [LoginController::class, 'index'])->name('connection');
   Route::get('/connexion/{connector}', [LoginController::class, 'externalConnection'])->name('connection.external');
 });
+
+Route::get('/test-db', function () {
+  try {
+      \DB::connection()->getPdo();
+      return 'La connexion à la base de données fonctionne.';
+  } catch (\Exception $e) {
+      return 'La connexion à la base de données ne fonctionne pas : ' . $e->getMessage();
+  }
+});
