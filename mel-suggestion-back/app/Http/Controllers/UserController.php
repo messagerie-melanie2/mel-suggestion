@@ -25,7 +25,6 @@ class UserController extends Controller
     if (session()->has('suggestion_user')) {
       return session()->get('suggestion_user');
     } else {
-      Log::debug("Utilisateur non trouvé : " [session()->all()]);
       return response()->json([
         'error' => 'Data not found'
       ]);
