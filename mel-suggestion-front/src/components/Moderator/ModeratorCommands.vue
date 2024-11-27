@@ -18,7 +18,7 @@
         Refuser
       </button>
       <!-- Modify Suggestion Button -->
-      <button @click.stop="modifySuggestion"
+      <button v-if="$anonymised" @click.stop="modifySuggestion"
         class="text-yellow-500 border border-yellow-500 hover:bg-yellow-500 hover:text-white active:bg-yellow-600 font-bold uppercase text-xs px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
         type="button">
         <i class="fas fa-pen mr-1"></i>
