@@ -27,8 +27,10 @@
     <div v-else>
       <Preloader color="gray" />
     </div>
+    <span v-if="allText.application_version && allText.application_version !== '%%VERSION%%'" class="version-number mr-2 text-gray-700 dark:text-gray-400">
+      version {{ allText.application_version }}
+    </span>
   </section>
-
 </template>
 
 <script>
@@ -123,5 +125,11 @@ export default {
 .dark svg,
 .dark .svg {
   filter: invert(69%) sepia(75%) saturate(408%) hue-rotate(184deg) brightness(100%) contrast(82%);
+}
+
+.version-number {
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }
 </style>
