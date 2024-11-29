@@ -128,7 +128,7 @@ export default {
 }
 
 .version-number {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   right: 0;
 }
