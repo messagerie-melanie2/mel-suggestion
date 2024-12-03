@@ -27,11 +27,14 @@ class DetectAuthContext
         }
 
         if (config('suggestion.use_roundcube_session')) {
+            Log::info('Début connexion utilisateur roundcube');
+
             if (isset($_COOKIE['roundcube_sessid']) && !empty($_COOKIE['roundcube_sessid'])) {
                 session_id($_COOKIE['roundcube_sessid']);
                 session_start();
               
                 if (env('ROUNDCUBE_SESSION_DRIVER') == "memcached") {
+                    Log::info('Début connexion memcached', explode(',', env('MEMCACHED_HOSTS')));
                     $m = new \Memcache();
                     $memcached_hosts = explode(',', env('MEMCACHED_HOSTS'));
                     foreach ($memcached_hosts as $host) {
@@ -41,7 +44,7 @@ class DetectAuthContext
                     }
                     $vars = unserialize($m->get($_COOKIE['roundcube_sessid']));
                     session_decode($vars['vars']);
-                    Log::info('Cache type : memcache');
+                    Log::info('Fin connexion memcached');
                   }
 
                 $moderator = array_map('strtolower', config('moderator')['moderator']);
