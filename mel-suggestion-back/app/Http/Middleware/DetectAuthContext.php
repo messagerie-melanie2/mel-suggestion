@@ -32,7 +32,8 @@ class DetectAuthContext
             if (isset($_COOKIE['roundcube_sessid']) && !empty($_COOKIE['roundcube_sessid'])) {
                 session_id($_COOKIE['roundcube_sessid']);
                 session_start();
-              
+                
+                Log::info('Type de connexion', ['driver' => env('ROUNDCUBE_SESSION_DRIVER')]);
                 if (env('ROUNDCUBE_SESSION_DRIVER') == "memcached") {
                     Log::info('Début connexion memcached', explode(',', env('MEMCACHED_HOSTS')));
                     $m = new \Memcache();
