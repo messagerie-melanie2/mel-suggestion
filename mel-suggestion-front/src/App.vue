@@ -57,7 +57,7 @@ export default {
   },
   created() {
     this.fetchSuggestions(),
-      this.fetchText()
+    this.fetchText()
   },
 
   mounted() {
@@ -71,7 +71,8 @@ export default {
         this.modalComment = e.suggestion.comment;
       }),
       this.$root.$on('refresh', () => {
-        this.fetchSuggestions()
+        this.fetchSuggestions(),
+        this.fetchText()
       })
   },
   methods: {
