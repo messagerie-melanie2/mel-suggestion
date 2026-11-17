@@ -138,10 +138,9 @@ export default {
   },
   filters: {
     strippedContent: function (value) {
-      const div = document.createElement('div')
-      div.innerHTML = value
-      const text = div.textContent || div.innerText || ''
-      return text
+      // Document inerte(sans image chargée, sans script executé)
+      const doc = new DOMParser().parseFromString(String(value ?? ''), 'text/html')
+      return doc.body.textContent || ''
     },
     formatDate: function (value) {
       if (value) {
