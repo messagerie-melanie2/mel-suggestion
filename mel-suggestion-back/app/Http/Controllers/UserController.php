@@ -19,12 +19,13 @@ class UserController extends Controller
    */
   public function index()
   {
-    Log::info('Récupération de l\'utilisateur : ', [
-      'name' => session()->get('suggestion_user')
-    ]);
     if (session()->has('suggestion_user')) {
+      Log::info('Récupération de l\'utilisateur : ', [
+        'name' => session()->get('suggestion_user')
+      ]);
       return session()->get('suggestion_user');
     } else {
+      Log::info('Utilisateur non trouvé');
       return response()->json([
         'error' => 'Data not found'
       ]);

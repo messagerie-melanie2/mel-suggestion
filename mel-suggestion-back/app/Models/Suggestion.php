@@ -79,7 +79,8 @@ class Suggestion extends Model
           } else {
             $votes_up++;
           }
-          if ($vote->user_email == $session_user->email || $vote->user_email == $session_user->sub) {
+     
+          if ($vote->user_email == $session_user->email || (isset($session_user->sub) && $vote->user_email == $session_user->sub)) {
             $suggestion->voted = true;
             $suggestion->voted_type = $vote->type;
             $suggestion->vote_id = $vote->id;
