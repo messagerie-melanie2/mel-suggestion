@@ -13,7 +13,7 @@
       <!-- Description -->
       <div class="ql-snow" v-if="active">
         <div class="ql-editor">
-          <div v-html="suggestion.description"></div>
+          <div v-html="SafeDescription"></div>
         </div>
       </div>
       <!-- Moderation Notification -->
@@ -63,6 +63,7 @@
 <script>
 import moment from 'moment';
 import { mapGetters } from 'vuex';
+import DOMPurify from 'dompurify';
 
 export default {
   // Component name
@@ -119,6 +120,16 @@ export default {
         return this.suggestion.user_firstname + ' ' + this.suggestion.user_lastname;
       }
       return this.suggestion.user_email;
+    }
+    // Même liste blanche que le profil "suggestion" du serveur 
+    safeDescription() {
+      return DOMPurify.sanitize(this.suggestion.description || '', {
+        ALLOWED_TAGS: ['p', 'br', 'span', 'strong', 'em', 'u', 's',
+                      'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+                      'blockquote', 'pre', 'ol', 'ul', 'li', 'a', 'img'],
+        ALLOWED_ATTR: ['class', 'style', 'href', 'title', 'target', 'rel',
+                      'src', 'alt', 'width', 'height'],
+      })
     }
   },
 

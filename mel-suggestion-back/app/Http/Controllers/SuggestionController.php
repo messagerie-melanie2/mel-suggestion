@@ -43,6 +43,17 @@ class SuggestionController extends Controller
       $session_user = json_decode(session()->get('suggestion_user'));
     }
 
+    
+    $validated = $request->validate([
+      'title'       => 'required|string|max:255',
+      'description' => 'required|string|max:2000000',
+    ]);
+
+    $clean = $this->sanitizeInput($validated);
+    if ($clean === null) {
+      return response()->json(['message' => 'Titre ou description vide'], 422);
+    }
+
     if (config('suggestion.notification') && config('moderator.moderator')[0] !== "" && config('suggestion.use_roundcube_session')) {
       foreach (config('moderator.moderator') as $email) {
         if ($email != $session_user->email) {
@@ -55,13 +66,13 @@ class SuggestionController extends Controller
       }
     }
 
-    $request->validate([
-      'title' => 'required|max:255',
-      'description' => 'required',
-      'user_firstname' => '',
-      'user_lastname' => '',
-      'user_email' => '',
-    ]);
+    // $request->validate([
+    //   'title' => 'required|max:255',
+    //   'description' => 'required',
+    //   'user_firstname' => '',
+    //   'user_lastname' => '',
+    //   'user_email' => '',
+    // ]);
 
     // Récupérer la configuration d'anonymisation
     $anonymize = config('app.suggestion_anonymize');
@@ -114,6 +125,26 @@ class SuggestionController extends Controller
     $suggestion = Suggestion::findOrFail($id);
     return response()->json($suggestion);
   }
+  
+  /**
+   * Filtrage titre et description. Renvoie null si l'un des deux est vide après filtrage.
+   */
+  private function sanitizeInput(array $validated): ?array
+  {
+      $title       = trim(strip_tags($validated['title']));
+      $description = clean($validated['description'], 'suggestion');
+
+      // Une description faite uniquement de code malveillant est vide après filtrage.
+      // On garde les descriptions qui ne contiennent qu'une image.
+      $hasText  = trim(strip_tags($description)) !== '';
+      $hasImage = stripos($description, '<img') !== false;
+
+      if ($title === '' || (!$hasText && !$hasImage)) {
+          return null;
+      }
+
+      return ['title' => $title, 'description' => $description];
+  }
 
   /**
    * Update the specified suggestion in storage.
@@ -126,14 +157,18 @@ class SuggestionController extends Controller
   {
     $suggestion = Suggestion::findOrFail($id);
 
-    $request->validate([
-      'title' => 'required|max:255',
-      'description' => 'required',
+    $validated = $request->validate([
+      'title'       => 'required|string|max:255',
+      'description' => 'required|string|max:2000000',
     ]);
+    // filtrage update
+    $clean = $this->sanitizeInput($validated);
+    if ($clean === null) {
+      return response()->json(['message' => 'Titre ou description vide'], 422);
+    }
 
-    $suggestion->title = $request->get('title');
-    $suggestion->description = $request->get('description');
-
+    $suggestion->title       = $clean['title'];
+    $suggestion->description = $clean['description'];
     $suggestion->save();
 
     $suggestion = Suggestion::isMySuggestion($suggestion);
