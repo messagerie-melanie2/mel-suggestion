@@ -14,6 +14,7 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "messagerie-melanie2/orm-m2": "~0.6.4.0",
+        "mews/purifier": "^3.4",
         "nunomaduro/collision": "^5.10",
         "predis/predis": "^2.2"
     },
