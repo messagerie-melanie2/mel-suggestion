@@ -79,7 +79,8 @@ class Suggestion extends Model
           } else {
             $votes_up++;
           }
-          if ($vote->user_email == $session_user->email || $vote->user_email == $session_user->sub) {
+          $sub = $session_user->sub ?? null;   // n'existe qu'en mode externe (OIDC)
+          if ($vote->user_email == $session_user->email || ($sub !== null && $vote->user_email == $sub)) {
             $suggestion->voted = true;
             $suggestion->voted_type = $vote->type;
             $suggestion->vote_id = $vote->id;
