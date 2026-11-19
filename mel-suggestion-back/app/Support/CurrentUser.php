@@ -46,6 +46,7 @@ final class CurrentUser
         return $suggestion->state === 'moderate'
             && (self::isModerator($user) || self::owns($user, $suggestion));
     }
+    
 
     /**
      * Suppression : un modérateur en modération ou refusée, l'auteur en modération.

@@ -93,9 +93,6 @@ class SuggestionController extends Controller
     }
   }
 
-
-  
-
   /**
    * Update the specified suggestion in storage.
    *

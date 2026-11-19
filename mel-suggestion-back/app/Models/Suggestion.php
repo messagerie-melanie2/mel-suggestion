@@ -90,7 +90,6 @@ class Suggestion extends Model
       $suggestion->votes_up = $votes_up;
       $suggestion->votes_down = $votes_down;
     }
-
     return $suggestions;
   }
 
