@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Notification;
 use App\Models\Suggestion;
 use App\Models\User;
+use App\Support\CurrentUser;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -14,16 +15,15 @@ use Illuminate\Support\Facades\Storage;
 class SuggestionController extends Controller
 {
   /**
-   * Display a listing of the moderate and user's suggestions.
+   * Liste les suggestions visibles par l'utilisateur courant.
+   * Le filtrage (suggestions en modération des autres masquées aux non-modérateurs)
+   * est fait dans Suggestion::getAllSuggestionsByInstance().
    *
    * @return \Illuminate\Http\Response
    */
   public function index()
   {
-    $user = new User();
-    if (session()->has('suggestion_user')) {
-      $user = json_decode(session()->get('suggestion_user'));
-    }
+    $user = CurrentUser::get();
 
     $suggestions = Suggestion::getAllSuggestionsByInstance($user);
 
@@ -69,16 +69,7 @@ class SuggestionController extends Controller
     // Si l'anonymisation est activée, ne pas inclure les informations personnelles de l'utilisateur
     $user_email = $anonymize ? 'Anonyme' : $session_user->email;
     $user_firstname = $anonymize ? 'Anonyme' : explode(' ', $session_user->name)[0];
-    if ($anonymize) {
-      $user_lastname = ' ';
-    } else {
-      if (isset(explode(' ', $session_user->name)[1])) {
-        $user_lastname = explode(' ', $session_user->name)[1];
-      }
-      else {
-        $user_lastname = ' ';
-      }
-    }
+    $user_lastname  = $anonymize ? ' ' : (explode(' ', $session_user->name)[1] ?? ' ');
 
     $newSuggestion = new Suggestion([
       'title' => $request->get('title'),
@@ -103,17 +94,7 @@ class SuggestionController extends Controller
   }
 
 
-  /**
-   * Display the specified suggestion.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
-  public function show($id)
-  {
-    $suggestion = Suggestion::findOrFail($id);
-    return response()->json($suggestion);
-  }
+  
 
   /**
    * Update the specified suggestion in storage.
@@ -124,7 +105,10 @@ class SuggestionController extends Controller
    */
   public function update(Request $request, $id)
   {
-    $suggestion = Suggestion::findOrFail($id);
+    $user = CurrentUser::get();
+    $suggestion = Suggestion::where('instance', config('suggestion.instance'))->findOrFail($id);
+
+    abort_unless(CurrentUser::canEdit($user, $suggestion), 403);
 
     $request->validate([
       'title' => 'required|max:255',
@@ -136,7 +120,7 @@ class SuggestionController extends Controller
 
     $suggestion->save();
 
-    $suggestion = Suggestion::isMySuggestion($suggestion);
+     $suggestion->my_suggestion = CurrentUser::owns($user, $suggestion);;
 
     return response()->json(Suggestion::countVote($suggestion));
   }
@@ -150,7 +134,10 @@ class SuggestionController extends Controller
    */
   public function updateState(Request $request, $id)
   {
-    $suggestion = Suggestion::findOrFail($id);
+     $user = CurrentUser::get();
+    abort_unless(CurrentUser::isModerator($user), 403);
+
+    $suggestion = Suggestion::where('instance', config('suggestion.instance'))->findOrFail($id);
 
     $request->validate([
       'state' => 'required',
@@ -170,17 +157,22 @@ class SuggestionController extends Controller
   }
 
   /**
-   * Remove the specified suggestion from storage.
+   * Supprime une suggestion.
+   * Modérateur : en modération ou refusée. Auteur : en modération (audit C2).
    *
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
   public function destroy($id)
   {
-    $suggestion = Suggestion::findOrFail($id);
+    $user = CurrentUser::get();
+    $suggestion = Suggestion::where('instance', config('suggestion.instance'))->findOrFail($id);
+
+    abort_unless(CurrentUser::canDelete($user, $suggestion), 403);
+
     $suggestion->delete();
 
-    return response()->json("ok");
+    return response()->json('ok');
   }
 
   /**
